@@ -10,7 +10,7 @@ import de.l3s.boilerpipe.sax.HTMLHighlighter;
 /**
  * Demonstrates how to use Boilerpipe to get the main content, highlighted as HTML.
  * 
- * @author Christian Kohlschütter
+ * @author Christian Vieri
  * @see Oneliner if you only need the plain text.
  */
 public class Demo {
