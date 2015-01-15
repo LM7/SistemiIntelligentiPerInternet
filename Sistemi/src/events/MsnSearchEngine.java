@@ -130,7 +130,7 @@ public class MsnSearchEngine implements SearchEngine {
 	
 	public static void main(String[] args) throws Exception {
 		MsnSearchEngine se = new MsnSearchEngine();
-		HitsIterator iterator = se.query("Totti");
+		HitsIterator iterator = se.query("Apple");
 		System.out.println("DOPO HITS");
 		int i = 0;
 		while (iterator.hasNext()) {
