@@ -29,9 +29,9 @@ import org.json.simple.parser.ParseException;
 */
 public class MsnSearchEngine implements SearchEngine {
 	protected String accountKey = null;
-	public static final int MAX_MSN_WEB_RESULTS = 50;
+	public static final int MAX_MSN_WEB_RESULTS = 200;
+
 	// Roberto's key
-//=====>
 	public static final String DEFAULT_ACCOUNT_KEY = "2O/a7594vhe5kcP7jPt8z5fMzZaR3NB01mT7ivLfSrk";
 
 	public MsnSearchEngine() {
@@ -65,14 +65,12 @@ public class MsnSearchEngine implements SearchEngine {
 		urlConnection.setRequestProperty("Authorization", String.format("Basic %s", accountKeyEnc));
 		urlConnection.setConnectTimeout(30*1000); // 30 secs
 		
-		System.out.println("PRIMA DI JSON");
 		JSONParser parser = new JSONParser();
 		InputStream is = urlConnection.getInputStream();
 		InputStreamReader isr = new InputStreamReader(is);
 		BufferedReader br = new BufferedReader(isr);
 		Object obj = parser.parse(br);
 		JSONObject jsonObject = (JSONObject) obj;
-		System.out.println("DOPO DI JSON");
 		
 		JSONObject jsonRanking = (JSONObject) jsonObject.get("d");
 		JSONArray jsonResults = (JSONArray) jsonRanking.get("results");
@@ -131,7 +129,6 @@ public class MsnSearchEngine implements SearchEngine {
 	public static void main(String[] args) throws Exception {
 		MsnSearchEngine se = new MsnSearchEngine();
 		HitsIterator iterator = se.query("Apple");
-		System.out.println("DOPO HITS");
 		int i = 0;
 		while (iterator.hasNext()) {
 			Document d = (Document) iterator.next();
