@@ -17,5 +17,8 @@
 	<classpathentry kind="lib" path="lib/StanfordSUTime/joda-time.jar"/>
 	<classpathentry kind="lib" path="lib/StanfordSUTime/jollyday-0.4.7-sources.jar"/>
 	<classpathentry kind="lib" path="lib/StanfordSUTime/jollyday.jar"/>
+	<classpathentry kind="lib" path="lib/StanfordSUTime/stanford-corenlp-3.5.0.jar"/>
+	<classpathentry kind="lib" path="lib/StanfordSUTime/xom-1.2.10-src.jar"/>
+	<classpathentry kind="lib" path="lib/StanfordSUTime/xom.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
