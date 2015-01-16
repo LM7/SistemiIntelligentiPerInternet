@@ -10,5 +10,12 @@
 	<classpathentry kind="lib" path="lib/nekohtml-1.9.13.jar"/>
 	<classpathentry kind="lib" path="lib/xerces-2.9.1.jar"/>
 	<classpathentry kind="lib" path="lib/mongo-java-driver-2.13.0-rc1.jar"/>
+	<classpathentry kind="lib" path="lib/StanfordSUTime/ejml-0.23.jar"/>
+	<classpathentry kind="lib" path="lib/StanfordSUTime/javax.json-api-1.0-sources.jar"/>
+	<classpathentry kind="lib" path="lib/StanfordSUTime/javax.json.jar"/>
+	<classpathentry kind="lib" path="lib/StanfordSUTime/joda-time-2.1-sources.jar"/>
+	<classpathentry kind="lib" path="lib/StanfordSUTime/joda-time.jar"/>
+	<classpathentry kind="lib" path="lib/StanfordSUTime/jollyday-0.4.7-sources.jar"/>
+	<classpathentry kind="lib" path="lib/StanfordSUTime/jollyday.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
