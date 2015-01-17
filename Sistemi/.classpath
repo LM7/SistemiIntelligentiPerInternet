@@ -22,5 +22,6 @@
 	<classpathentry kind="lib" path="lib/StanfordSUTime/xom.jar"/>
 	<classpathentry kind="lib" path="lib/StanfordPosTagger/stanford-postagger.jar"/>
 	<classpathentry kind="lib" path="lib/StanfordNamedEntityRecognizer/stanford-ner.jar"/>
+	<classpathentry kind="lib" path="lib/StanfordSUTime/stanford-corenlp-3.5.0-models - Modificato.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

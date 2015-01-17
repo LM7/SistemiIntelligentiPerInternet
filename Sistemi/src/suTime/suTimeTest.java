@@ -36,6 +36,7 @@ public class suTimeTest {
 			annotation.set(CoreAnnotations.DocDateAnnotation.class, "2013-07-14");
 			pipeline.annotate(annotation);
 			System.out.println(annotation.get(CoreAnnotations.TextAnnotation.class));
+			System.out.println("--");
 			List<CoreMap> timexAnnsAll = annotation.get(TimeAnnotations.TimexAnnotations.class);
 			for (CoreMap cm : timexAnnsAll) {
 				List<CoreLabel> tokens = cm.get(CoreAnnotations.TokensAnnotation.class);
