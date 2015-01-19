@@ -3,6 +3,7 @@ package events;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -109,6 +110,12 @@ public class MsnHitsIterator implements HitsIterator {
 	@Override
 	public void interrupt() throws IOException {
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void forEachRemaining(Consumer arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
