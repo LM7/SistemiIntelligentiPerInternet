@@ -23,5 +23,7 @@
 	<classpathentry kind="lib" path="lib/StanfordPosTagger/stanford-postagger.jar"/>
 	<classpathentry kind="lib" path="lib/StanfordNamedEntityRecognizer/stanford-ner.jar"/>
 	<classpathentry kind="lib" path="lib/StanfordSUTime/stanford-corenlp-3.5.0-models - Modificato.jar"/>
+	<classpathentry kind="lib" path="lib/tagMe/commons-lang-2.4.jar"/>
+	<classpathentry kind="lib" path="lib/tagMe/gson-2.2.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
