@@ -125,7 +125,7 @@ public class MsnSearchEngine implements SearchEngine {
 		throw new UnsupportedOperationException();
 	}
 	
-	
+	/*
 	public static void main(String[] args) throws Exception {
 		MsnSearchEngine se = new MsnSearchEngine();
 		HitsIterator iterator = se.query("Apple");
@@ -134,5 +134,24 @@ public class MsnSearchEngine implements SearchEngine {
 			Document d = (Document) iterator.next();
 			System.out.println(++i+d.get("idse")+" "+d.get("desc")+" "+d.get("title"));
 		}
+	}
+	*/
+	
+	public String[] getUrls(String query,int numQueryResults) {
+		String[] urls = new String[numQueryResults];
+		
+		try {
+			List<String[]> results = retrieveResults(0, numQueryResults, query);
+			int i = 0;
+			for(String s[]: results){
+				//la posizione 2 contiene l'url
+				urls[i] = s[2];
+				i++;
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		return urls;
 	}
 }

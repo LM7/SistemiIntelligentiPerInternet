@@ -5,20 +5,38 @@ import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 
+import events.MsnSearchEngine;
 import suTime.SUTime;
 import boilerpipe.Boilerpipe;
 
 public class Principal {
 	
 	public static void main(String[] args) throws Exception {
+		MsnSearchEngine se = new MsnSearchEngine();
+		String[] urls = se.getUrls("Roma", 5);
+		
+		//Queste 2 righe verranno tolte
+		for(String s: urls)
+			System.out.println(s);
+		
+		
 		Boilerpipe b = new Boilerpipe();
+		
+		/* questo verra' scommentato
+		for(String s: urls) {
+			URL url = new URL(s);
+		*/
+		
+		//Queste 5 righe verranno tolte
 		URL url = new URL("http://www.last.fm/event/3987451+Mini+Mansions+at+The+Lexington+on+19+January+2015"
 				//"http://www.aloud.com/towns/london/camden%20underworld.xml"
 				//"http://www.aloud.com/tickets/within-the-ruins"
 				//"http://lambgoat.com/news/23481/Within-The-Ruins-I-Declare-War-tour-Europe"				
 				);
+		
 		String text = b.getText(url);
 		
+		//Queste 4 righe verranno tolte
 		PrintWriter out = new PrintWriter("contenutoTesto.html", "UTF-8");
 		out.println("<meta http-equiv=\"Content-Type\" content=\"html; charset=utf-8\" />");
 		out.println(text);
@@ -26,9 +44,12 @@ public class Principal {
 		
 		SUTime suT = new SUTime();
 		
+		//Questa riga verra' tolta
 		suT.getTimeProva(text);
 		
 		HashMap<Date, Integer> date = suT.getTime(text);
+		
+		//Queste 8 righe verranno tolte
 		int i = 1;
 		int numDate = 0;
 		for(Date d: date.keySet()){
@@ -38,5 +59,7 @@ public class Principal {
 		}
 		System.out.println("DATE TOT= "+numDate);
 		System.out.println("data evento proposto="+suT.dataEvento(date));
+		
+		
 	}
 }
