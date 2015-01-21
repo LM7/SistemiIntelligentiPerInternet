@@ -55,7 +55,7 @@ public class MsnSearchEngine implements SearchEngine {
 	List<String[]> retrieveResults(int from, int n, String query) throws IOException, ParseException {
 		List<String[]> results = new ArrayList<String[]>();
 		query.replaceAll("%27", "'");
-		String bingUrl = "https://api.datamarket.azure.com/Bing/Search/Web?Query=%27"+ java.net.URLEncoder.encode(query, "UTF-8") +"%27&$format=json&$top="+n+"&$skip="+from;
+		String bingUrl = "https://api.datamarket.azure.com/Bing/Search/Web?Query=%27"+ java.net.URLEncoder.encode(query, "UTF-8") +"%27&Market=%27en-US%27&$format=json&$top="+n+"&$skip="+from;
 
 		byte[] encoding = Base64.encodeBase64((accountKey + ":" + accountKey).getBytes());
 		String accountKeyEnc = new String(encoding);
@@ -128,7 +128,7 @@ public class MsnSearchEngine implements SearchEngine {
 	/*
 	public static void main(String[] args) throws Exception {
 		MsnSearchEngine se = new MsnSearchEngine();
-		HitsIterator iterator = se.query("Apple");
+		HitsIterator iterator = se.query("Roma");
 		int i = 0;
 		while (iterator.hasNext()) {
 			Document d = (Document) iterator.next();

@@ -13,3 +13,4 @@
 *.props
 *.prop
 *.gz
+/events/
