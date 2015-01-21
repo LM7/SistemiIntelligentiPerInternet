@@ -3,7 +3,11 @@ package boilerpipe;
 import java.net.URL;
 
 import de.l3s.boilerpipe.BoilerpipeExtractor;
+import de.l3s.boilerpipe.document.TextDocument;
 import de.l3s.boilerpipe.extractors.CommonExtractors;
+import de.l3s.boilerpipe.sax.BoilerpipeSAXInput;
+import de.l3s.boilerpipe.sax.HTMLDocument;
+import de.l3s.boilerpipe.sax.HTMLFetcher;
 import de.l3s.boilerpipe.sax.HTMLHighlighter;
 
 public class Boilerpipe {
@@ -40,8 +44,13 @@ public class Boilerpipe {
 		}
 	}
 
-	public String getText(URL url) throws Exception {
-		return hh.process(url, extractor);
+	public String[] getText(URL url) throws Exception {
+		String[] TitoloTesto = new String[2];
+		HTMLDocument htmlDoc = HTMLFetcher.fetch(new URL("http://www.last.fm/event/3996308+Giraffage+at+Music+Hall+of+Williamsburg+on+31+January+2015"));
+	    TextDocument doc = new BoilerpipeSAXInput(htmlDoc.toInputSource()).getTextDocument();
+		TitoloTesto[0] = doc.getTitle();
+		TitoloTesto[1] = hh.process(url, extractor);
+		return TitoloTesto;
 	}
 
 }

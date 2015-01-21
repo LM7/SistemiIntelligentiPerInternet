@@ -28,13 +28,14 @@ public class Principal {
 		*/
 		
 		//Queste 5 righe verranno tolte
-		URL url = new URL("http://www.last.fm/event/3987451+Mini+Mansions+at+The+Lexington+on+19+January+2015"
+		URL url = new URL("http://www.last.fm/event/3996308+Giraffage+at+Music+Hall+of+Williamsburg+on+31+January+2015"
 				//"http://www.aloud.com/towns/london/camden%20underworld.xml"
 				//"http://www.aloud.com/tickets/within-the-ruins"
 				//"http://lambgoat.com/news/23481/Within-The-Ruins-I-Declare-War-tour-Europe"				
 				);
 		
-		String text = b.getText(url);
+		String title = b.getText(url)[0];
+		String text = b.getText(url)[1];
 		
 		//Queste 4 righe verranno tolte
 		PrintWriter out = new PrintWriter("contenutoTesto.html", "UTF-8");
@@ -47,7 +48,7 @@ public class Principal {
 		//Questa riga verra' tolta
 		suT.getTimeProva(text);
 		
-		HashMap<Date, Integer> date = suT.getTime(text);
+		HashMap<Date, Integer> date = suT.getTime(title,text);
 		
 		//Queste 8 righe verranno tolte
 		int i = 1;

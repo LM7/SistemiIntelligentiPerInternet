@@ -23,6 +23,7 @@ import edu.stanford.nlp.util.CoreMap;
 public class SUTime {
 
 	private AnnotationPipeline pipeline;
+	public static final int IMPORTANZA_TITOLO = 10;
 
 	public SUTime() {
 		Properties props = new Properties();
@@ -102,16 +103,40 @@ public class SUTime {
 		System.out.println("date maggiori a ieri: "+l);
 	}
 	
-	public HashMap<Date, Integer> getTime(String text) {
+	public HashMap<Date, Integer> getTime(String title, String text) {
 		HashMap<Date, Integer> date = new HashMap<Date, Integer>();
 		GregorianCalendar ieri = new GregorianCalendar();
 		ieri.add(Calendar.HOUR_OF_DAY, -24);
 		
-		Annotation annotation = new Annotation(text);
+		Annotation annotation = new Annotation(title);
 		annotation.set(CoreAnnotations.DocDateAnnotation.class, "2013-07-14");
 		pipeline.annotate(annotation);
 		List<CoreMap> timexAnnsAll = annotation.get(TimeAnnotations.TimexAnnotations.class);
 		for(CoreMap cm : timexAnnsAll) {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String miaData = cm.get(TimeExpression.Annotation.class).getTemporal().getTimexValue();
+			GregorianCalendar c = new GregorianCalendar();
+			try{
+				c.setTime(sdf.parse(miaData));
+				if(!c.before(ieri)) {
+					Date d = c.getTime();
+					if(date.containsKey(d))
+						date.put(d, date.get(d) + IMPORTANZA_TITOLO);
+					else
+						date.put(d, IMPORTANZA_TITOLO);
+				}
+			} 
+			catch (Exception e){
+				//nulla
+			}		
+
+		}
+		
+		Annotation annotation2 = new Annotation(text);
+		annotation2.set(CoreAnnotations.DocDateAnnotation.class, "2013-07-14");
+		pipeline.annotate(annotation2);
+		List<CoreMap> timexAnnsAll2 = annotation2.get(TimeAnnotations.TimexAnnotations.class);
+		for(CoreMap cm : timexAnnsAll2) {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			String miaData = cm.get(TimeExpression.Annotation.class).getTemporal().getTimexValue();
 			GregorianCalendar c = new GregorianCalendar();
