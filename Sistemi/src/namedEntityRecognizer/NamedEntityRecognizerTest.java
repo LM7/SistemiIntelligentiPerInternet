@@ -1,9 +1,12 @@
 package namedEntityRecognizer;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import boilerpipe.Boilerpipe;
 import edu.stanford.nlp.ie.AbstractSequenceClassifier;
 import edu.stanford.nlp.ie.crf.*;
 import edu.stanford.nlp.ling.CoreAnnotations;
@@ -20,10 +23,18 @@ public class NamedEntityRecognizerTest {
 		//String serializedClassifier = "classifiers/english.nowiki.3class.distsim.crf.ser.gz";
 
 		AbstractSequenceClassifier<CoreLabel> classifier = CRFClassifier.getClassifier(serializedClassifier);
-
+		
+		//Prova con Boilerpipe
+		Boilerpipe b = new Boilerpipe();
+		URL url = new URL("http://www.last.fm/event/3917258+Ed+Sheeran+at+Palalottomatica+on+26+January+2015");
+		String title = b.getText(url)[0];
+		String text = b.getText(url)[1];
+		
 
 		String[] example = {"Good afternoon Rajat Raina, how are you today?",
 		"I go to school at Stanford University, which California is located in California." }; //modifica
+		
+		String[] example2 = {title, text};
 		
 		System.out.println("STAMPATA NUMERO 1"); //frase con parola/categoria
 		
@@ -104,27 +115,36 @@ public class NamedEntityRecognizerTest {
 		System.out.println("---");
 		
 		
+	}
 		
 		
+		
+		
+		
+
+	public ArrayList<HashMap<String,Integer>> createListOfMapEntity(String[] urls) throws ClassCastException, ClassNotFoundException, IOException {
+		String serializedClassifier = "classifiers/english.all.3class.distsim.crf.ser.gz";
+		AbstractSequenceClassifier<CoreLabel> classifier = CRFClassifier.getClassifier(serializedClassifier);
+
 		HashMap<String,Integer> str2occLoc = new HashMap<String,Integer>(); //chiave= stringa(parola); valore= occorrenza
 		HashMap<String,Integer> str2occPer = new HashMap<String,Integer>();
 		HashMap<String,Integer> str2occOrg = new HashMap<String,Integer>();
-		List<HashMap<String, Integer>> listEntity = new ArrayList<HashMap<String, Integer>>();
+		ArrayList<HashMap<String, Integer>> listEntity = new ArrayList<HashMap<String, Integer>>();
 		listEntity.add(0, str2occLoc);
 		listEntity.add(1, str2occPer);
 		listEntity.add(2, str2occOrg);
-		
+
 		/* Location -> 0; Person -> 1; Organization -> 2*/
-		
-		
-		for (String str : example) {
+
+
+		for (String str : urls) {
 			for (List<CoreLabel> lcl : classifier.classify(str)) {
 				for (CoreLabel cl : lcl) {
 					String stringa = cl.originalText();
 					String entity = cl.get(CoreAnnotations.AnswerAnnotation.class);
-					
+
 					if (entity.equals("LOCATION") || entity.equals("PERSON") || entity.equals("ORGANIZATION") ) { 
-						
+
 						if (entity.equals("LOCATION")) {
 							boolean trovato = false;
 							for (String key: str2occLoc.keySet() ) { 
@@ -136,7 +156,7 @@ public class NamedEntityRecognizerTest {
 							if (!trovato) {
 								str2occLoc.put(stringa, 1); 
 							}
-							
+
 						}
 						if (entity.equals("PERSON")) {
 							boolean trovato = false;
@@ -162,7 +182,7 @@ public class NamedEntityRecognizerTest {
 								str2occOrg.put(stringa, 1); 
 							}
 						}
-						
+
 					}
 
 					if (entity.equals("LOCATION")) {
@@ -182,13 +202,13 @@ public class NamedEntityRecognizerTest {
 				}
 			}
 		}
-			
-		
+
+
 		System.out.println("STAMPO LA MIA MAPPA");
-		
+
 		int cont;
 		HashMap<String,Integer> mapHelp = new HashMap<String,Integer>(); //mappa d'appoggio per stampare
-		
+
 		for (cont=0; cont<3; cont++) {
 			mapHelp = listEntity.get(cont);
 			if (cont == 0) {
@@ -204,8 +224,18 @@ public class NamedEntityRecognizerTest {
 				System.out.println("Key : " + key.toString() + " Value : "+ mapHelp.get(key));
 			}
 		}
-		
+
 		System.out.println("Lunghezza della mia lista di mappe: "+ listEntity.size());	
+		
+		return listEntity;
 
 	}
+
 }
+
+
+
+
+	
+	
+
