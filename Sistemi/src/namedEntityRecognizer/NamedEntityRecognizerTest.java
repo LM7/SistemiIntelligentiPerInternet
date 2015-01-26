@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import boilerpipe.Boilerpipe;
 import edu.stanford.nlp.ie.AbstractSequenceClassifier;
@@ -121,12 +122,12 @@ public class NamedEntityRecognizerTest {
 		
 		
 		
-
+	/* Restituisce una lista di mappe: Location -> 0; Person -> 1; Organization -> 2; chiave= stringa(parola); valore= occorrenza */
 	public ArrayList<HashMap<String,Integer>> createListOfMapEntity(String[] urls) throws ClassCastException, ClassNotFoundException, IOException {
 		String serializedClassifier = "classifiers/english.all.3class.distsim.crf.ser.gz";
 		AbstractSequenceClassifier<CoreLabel> classifier = CRFClassifier.getClassifier(serializedClassifier);
 
-		HashMap<String,Integer> str2occLoc = new HashMap<String,Integer>(); //chiave= stringa(parola); valore= occorrenza
+		HashMap<String,Integer> str2occLoc = new HashMap<String,Integer>(); 
 		HashMap<String,Integer> str2occPer = new HashMap<String,Integer>();
 		HashMap<String,Integer> str2occOrg = new HashMap<String,Integer>();
 		ArrayList<HashMap<String, Integer>> listEntity = new ArrayList<HashMap<String, Integer>>();
@@ -134,7 +135,7 @@ public class NamedEntityRecognizerTest {
 		listEntity.add(1, str2occPer);
 		listEntity.add(2, str2occOrg);
 
-		/* Location -> 0; Person -> 1; Organization -> 2*/
+		
 
 
 		for (String str : urls) {
@@ -229,6 +230,34 @@ public class NamedEntityRecognizerTest {
 		
 		return listEntity;
 
+	}
+	
+	
+	// Data la lista di mappe e la stringa del titolo: resituisce il luogo con occorrenza maggiore, se è presente nel titolo-> occorrenza +10
+	public String locationTop(ArrayList<HashMap<String,Integer>> lista, String titolo) throws ClassCastException, ClassNotFoundException, IOException {
+		String serializedClassifier = "classifiers/english.all.3class.distsim.crf.ser.gz";
+		AbstractSequenceClassifier<CoreLabel> classifier = CRFClassifier.getClassifier(serializedClassifier);
+		int max = 0;
+		int i;
+		String locMoreOcc = "";
+		HashMap<String,Integer> locationsToOcc = lista.get(0); //potevo anche farlo fuori dal metodo...è uguale...in caso si cambia
+		Set<String> locations = locationsToOcc.keySet();
+		for (String location: locations) {
+			i = locationsToOcc.get(location);
+			for (List<CoreLabel> lcl : classifier.classify(titolo)) {
+				for (CoreLabel cl : lcl) {
+						if (location.equals(cl.originalText())) {
+							i = i +10;
+						}
+				}
+			}
+			if (i>max) {
+				max = i;
+				locMoreOcc = location;
+			}
+		}
+		return locMoreOcc;
+		
 	}
 
 }
