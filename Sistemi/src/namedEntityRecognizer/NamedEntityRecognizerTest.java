@@ -1,7 +1,7 @@
 package namedEntityRecognizer;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
 import edu.stanford.nlp.ie.AbstractSequenceClassifier;
@@ -106,7 +106,15 @@ public class NamedEntityRecognizerTest {
 		
 		
 		
-		HashMap<String,Integer> str2occ = new HashMap<String,Integer>(); //chiave= stringa(parola); valore= occorrenza
+		HashMap<String,Integer> str2occLoc = new HashMap<String,Integer>(); //chiave= stringa(parola); valore= occorrenza
+		HashMap<String,Integer> str2occPer = new HashMap<String,Integer>();
+		HashMap<String,Integer> str2occOrg = new HashMap<String,Integer>();
+		List<HashMap<String, Integer>> listEntity = new ArrayList<HashMap<String, Integer>>();
+		listEntity.add(0, str2occLoc);
+		listEntity.add(1, str2occPer);
+		listEntity.add(2, str2occOrg);
+		
+		/* Location -> 0; Person -> 1; Organization -> 2*/
 		
 		
 		for (String str : example) {
@@ -114,19 +122,63 @@ public class NamedEntityRecognizerTest {
 				for (CoreLabel cl : lcl) {
 					String stringa = cl.originalText();
 					String entity = cl.get(CoreAnnotations.AnswerAnnotation.class);
-					if (entity.equals("LOCATION") || entity.equals("PERSON") || entity.equals("ORGANIZATION") ) {
-						boolean trovato = false;
-						for (String key: str2occ.keySet() ) { 
-							if (key.equals(stringa)) {
-								trovato = true;
-								str2occ.put(key, str2occ.get(key) +1 );
+					
+					if (entity.equals("LOCATION") || entity.equals("PERSON") || entity.equals("ORGANIZATION") ) { 
+						
+						if (entity.equals("LOCATION")) {
+							boolean trovato = false;
+							for (String key: str2occLoc.keySet() ) { 
+								if (key.equals(stringa)) {
+									trovato = true;
+									str2occLoc.put(key, str2occLoc.get(key) +1 );
+								}
+							}
+							if (!trovato) {
+								str2occLoc.put(stringa, 1); 
+							}
+							
+						}
+						if (entity.equals("PERSON")) {
+							boolean trovato = false;
+							for (String key: str2occPer.keySet() ) { 
+								if (key.equals(stringa)) {
+									trovato = true;
+									str2occPer.put(key, str2occPer.get(key) +1 );
+								}
+							}
+							if (!trovato) {
+								str2occPer.put(stringa, 1); 
 							}
 						}
-						if (!trovato) {
-							str2occ.put(stringa, 1); 
+						if (entity.equals("ORGANIZATION")) {
+							boolean trovato = false;
+							for (String key: str2occOrg.keySet() ) { 
+								if (key.equals(stringa)) {
+									trovato = true;
+									str2occOrg.put(key, str2occOrg.get(key) +1 );
+								}
+							}
+							if (!trovato) {
+								str2occOrg.put(stringa, 1); 
+							}
 						}
 						
 					}
+
+					if (entity.equals("LOCATION")) {
+						listEntity.remove(0);
+						listEntity.add(0, str2occLoc);
+					}
+					if (entity.equals("PERSON")) {
+						listEntity.remove(1);
+						listEntity.add(1, str2occPer);
+					}
+					if (entity.equals("ORGANIZATION")) {
+						listEntity.remove(2);
+						listEntity.add(2, str2occOrg);
+					}
+
+
 				}
 			}
 		}
@@ -134,12 +186,26 @@ public class NamedEntityRecognizerTest {
 		
 		System.out.println("STAMPO LA MIA MAPPA");
 		
-		for (String key: str2occ.keySet() ) {
-			System.out.println("Key : " + key.toString() + " Value : "+ str2occ.get(key));
-			
-			
+		int cont;
+		HashMap<String,Integer> mapHelp = new HashMap<String,Integer>(); //mappa d'appoggio per stampare
+		
+		for (cont=0; cont<3; cont++) {
+			mapHelp = listEntity.get(cont);
+			if (cont == 0) {
+				System.out.println("LOCATION");
+			}
+			if (cont == 1) {
+				System.out.println("PERSON");
+			}
+			if (cont == 2) {
+				System.out.println("ORGANIZATION");
+			}
+			for (String key: mapHelp.keySet() ) {
+				System.out.println("Key : " + key.toString() + " Value : "+ mapHelp.get(key));
+			}
 		}
 		
+		System.out.println("Lunghezza della mia lista di mappe: "+ listEntity.size());	
 
 	}
 }
