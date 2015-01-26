@@ -61,7 +61,13 @@ public class MainTest {
 			Set<String> luoghi = lista.get(0).keySet();    //la lista di luoghi/locations
 			String luogoTop = ner.locationTop(lista, title); //il luogo proposto
 			
+			Set<String> persone = lista.get(1).keySet(); //la lista di persone
+			String personaTop = ner.personTop(lista, title); // la persona proposta
+			
+			
 			System.out.println("IL LUOGO PROPOSTO E': "+ luogoTop);
+			
+			System.out.println("LA PERSONA PROPOSTA E': "+ personaTop);
 			
 			/*BasicDBObject document = new BasicDBObject();
 			document.put("data", data);

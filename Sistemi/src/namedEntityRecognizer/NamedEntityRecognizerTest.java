@@ -259,6 +259,34 @@ public class NamedEntityRecognizerTest {
 		return locMoreOcc;
 		
 	}
+	
+	// Stessa cosa per PERSON
+	public String personTop(ArrayList<HashMap<String,Integer>> lista, String titolo) throws ClassCastException, ClassNotFoundException, IOException {
+		String serializedClassifier = "classifiers/english.all.3class.distsim.crf.ser.gz";
+		AbstractSequenceClassifier<CoreLabel> classifier = CRFClassifier.getClassifier(serializedClassifier);
+		int max = 0;
+		int i;
+		String perMoreOcc = "";
+		HashMap<String,Integer> personsToOcc = lista.get(1); //potevo anche farlo fuori dal metodo...è uguale...in caso si cambia
+		Set<String> persons = personsToOcc.keySet();
+		for (String person: persons) {
+			i = personsToOcc.get(person);
+			for (List<CoreLabel> lcl : classifier.classify(titolo)) {
+				for (CoreLabel cl : lcl) {
+						if (person.equals(cl.originalText())) {
+							i = i +10;
+						}
+				}
+			}
+			if (i>max) {
+				max = i;
+				perMoreOcc = person;
+			}
+		}
+		return perMoreOcc;
+		
+	}
+	
 
 }
 
