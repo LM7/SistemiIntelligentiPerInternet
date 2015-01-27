@@ -46,7 +46,7 @@ public class Boilerpipe {
 
 	public String[] getText(URL url) throws Exception {
 		String[] TitoloTesto = new String[2];
-		HTMLDocument htmlDoc = HTMLFetcher.fetch(new URL("http://www.last.fm/event/3996308+Giraffage+at+Music+Hall+of+Williamsburg+on+31+January+2015"));
+		HTMLDocument htmlDoc = HTMLFetcher.fetch(url);
 	    TextDocument doc = new BoilerpipeSAXInput(htmlDoc.toInputSource()).getTextDocument();
 		TitoloTesto[0] = doc.getTitle();
 		TitoloTesto[1] = hh.process(url, extractor);

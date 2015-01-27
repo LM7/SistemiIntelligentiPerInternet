@@ -204,7 +204,7 @@ public class NamedEntityRecognizerTest {
 			}
 		}
 
-
+/*
 		System.out.println("STAMPO LA MIA MAPPA");
 
 		int cont;
@@ -227,7 +227,7 @@ public class NamedEntityRecognizerTest {
 		}
 
 		System.out.println("Lunghezza della mia lista di mappe: "+ listEntity.size());	
-		
+		*/
 		return listEntity;
 
 	}

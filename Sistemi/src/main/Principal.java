@@ -52,8 +52,9 @@ public class Principal {
 			URL url = null;
 			try {
 				url = new URL(s);
-				String title = b.getText(url)[0];
-				String text = b.getText(url)[1];				
+				String[] site = b.getText(url);
+				String title = site[0];
+				String text = site[1];				
 				
 				//SUTime
 				SUTime suT = new SUTime();
@@ -63,8 +64,6 @@ public class Principal {
 				
 				
 				//NER
-				String[] site = {title, text};
-				
 				//Luogo
 				NamedEntityRecognizerTest ner = new NamedEntityRecognizerTest();
 				ArrayList<HashMap<String,Integer>> lista = ner.createListOfMapEntity(site); //restituisce la lista di mappe
@@ -80,6 +79,7 @@ public class Principal {
 				for (Date d : date.keySet()){
 					dateString.put(d.toString(), date.get(d));
 				}
+				luogo = "Williamsburg";
 				BasicDBObject document = new BasicDBObject();
 				document.put("data", data);
 				document.put("evento_cantante", evento_cantante);
