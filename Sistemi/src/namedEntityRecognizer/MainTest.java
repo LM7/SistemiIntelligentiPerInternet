@@ -68,6 +68,7 @@ public class MainTest {
 			System.out.println("IL LUOGO PROPOSTO E': "+ luogoTop);
 			
 			System.out.println("LA PERSONA PROPOSTA E': "+ personaTop);
+			System.out.println("TITOLO "+title);
 			
 			/*BasicDBObject document = new BasicDBObject();
 			document.put("data", data);
