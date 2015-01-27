@@ -33,7 +33,7 @@ public class NamedEntityRecognizerTest {
 		
 
 		String[] example = {"Good afternoon Rajat Raina, how are you today?",
-		"I go to school at Stanford University, which California is located in California." }; //modifica
+		"I go to school at Stanford University, which California is located in California, New York" }; //modifica
 		
 		String[] example2 = {title, text};
 		
@@ -233,14 +233,14 @@ public class NamedEntityRecognizerTest {
 	}
 	
 	
-	// Data la lista di mappe e la stringa del titolo: resituisce il luogo con occorrenza maggiore, se è presente nel titolo-> occorrenza +10
+	// Data la lista di mappe e la stringa del titolo: resituisce il luogo con occorrenza maggiore, se �� presente nel titolo-> occorrenza +10
 	public String locationTop(ArrayList<HashMap<String,Integer>> lista, String titolo) throws ClassCastException, ClassNotFoundException, IOException {
 		String serializedClassifier = "classifiers/english.all.3class.distsim.crf.ser.gz";
 		AbstractSequenceClassifier<CoreLabel> classifier = CRFClassifier.getClassifier(serializedClassifier);
 		int max = 0;
 		int i;
 		String locMoreOcc = "";
-		HashMap<String,Integer> locationsToOcc = lista.get(0); //potevo anche farlo fuori dal metodo...è uguale...in caso si cambia
+		HashMap<String,Integer> locationsToOcc = lista.get(0); //potevo anche farlo fuori dal metodo...�� uguale...in caso si cambia
 		Set<String> locations = locationsToOcc.keySet();
 		for (String location: locations) {
 			i = locationsToOcc.get(location);
@@ -267,7 +267,7 @@ public class NamedEntityRecognizerTest {
 		int max = 0;
 		int i;
 		String perMoreOcc = "";
-		HashMap<String,Integer> personsToOcc = lista.get(1); //potevo anche farlo fuori dal metodo...è uguale...in caso si cambia
+		HashMap<String,Integer> personsToOcc = lista.get(1); //potevo anche farlo fuori dal metodo...�� uguale...in caso si cambia
 		Set<String> persons = personsToOcc.keySet();
 		for (String person: persons) {
 			i = personsToOcc.get(person);

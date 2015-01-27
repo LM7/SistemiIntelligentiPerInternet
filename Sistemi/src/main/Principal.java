@@ -21,12 +21,33 @@ import boilerpipe.Boilerpipe;
 
 public class Principal {
 	
-	public final static int numero_query = 5;
+	public final static int numero_query = 10;
 
 	public static void main(String[] args) {
-		String data = "31 January 2015";
+		/*String data = "31 January 2015";
 		String evento_cantante = "Giraffage";
+		String luogo = "";*/
+		
+		/*String data = "28 January 2015";
+		String evento_cantante = "Die Antwoord";
+		String luogo = "";*/
+		
+		/*String data = "23 June 2015";
+		String evento_cantante = "Lady Gaga";
+		String luogo = "";*/
+		
+		/*String data = "2 June 2015";
+		String evento_cantante = "Hozier";
+		String luogo = "";*/
+		
+		/*String data = "5 November 2015";
+		String evento_cantante = "Nickelback";
+		String luogo = "";*/
+		
+		String data = "20 March 2015";
+		String evento_cantante = "Francesco De Gregori";
 		String luogo = "";
+		
 
 		//Database
 		MongoClient mongo = null;
@@ -38,8 +59,8 @@ public class Principal {
 		DB db = mongo.getDB("db");
 		DBCollection collection = db.getCollection("collezione");		
 		// svuota database
-		BasicDBObject x = new BasicDBObject();
-		collection.remove(x);
+		/*BasicDBObject x = new BasicDBObject();
+		collection.remove(x);*/
 
 		MsnSearchEngine se = new MsnSearchEngine();
 		String[] urls = se.getUrls(data+" "+evento_cantante+" "+luogo, numero_query);
@@ -76,7 +97,12 @@ public class Principal {
 				for (Date d : date.keySet()){
 					dateString.put(d.toString(), date.get(d));
 				}
-				luogo = "Williamsburg";
+				//luogo = "Williamsburg";
+				//luogo = "Le Zenith, Paris";
+				//luogo = "Radio City Music Hall, New York";
+				//luogo = "Shepherds Bush Empire, London";
+				//luogo = "Razzmatazz, Barcelona";
+				luogo = "Roma, Palalottomatica";
 				BasicDBObject document = new BasicDBObject();
 				document.put("data", data);
 				document.put("evento_cantante", evento_cantante);
