@@ -37,7 +37,7 @@ public class MainTest {
 		/*parte database---> RICORDA SI SCRIVE "DABABASE"*/
 		
 
-		/*MongoClient mongo = null;
+		MongoClient mongo = null;
 		try {
 			mongo = new MongoClient("localhost", 27017);
 		}catch (Exception e) {
@@ -47,7 +47,7 @@ public class MainTest {
 		DBCollection collection = db.getCollection("collezione");		
 		// svuota database
 		BasicDBObject x = new BasicDBObject();
-		collection.remove(x);*/
+		collection.remove(x);
 
 		for(String s: urls) {
 			Boilerpipe b = new Boilerpipe();
@@ -70,14 +70,14 @@ public class MainTest {
 			System.out.println("LA PERSONA PROPOSTA E': "+ personaTop);
 			System.out.println("TITOLO "+title);
 			
-			/*BasicDBObject document = new BasicDBObject();
+			BasicDBObject document = new BasicDBObject();
 			document.put("data", data);
 			document.put("evento_cantante", evento_cantante);
 			document.put("luogo", luogo);
 			document.put("url", url.toString());
 			document.put("luogo proposto", luogoTop );
 			document.put("luoghi", luoghi);
-			collection.insert(document);*/
+			collection.insert(document);
 			
 			
 			

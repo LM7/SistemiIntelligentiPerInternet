@@ -5,8 +5,12 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Set;
+
+import namedEntityRecognizer.NamedEntityRecognizerTest;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -24,7 +28,7 @@ public class Principal {
 
 	public static void main(String[] args) {
 		String data = "31 January 2015";
-		String evento_canatante = "Giraffage";
+		String evento_cantante = "Giraffage";
 		String luogo = "";
 
 		//Database
@@ -41,7 +45,7 @@ public class Principal {
 		collection.remove(x);
 
 		MsnSearchEngine se = new MsnSearchEngine();
-		String[] urls = se.getUrls(data+" "+evento_canatante+" "+luogo, numero_query);
+		String[] urls = se.getUrls(data+" "+evento_cantante+" "+luogo, numero_query);
 		for(String s: urls) {
 			//Boilerpipe
 			Boilerpipe b = new Boilerpipe();
@@ -50,10 +54,27 @@ public class Principal {
 				url = new URL(s);
 				String title = b.getText(url)[0];
 				String text = b.getText(url)[1];				
+				
 				//SUTime
 				SUTime suT = new SUTime();
 				HashMap<Date, Integer> date = suT.getTime(title,text);
 				Date dataProposta = suT.dataEvento(date);
+				
+				
+				
+				//NER
+				String[] site = {title, text};
+				
+				//Luogo
+				NamedEntityRecognizerTest ner = new NamedEntityRecognizerTest();
+				ArrayList<HashMap<String,Integer>> lista = ner.createListOfMapEntity(site); //restituisce la lista di mappe
+				Set<String> luoghi = lista.get(0).keySet();    //la lista di luoghi/locations
+				String luogoTop = ner.locationTop(lista, title); //il luogo proposto
+				
+				//Evento/Persona
+				Set<String> persone = lista.get(1).keySet(); //la lista di persone
+				String personaTop = ner.personTop(lista, title); // la persona proposta
+				
 
 				HashMap<String, Integer> dateString = new HashMap<String, Integer>();	
 				for (Date d : date.keySet()){
@@ -61,12 +82,17 @@ public class Principal {
 				}
 				BasicDBObject document = new BasicDBObject();
 				document.put("data", data);
-				document.put("evento_canatante", evento_canatante);
+				document.put("evento_cantante", evento_cantante);
 				document.put("luogo", luogo);
 				document.put("url", url.toString());
 				document.put("data proposta", dataProposta.toString());
 				document.put("date", dateString);
+				document.put("luogo proposto", luogoTop );
+				document.put("luoghi", luoghi);
+				document.put("persona proposta", personaTop );
+				document.put("persone", persone);
 				collection.insert(document);
+				
 				System.out.println("Documento aggiunto");
 
 			} catch (Exception e) {
