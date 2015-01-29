@@ -28,16 +28,16 @@ public class NamedEntityRecognizerTest {
 		AbstractSequenceClassifier<CoreLabel> classifier = CRFClassifier.getClassifier(serializedClassifier);
 		
 		//Prova con Boilerpipe
-		Boilerpipe b = new Boilerpipe();
+		/*Boilerpipe b = new Boilerpipe();
 		URL url = new URL("http://www.last.fm/event/3917258+Ed+Sheeran+at+Palalottomatica+on+26+January+2015");
 		String title = b.getText(url)[0];
-		String text = b.getText(url)[1];
+		String text = b.getText(url)[1];*/
 		
 
 		String[] example = {"Good afternoon Rajat Raina, how are you today?",
 		"I go to school at Stanford University, which California is located in California, New York" }; //modifica
 		
-		String[] example2 = {title, text};
+		//String[] example2 = {title, text};
 		
 		System.out.println("STAMPATA NUMERO 1"); //frase con parola/categoria
 		
@@ -103,13 +103,34 @@ public class NamedEntityRecognizerTest {
 		
 		System.out.println("STAMPATA NUMERO 8"); // tutte le parole analizzate in maniera approfondita
 		int i=0;
+		String categoria = "";
+		String prev = "";
+		String concat = "";
+		String entityNow = "";
 		for (String str : example) {
 			for (List<CoreLabel> lcl : classifier.classify(str)) {
 				for (CoreLabel cl : lcl) {
 					System.out.print(i++ + ": ");
 					System.out.println(cl.toShorterString());
 					System.out.println(cl.originalText()); //la stringa
-					System.out.println(cl.get(CoreAnnotations.AnswerAnnotation.class)); //la categoria
+					System.out.println(cl.get(CoreAnnotations.AnswerAnnotation.class));//la categoria
+					entityNow = cl.get(CoreAnnotations.AnswerAnnotation.class);
+					// Provo a unire due o più categorie consecutive
+					if (entityNow.equals(categoria) && ( entityNow.equals("LOCATION") || entityNow.equals("PERSON") || entityNow.equals("ORGANIZATION") )  ) {
+						concat = prev + " "+ cl.originalText();
+						cl.setOriginalText(concat);
+						System.out.println(cl.originalText());
+						System.out.println(cl.get(CoreAnnotations.AnswerAnnotation.class));//la categoria
+						/*System.out.println("LA STRINGA PRECEDENTE: "+prev );
+						System.out.println("LA STRINGA CONCATENATA: "+concat);*/
+						prev = concat;
+					}
+					else {
+						prev = cl.originalText();
+						concat = "";
+					}
+					categoria = entityNow;
+					
 					
 				}
 			}
@@ -136,6 +157,13 @@ public class NamedEntityRecognizerTest {
 		listEntity.add(0, str2occLoc);
 		listEntity.add(1, str2occPer);
 		listEntity.add(2, str2occOrg);
+		
+		//Variabili per unire stesse categorie consecutive
+		String categoria = "";
+		String prev = "";
+		String concat = "";
+		String delete = "";
+		boolean del = false;
 
 		
 
@@ -145,10 +173,26 @@ public class NamedEntityRecognizerTest {
 				for (CoreLabel cl : lcl) {
 					String stringa = cl.originalText();
 					String entity = cl.get(CoreAnnotations.AnswerAnnotation.class);
+					
 
-					if (entity.equals("LOCATION") || entity.equals("PERSON") || entity.equals("ORGANIZATION") ) { 
+					if (entity.equals("LOCATION") || entity.equals("PERSON") || entity.equals("ORGANIZATION") ) {
+						
+						if (entity.equals(categoria) && ( entity.equals("LOCATION") || entity.equals("PERSON") )  ) {
+							concat = prev + " "+ cl.originalText();
+							stringa = concat;
+							delete = prev;
+							del = true;
+							prev = concat;
+						}
+						else {
+							prev = cl.originalText();
+							concat = "";
+						}
 
 						if (entity.equals("LOCATION")) {
+							if (del) {
+								str2occLoc.remove(delete);
+							}
 							boolean trovato = false;
 							for (String key: str2occLoc.keySet() ) { 
 								if (key.equals(stringa)) {
@@ -157,11 +201,14 @@ public class NamedEntityRecognizerTest {
 								}
 							}
 							if (!trovato) {
-								str2occLoc.put(stringa, 1); 
+								str2occLoc.put(stringa, 1);
 							}
 
 						}
 						if (entity.equals("PERSON")) {
+							if (del) {
+								str2occPer.remove(delete);
+							}
 							boolean trovato = false;
 							for (String key: str2occPer.keySet() ) { 
 								if (key.equals(stringa)) {
@@ -174,6 +221,9 @@ public class NamedEntityRecognizerTest {
 							}
 						}
 						if (entity.equals("ORGANIZATION")) {
+							if (del) {
+								str2occOrg.remove(delete);
+							}
 							boolean trovato = false;
 							for (String key: str2occOrg.keySet() ) { 
 								if (key.equals(stringa)) {
@@ -187,6 +237,11 @@ public class NamedEntityRecognizerTest {
 						}
 
 					}
+					
+					/*else {
+						prev = cl.originalText();
+						concat = "";
+					}*/
 
 					if (entity.equals("LOCATION")) {
 						listEntity.remove(0);
@@ -200,14 +255,17 @@ public class NamedEntityRecognizerTest {
 						listEntity.remove(2);
 						listEntity.add(2, str2occOrg);
 					}
-
+					
+					categoria = entity;
+					del = false;
+					
 
 				}
 			}
 		}
 
 
-		/*System.out.println("STAMPO LA MIA MAPPA");
+		System.out.println("STAMPO LA MIA MAPPA");
 
 		int cont;
 		HashMap<String,Integer> mapHelp = new HashMap<String,Integer>(); //mappa d'appoggio per stampare
@@ -226,7 +284,7 @@ public class NamedEntityRecognizerTest {
 			for (String key: mapHelp.keySet() ) {
 				System.out.println("Key : " + key.toString() + " Value : "+ mapHelp.get(key));
 			}
-		}*/
+		}
 
 		System.out.println("Lunghezza della mia lista di mappe: "+ listEntity.size());	
 		
@@ -234,7 +292,7 @@ public class NamedEntityRecognizerTest {
 
 	}
 	
-	//Unico metodo per restituire il luogo o la persona con l'occorrenza maggiore
+	
 	
 	public String entityTop(HashMap<String,Integer> mappa, String titolo) throws ClassCastException, ClassNotFoundException, IOException {
 		String serializedClassifier = "classifiers/english.all.3class.distsim.crf.ser.gz";
@@ -243,14 +301,38 @@ public class NamedEntityRecognizerTest {
 		int i;
 		String entityMoreOcc = "";
 		Set<String> entities = mappa.keySet();
+		String categoriaPrev = "";
+		String stringaPrev = "";
+		String categoriaNow = "";
+		String concat = "";
 		for (String entity: entities) {
 			i = mappa.get(entity);
 			for (List<CoreLabel> lcl : classifier.classify(titolo)) {
 				for (CoreLabel cl : lcl) {
+					categoriaNow = cl.get(CoreAnnotations.AnswerAnnotation.class);
+					System.out.println("categoriaNow: "+categoriaNow);
+					System.out.println("entity: "+entity);
+					System.out.println("corelabel: "+cl.originalText());
+					if ( (categoriaPrev.equals(categoriaNow)) && (categoriaNow.equals("LOCATION") || categoriaNow.equals("PERSON")) ) {
+						System.out.println("nella mia mappa: "+entity);
+						concat = stringaPrev + " " + cl.originalText();
+						stringaPrev = concat;
+						System.out.println("il mio concat: "+concat);
+						if (entity.equals(concat)) {
+							mappa.put(entity, mappa.get(entity) + IMPORTANZA_TITOLO);
+							i = mappa.get(entity);
+						}
+					}
+					else {
 						if (entity.equals(cl.originalText())) {
 							mappa.put(entity, mappa.get(entity) + IMPORTANZA_TITOLO);
 							i = mappa.get(entity);
 						}
+						stringaPrev = cl.originalText();
+						concat = "";
+					}
+					categoriaPrev = cl.get(CoreAnnotations.AnswerAnnotation.class);
+					System.out.println("categoriaPrev: "+categoriaPrev);
 				}
 			}
 			if (i>max) {
@@ -259,16 +341,16 @@ public class NamedEntityRecognizerTest {
 			}
 			
 		}
-		
-		/*System.out.println("STAMPO LA MIA MAPPA DI LOCATION or PERSON");
+
+		System.out.println("STAMPO LA MIA MAPPA DI LOCATION or PERSON");
 		HashMap<String,Integer> mapHelp = new HashMap<String,Integer>(); //mappa d'appoggio per stampare
 		mapHelp = mappa;
 		System.out.println("LOCATION or PERSON");
 		for (String key: mapHelp.keySet() ) {
 			System.out.println("Key : " + key.toString() + " Value : "+ mapHelp.get(key));
-		}*/
-		
-		
+		}
+
+
 		return entityMoreOcc;
 	}
 	
