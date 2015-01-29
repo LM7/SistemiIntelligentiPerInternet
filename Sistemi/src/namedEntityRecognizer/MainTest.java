@@ -15,7 +15,7 @@ import events.MsnSearchEngine;
 import boilerpipe.Boilerpipe;
 
 public class MainTest {
-	public final static int numero_query = 2;
+	public final static int numero_query = 3;
 
 	public static void main(String[] args) throws Exception {
 		String data = "31 January 2015";
@@ -37,7 +37,7 @@ public class MainTest {
 		/*parte database---> RICORDA SI SCRIVE "DABABASE"*/
 		
 
-		MongoClient mongo = null;
+		/*MongoClient mongo = null;
 		try {
 			mongo = new MongoClient("localhost", 27017);
 		}catch (Exception e) {
@@ -47,7 +47,7 @@ public class MainTest {
 		DBCollection collection = db.getCollection("collezione");		
 		// svuota database
 		BasicDBObject x = new BasicDBObject();
-		collection.remove(x);
+		collection.remove(x);*/
 
 		for(String s: urls) {
 			Boilerpipe b = new Boilerpipe();
@@ -58,11 +58,17 @@ public class MainTest {
 			
 			String[] site = {title, text};
 			ArrayList<HashMap<String,Integer>> lista = ner.createListOfMapEntity(site); //restituisce la lista di mappe
-			Set<String> luoghi = lista.get(0).keySet();    //la lista di luoghi/locations
-			String luogoTop = ner.locationTop(lista, title); //il luogo proposto
+			HashMap<String,Integer> locations = lista.get(0); // la mappa dei luoghi
+			HashMap<String,Integer> people = lista.get(1); // la mappa delle persone-eventi
 			
-			Set<String> persone = lista.get(1).keySet(); //la lista di persone
-			String personaTop = ner.personTop(lista, title); // la persona proposta
+			String luogoTop = ner.entityTop(locations, title);
+			String personaTop = ner.entityTop(people, title);
+			
+			//Set<String> luoghi = locations.keySet();    //la lista di luoghi/locations
+			//String luogoTop = ner.locationTop(lista, title); //il luogo proposto
+			
+			//Set<String> persone = people.keySet(); //la lista di persone
+			//String personaTop = ner.personTop(lista, title); // la persona proposta
 			
 			
 			System.out.println("IL LUOGO PROPOSTO E': "+ luogoTop);
@@ -70,14 +76,14 @@ public class MainTest {
 			System.out.println("LA PERSONA PROPOSTA E': "+ personaTop);
 			System.out.println("TITOLO "+title);
 			
-			BasicDBObject document = new BasicDBObject();
+			/*BasicDBObject document = new BasicDBObject();
 			document.put("data", data);
 			document.put("evento_cantante", evento_cantante);
 			document.put("luogo", luogo);
 			document.put("url", url.toString());
 			document.put("luogo proposto", luogoTop );
 			document.put("luoghi", luoghi);
-			collection.insert(document);
+			collection.insert(document);*/
 			
 			
 			

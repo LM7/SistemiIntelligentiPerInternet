@@ -24,9 +24,9 @@ public class Principal {
 	public final static int numero_query = 10;
 
 	public static void main(String[] args) {
-		/*String data = "31 January 2015";
+		String data = "31 January 2015";
 		String evento_cantante = "Giraffage";
-		String luogo = "";*/
+		String luogo = "";
 		
 		/*String data = "28 January 2015";
 		String evento_cantante = "Die Antwoord";
@@ -44,9 +44,9 @@ public class Principal {
 		String evento_cantante = "Nickelback";
 		String luogo = "";*/
 		
-		String data = "20 March 2015";
+		/*String data = "20 March 2015";
 		String evento_cantante = "Francesco De Gregori";
-		String luogo = "";
+		String luogo = "";*/
 		
 
 		//Database
@@ -59,8 +59,8 @@ public class Principal {
 		DB db = mongo.getDB("db");
 		DBCollection collection = db.getCollection("collezione");		
 		// svuota database
-		/*BasicDBObject x = new BasicDBObject();
-		collection.remove(x);*/
+		BasicDBObject x = new BasicDBObject();
+		collection.remove(x);
 
 		MsnSearchEngine se = new MsnSearchEngine();
 		String[] urls = se.getUrls(data+" "+evento_cantante+" "+luogo, numero_query);
@@ -85,24 +85,23 @@ public class Principal {
 				//Luogo
 				NamedEntityRecognizerTest ner = new NamedEntityRecognizerTest();
 				ArrayList<HashMap<String,Integer>> lista = ner.createListOfMapEntity(site); //restituisce la lista di mappe
-				Set<String> luoghi = lista.get(0).keySet();    //la lista di luoghi/locations
-				String luogoTop = ner.locationTop(lista, title); //il luogo proposto
+				HashMap<String,Integer> locations = lista.get(0); // la mappa dei luoghi
+				HashMap<String,Integer> people = lista.get(1); // la mappa delle persone-eventi
 				
-				//Evento/Persona
-				Set<String> persone = lista.get(1).keySet(); //la lista di persone
-				String personaTop = ner.personTop(lista, title); // la persona proposta
+				String luogoTop = ner.entityTop(locations, title);
+				String personaTop = ner.entityTop(people, title);
 				
 
 				HashMap<String, Integer> dateString = new HashMap<String, Integer>();	
 				for (Date d : date.keySet()){
 					dateString.put(d.toString(), date.get(d));
 				}
-				//luogo = "Williamsburg";
+				luogo = "Williamsburg";
 				//luogo = "Le Zenith, Paris";
 				//luogo = "Radio City Music Hall, New York";
 				//luogo = "Shepherds Bush Empire, London";
 				//luogo = "Razzmatazz, Barcelona";
-				luogo = "Roma, Palalottomatica";
+				//luogo = "Roma, Palalottomatica";
 				BasicDBObject document = new BasicDBObject();
 				document.put("data", data);
 				document.put("evento_cantante", evento_cantante);
@@ -111,9 +110,9 @@ public class Principal {
 				document.put("data proposta", dataProposta.toString());
 				document.put("date", dateString);
 				document.put("luogo proposto", luogoTop );
-				document.put("luoghi", luoghi);
+				document.put("luoghi", locations);
 				document.put("persona proposta", personaTop );
-				document.put("persone", persone);
+				document.put("persone", people);
 				collection.insert(document);
 				
 				System.out.println("Documento aggiunto");

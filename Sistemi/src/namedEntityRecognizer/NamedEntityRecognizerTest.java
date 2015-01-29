@@ -15,6 +15,8 @@ import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.util.Triple;
 
 public class NamedEntityRecognizerTest {
+	
+	public static final int IMPORTANZA_TITOLO = 10;
 
 	public static void main(String[] args) throws Exception {
 
@@ -204,8 +206,8 @@ public class NamedEntityRecognizerTest {
 			}
 		}
 
-/*
-		System.out.println("STAMPO LA MIA MAPPA");
+
+		/*System.out.println("STAMPO LA MIA MAPPA");
 
 		int cont;
 		HashMap<String,Integer> mapHelp = new HashMap<String,Integer>(); //mappa d'appoggio per stampare
@@ -224,67 +226,50 @@ public class NamedEntityRecognizerTest {
 			for (String key: mapHelp.keySet() ) {
 				System.out.println("Key : " + key.toString() + " Value : "+ mapHelp.get(key));
 			}
-		}
+		}*/
 
 		System.out.println("Lunghezza della mia lista di mappe: "+ listEntity.size());	
-		*/
+		
 		return listEntity;
 
 	}
 	
+	//Unico metodo per restituire il luogo o la persona con l'occorrenza maggiore
 	
-	// Data la lista di mappe e la stringa del titolo: resituisce il luogo con occorrenza maggiore, se �� presente nel titolo-> occorrenza +10
-	public String locationTop(ArrayList<HashMap<String,Integer>> lista, String titolo) throws ClassCastException, ClassNotFoundException, IOException {
+	public String entityTop(HashMap<String,Integer> mappa, String titolo) throws ClassCastException, ClassNotFoundException, IOException {
 		String serializedClassifier = "classifiers/english.all.3class.distsim.crf.ser.gz";
 		AbstractSequenceClassifier<CoreLabel> classifier = CRFClassifier.getClassifier(serializedClassifier);
 		int max = 0;
 		int i;
-		String locMoreOcc = "";
-		HashMap<String,Integer> locationsToOcc = lista.get(0); //potevo anche farlo fuori dal metodo...�� uguale...in caso si cambia
-		Set<String> locations = locationsToOcc.keySet();
-		for (String location: locations) {
-			i = locationsToOcc.get(location);
+		String entityMoreOcc = "";
+		Set<String> entities = mappa.keySet();
+		for (String entity: entities) {
+			i = mappa.get(entity);
 			for (List<CoreLabel> lcl : classifier.classify(titolo)) {
 				for (CoreLabel cl : lcl) {
-						if (location.equals(cl.originalText())) {
-							i = i +10;
+						if (entity.equals(cl.originalText())) {
+							mappa.put(entity, mappa.get(entity) + IMPORTANZA_TITOLO);
+							i = mappa.get(entity);
 						}
 				}
 			}
 			if (i>max) {
 				max = i;
-				locMoreOcc = location;
+				entityMoreOcc = entity;
 			}
+			
 		}
-		return locMoreOcc;
 		
-	}
-	
-	// Stessa cosa per PERSON
-	public String personTop(ArrayList<HashMap<String,Integer>> lista, String titolo) throws ClassCastException, ClassNotFoundException, IOException {
-		String serializedClassifier = "classifiers/english.all.3class.distsim.crf.ser.gz";
-		AbstractSequenceClassifier<CoreLabel> classifier = CRFClassifier.getClassifier(serializedClassifier);
-		int max = 0;
-		int i;
-		String perMoreOcc = "";
-		HashMap<String,Integer> personsToOcc = lista.get(1); //potevo anche farlo fuori dal metodo...�� uguale...in caso si cambia
-		Set<String> persons = personsToOcc.keySet();
-		for (String person: persons) {
-			i = personsToOcc.get(person);
-			for (List<CoreLabel> lcl : classifier.classify(titolo)) {
-				for (CoreLabel cl : lcl) {
-						if (person.equals(cl.originalText())) {
-							i = i +10;
-						}
-				}
-			}
-			if (i>max) {
-				max = i;
-				perMoreOcc = person;
-			}
-		}
-		return perMoreOcc;
+		/*System.out.println("STAMPO LA MIA MAPPA DI LOCATION or PERSON");
+		HashMap<String,Integer> mapHelp = new HashMap<String,Integer>(); //mappa d'appoggio per stampare
+		mapHelp = mappa;
+		System.out.println("LOCATION or PERSON");
+		for (String key: mapHelp.keySet() ) {
+			System.out.println("Key : " + key.toString() + " Value : "+ mapHelp.get(key));
+		}*/
 		
+		
+		return entityMoreOcc;
 	}
 	
 
