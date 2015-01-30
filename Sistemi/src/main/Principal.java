@@ -48,6 +48,22 @@ public class Principal {
 		String evento_cantante = "Francesco De Gregori";
 		String luogo = "";*/
 		
+		/*String data = "10 April 2015";
+		 String evento_cantante = "The Prodigy";
+		 String luogo = ""; Heineken Music Hall, Amsterdam
+		 */
+		
+		/*String data = "4 April 2015";
+		 String evento_cantante = "A Day to Remember / The Offspring";
+		 String luogo = ""; Tempe Beach Park, United States
+		 */
+		
+		/*String data = "27 April 2015";
+		 String evento_cantante = "One Republic at MTS Centre";
+		 String luogo = ""; MTS Centre, Canada
+		 */
+		
+		
 
 		//Database
 		MongoClient mongo = null;
