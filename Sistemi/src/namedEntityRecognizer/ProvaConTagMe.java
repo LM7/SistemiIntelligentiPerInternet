@@ -21,7 +21,7 @@ public class ProvaConTagMe {
 		//con.setRequestProperty("User-Agent", USER_AGENT);
 		con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
 
-		String text = "Die Antwoord at Le Zenith  (Paris) on 28 Jan 2015";
+		String text = "One Republic at MTS Centre  (Winnipeg) on 27 Apr 2015";
 		String urlParameters = "key=41480047b3428dcfe6a5c1bba1f0a93e&text="+text+"&include_categories=true";
 
 		// Send post request

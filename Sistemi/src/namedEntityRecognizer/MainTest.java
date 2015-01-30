@@ -18,8 +18,8 @@ public class MainTest {
 	public final static int numero_query = 1;
 
 	public static void main(String[] args) throws Exception {
-		String data = "28 January 2015";
-		String evento_cantante = "Die Antwoord";
+		String data = "27 April 2015";
+		String evento_cantante = "One Republic at MTS Centre";
 		String luogo = "";
 		
 		NamedEntityRecognizerTest ner = new NamedEntityRecognizerTest();
