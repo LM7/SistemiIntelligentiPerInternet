@@ -313,7 +313,7 @@ public class NamedEntityRecognizerTest {
 					System.out.println("categoriaNow: "+categoriaNow);
 					System.out.println("entity: "+entity);
 					System.out.println("corelabel: "+cl.originalText());
-					if ( (categoriaPrev.equals(categoriaNow)) && (categoriaNow.equals("LOCATION") || categoriaNow.equals("PERSON")) ) {
+					if ( (categoriaPrev.equals(categoriaNow)) && (categoriaNow.equals("LOCATION") || categoriaNow.equals("PERSON") || categoriaNow.equals("ORGANIZATION") ) ) {
 						System.out.println("nella mia mappa: "+entity);
 						concat = stringaPrev + " " + cl.originalText();
 						stringaPrev = concat;

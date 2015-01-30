@@ -15,11 +15,11 @@ import events.MsnSearchEngine;
 import boilerpipe.Boilerpipe;
 
 public class MainTest {
-	public final static int numero_query = 3;
+	public final static int numero_query = 1;
 
 	public static void main(String[] args) throws Exception {
-		String data = "31 January 2015";
-		String evento_cantante = "Giraffage";
+		String data = "28 January 2015";
+		String evento_cantante = "Die Antwoord";
 		String luogo = "";
 		
 		NamedEntityRecognizerTest ner = new NamedEntityRecognizerTest();
