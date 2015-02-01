@@ -6,11 +6,64 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
+
+import edu.stanford.nlp.ling.CoreAnnotations;
+import edu.stanford.nlp.pipeline.Annotation;
+import edu.stanford.nlp.pipeline.AnnotationPipeline;
+import edu.stanford.nlp.pipeline.POSTaggerAnnotator;
+import edu.stanford.nlp.pipeline.TokenizerAnnotator;
+import edu.stanford.nlp.pipeline.WordsToSentencesAnnotator;
+import edu.stanford.nlp.time.TimeAnnotations;
+import edu.stanford.nlp.time.TimeAnnotator;
+import edu.stanford.nlp.util.CoreMap;
 
 public class startTagging {
-	
-	public static void main(String[] args) throws IOException {
 
+	public static void main(String[] args) throws IOException {
+		
+		/*Elaborazione del testo da taggare*/
+		String text;
+		text ="Die Antwoord at Le Zenith  (Paris) on 28 Jan 2015";
+		//text = "Giraffage ?  Tickets ? Music Hall of Williamsburg ? Brooklyn, NY ? January 31st, 2015";
+		//text = "Lady Gaga at Radio City Music Hall  (New York) on 23 Jun 2015";
+		//text = "Hozier tour (Concert) 31st January 2015-2nd June 2015";		
+		//text = "Nickelback at Razzmatazz  (Barcelona) on 5 Nov 2015";
+		//text = "Francesco De Gregori Rome Tickets - Francesco De Gregori on Friday, March 20, 2015 at Palalottomatica | TicketNetwork";
+		//text = "The Prodigy at Heineken Music Hall  (Amsterdam) on 10 Apr 2015";
+		//text = "A Day to Remember / The Offspring at Tempe Beach Park  (Tempe) on 4 Apr 2015";
+		//text = "One Republic at MTS Centre  (Winnipeg) on 27 Apr 2015";
+
+		/*Rimozione delle espressioni temporali
+		 * la presenza delle espressioni temporali condiziona consistentemente il tagging effettuato da TagMe
+		 */
+		Properties props = new Properties();
+		AnnotationPipeline pipeline = new AnnotationPipeline();
+		pipeline.addAnnotator(new TokenizerAnnotator(false));
+		pipeline.addAnnotator(new WordsToSentencesAnnotator(false));
+		pipeline.addAnnotator(new POSTaggerAnnotator(false));
+		pipeline.addAnnotator(new TimeAnnotator("sutime", props));
+
+		Annotation annotation = new Annotation(text);
+		annotation.set(CoreAnnotations.DocDateAnnotation.class, "2015-01-31");
+		pipeline.annotate(annotation);
+		System.out.println(annotation.get(CoreAnnotations.TextAnnotation.class));
+		System.out.println("--");
+		List<CoreMap> timexAnnsAll = annotation.get(TimeAnnotations.TimexAnnotations.class);
+		for (CoreMap cm : timexAnnsAll) {
+			//System.out.println("Espressione temporale: "+cm);
+			String temporalExpression = cm.toString();
+			//System.out.println("Espressione temporale.toString: "+temporalExpression);
+			text= text.replace(temporalExpression, "");  
+			//System.out.println("Testo pulito: "+text);
+		}
+
+		
+		/*Richiesta verso TagMe*/
 		URL url= new URL("http://tagme.di.unipi.it/tag");
 		HttpURLConnection con=(HttpURLConnection) url.openConnection(); 
 
@@ -19,10 +72,9 @@ public class startTagging {
 		//con.setRequestProperty("User-Agent", USER_AGENT);
 		con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
 
-		String text = "Grammy nominated singer and songwriter Ed Sheeran will be performing at The O2 on 12, 13, 14 and 15 October 2014. The 22-year olds debut + entered the UK Albums Chart at number one with the highest opening week figures for a debut male solo artist, and has now gone six times platinum. Ed Sheeran is also a two-time BRIT Award winner (Best Male Artist and Best Breakthrough Artist) and recipient of an Ivor Novello, helping him become a genuine global phenomenon. Sheeran said:  \"I can't wait to tour this new record, it's been a long time coming. I am looking forward to touring the UK once again.";
 		String urlParameters = "key=41480047b3428dcfe6a5c1bba1f0a93e&text="+text+"&include_categories=true";
 
-		// Send post request
+		//send post request
 		con.setDoOutput(true);
 		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
 		wr.writeBytes(urlParameters);
@@ -48,11 +100,65 @@ public class startTagging {
 		//print result
 		System.out.println(response.toString());
 		System.out.println("--------------------------------------------------------");
-		
-		// PARSING
+
+		/* Elaborazione dei risultati*/
 		Parser p = new Parser(response.toString());
-		p.processingReply();
+		HashMap<String, List<String>> tagMeResult = p.processingReply();
 
+		List<String> topWordPlaceCityList = new ArrayList<String>(); 
+		topWordPlaceCityList.add("cities");
+		topWordPlaceCityList.add("capitals");
+		topWordPlaceCityList.add("city");
+		topWordPlaceCityList.add("capital");
+		topWordPlaceCityList.add("states");
+		topWordPlaceCityList.add("populated place");
+		
+		List<String> topWordPlaceVenueList = new ArrayList<String>(); 
+		topWordPlaceVenueList.add("venues");
+		topWordPlaceVenueList.add("arenas");
+		topWordPlaceVenueList.add("buildings and structures");
+		topWordPlaceVenueList.add("hall");
+		topWordPlaceVenueList.add("theatres");
+		topWordPlaceVenueList.add("populated place");
+		
+		List<String> topWordPersonList = new ArrayList<String>(); 
+		topWordPersonList.add("singer-songwriters");
+		topWordPersonList.add("singer");
+		topWordPersonList.add("musical groups established in");
+		topWordPersonList.add("births");
 
+		HashMap<String,Integer> wordTaggedPlaceCity = p.filterCategories(tagMeResult, topWordPlaceCityList);
+		System.out.println("\n(LUOGHI: Citta' dell'evento) - Parole Taggate Rilevanti");
+		printMap(wordTaggedPlaceCity);
+		
+		HashMap<String,Integer> wordTaggedPlaceVenue = p.filterCategories(tagMeResult, topWordPlaceVenueList);
+		System.out.println("\n(LUOGHI: Sede dell'evento) - Parole Taggate Rilevanti");
+		printMap(wordTaggedPlaceVenue);
+
+		HashMap<String,Integer> wordTaggedPerson = p.filterCategories(tagMeResult, topWordPersonList);
+		System.out.println("\n(PERSONE) - Parole Taggate Rilevanti");
+		printMap(wordTaggedPerson);
+		
+		System.out.println();
+		
+		String[] selections = p.choiceDataProposals(wordTaggedPlaceCity,wordTaggedPlaceVenue,wordTaggedPerson);
+		String[] resultChoice = new String[2];
+		resultChoice[1] = selections[1]+", "+selections[2];
+		resultChoice[0] = selections[0];
+		
+		System.out.println("\n=== Dati proposti ===");
+		System.out.println("LUOGO: "+resultChoice[1]);
+		System.out.println("PERSONA: "+resultChoice[0]);
 	}
+
+	@SuppressWarnings("rawtypes")
+	public static void printMap(HashMap<String, Integer> wordTaggedPlace) {
+		Iterator iterator = wordTaggedPlace.keySet().iterator();	  
+		while (iterator.hasNext()) {
+			String key = iterator.next().toString();
+			String value = wordTaggedPlace.get(key).toString();	  
+			System.out.println("La Parola \""+key+"\" contiene "+value+" categorie dal contenuto Top");
+		}
+	}
+
 }
