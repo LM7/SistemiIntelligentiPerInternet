@@ -15,15 +15,37 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 
+import edu.stanford.nlp.wordseg.affDict;
 import events.MsnSearchEngine;
 import suTime.SUTime;
 import boilerpipe.Boilerpipe;
+import lastFM.*;
 
 public class Principal {
-	
+		
 	public final static int numero_query = 10;
 
 	public static void main(String[] args) {
+		
+		// 'totale' è una lista di eventi [artista, luogo, data]
+		ArrayList<String[]> totale = new ArrayList<String[]>();
+
+		totale = geoMethods.eventsPusher(totale,"Roma");
+		totale = geoMethods.eventsPusher(totale,"Berlino");
+
+		/*
+		// SCOMMENTARE PER VEDERE LE INFO RACCOLTE
+		// Visualizzazione di 'totale'
+		for (String[] a : totale){
+			System.out.println("Artista: "+a[0]);
+			System.out.println("Luogo: "+a[1]);
+			System.out.println("Data: "+a[2]);
+			System.out.println();
+		}
+		*/
+
+		
+		
 		String data = "31 January 2015";
 		String evento_cantante = "Giraffage";
 		String luogo = "";
