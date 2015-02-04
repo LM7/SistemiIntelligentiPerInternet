@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -20,15 +22,14 @@ import edu.stanford.nlp.pipeline.TokenizerAnnotator;
 import edu.stanford.nlp.pipeline.WordsToSentencesAnnotator;
 import edu.stanford.nlp.time.TimeAnnotations;
 import edu.stanford.nlp.time.TimeAnnotator;
+import edu.stanford.nlp.time.TimeExpression;
 import edu.stanford.nlp.util.CoreMap;
 
-public class startTagging {
+public class tagMe {
 
-	public static void main(String[] args) throws IOException {
-		
+	public String[] getTagMeProposedData(String text) throws IOException {
 		/*Elaborazione del testo da taggare*/
-		String text;
-		text ="Die Antwoord at Le Zenith  (Paris) on 28 Jan 2015";
+		//text ="Die Antwoord at Le Zenith  (Paris) on 28 Jan 2015";
 		//text = "Giraffage ?  Tickets ? Music Hall of Williamsburg ? Brooklyn, NY ? January 31st, 2015";
 		//text = "Lady Gaga at Radio City Music Hall  (New York) on 23 Jun 2015";
 		//text = "Hozier tour (Concert) 31st January 2015-2nd June 2015";		
@@ -49,20 +50,30 @@ public class startTagging {
 		pipeline.addAnnotator(new TimeAnnotator("sutime", props));
 
 		Annotation annotation = new Annotation(text);
-		annotation.set(CoreAnnotations.DocDateAnnotation.class, "2015-01-31");
+		annotation.set(CoreAnnotations.DocDateAnnotation.class, "2015-02-04");
 		pipeline.annotate(annotation);
 		System.out.println(annotation.get(CoreAnnotations.TextAnnotation.class));
-		System.out.println("--");
 		List<CoreMap> timexAnnsAll = annotation.get(TimeAnnotations.TimexAnnotations.class);
+
 		for (CoreMap cm : timexAnnsAll) {
-			//System.out.println("Espressione temporale: "+cm);
-			String temporalExpression = cm.toString();
-			//System.out.println("Espressione temporale.toString: "+temporalExpression);
-			text= text.replace(temporalExpression, "");  
-			//System.out.println("Testo pulito: "+text);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String miaData = cm.get(TimeExpression.Annotation.class).getTemporal().getTimexValue();
+			GregorianCalendar c = new GregorianCalendar();
+			/*
+			try {
+				c.setTime(sdf.parse(miaData));
+				//se la parsa la deve toglie
+				String temporalExpression = cm.toString();
+				//System.out.println("Espressione temporale.toString: "+temporalExpression);
+				text= text.replace(temporalExpression, "");
+				System.out.println("Testo pulito: "+text);
+			} catch (ParseException e) {
+				//nulla
+				e.printStackTrace();
+			}
+			*/
 		}
 
-		
 		/*Richiesta verso TagMe*/
 		URL url= new URL("http://tagme.di.unipi.it/tag");
 		HttpURLConnection con=(HttpURLConnection) url.openConnection(); 
@@ -77,7 +88,7 @@ public class startTagging {
 		//send post request
 		con.setDoOutput(true);
 		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-		wr.writeBytes(urlParameters);
+		wr.write(urlParameters.getBytes("UTF-8"));
 		wr.flush();
 		wr.close();
 
@@ -112,7 +123,8 @@ public class startTagging {
 		topWordPlaceCityList.add("capital");
 		topWordPlaceCityList.add("states");
 		topWordPlaceCityList.add("populated place");
-		
+		topWordPlaceCityList.add("boroughs");
+
 		List<String> topWordPlaceVenueList = new ArrayList<String>(); 
 		topWordPlaceVenueList.add("venues");
 		topWordPlaceVenueList.add("arenas");
@@ -120,35 +132,32 @@ public class startTagging {
 		topWordPlaceVenueList.add("hall");
 		topWordPlaceVenueList.add("theatres");
 		topWordPlaceVenueList.add("populated place");
-		
+
 		List<String> topWordPersonList = new ArrayList<String>(); 
 		topWordPersonList.add("singer-songwriters");
 		topWordPersonList.add("singer");
 		topWordPersonList.add("musical groups established in");
-		topWordPersonList.add("births");
 
 		HashMap<String,Integer> wordTaggedPlaceCity = p.filterCategories(tagMeResult, topWordPlaceCityList);
 		System.out.println("\n(LUOGHI: Citta' dell'evento) - Parole Taggate Rilevanti");
-		printMap(wordTaggedPlaceCity);
-		
+		//printMap(wordTaggedPlaceCity);
+
 		HashMap<String,Integer> wordTaggedPlaceVenue = p.filterCategories(tagMeResult, topWordPlaceVenueList);
 		System.out.println("\n(LUOGHI: Sede dell'evento) - Parole Taggate Rilevanti");
-		printMap(wordTaggedPlaceVenue);
+		//printMap(wordTaggedPlaceVenue);
 
 		HashMap<String,Integer> wordTaggedPerson = p.filterCategories(tagMeResult, topWordPersonList);
 		System.out.println("\n(PERSONE) - Parole Taggate Rilevanti");
-		printMap(wordTaggedPerson);
-		
+		//printMap(wordTaggedPerson);
+
 		System.out.println();
-		
+
 		String[] selections = p.choiceDataProposals(wordTaggedPlaceCity,wordTaggedPlaceVenue,wordTaggedPerson);
 		String[] resultChoice = new String[2];
 		resultChoice[1] = selections[1]+", "+selections[2];
 		resultChoice[0] = selections[0];
 		
-		System.out.println("\n=== Dati proposti ===");
-		System.out.println("LUOGO: "+resultChoice[1]);
-		System.out.println("PERSONA: "+resultChoice[0]);
+		return resultChoice;
 	}
 
 	@SuppressWarnings("rawtypes")
