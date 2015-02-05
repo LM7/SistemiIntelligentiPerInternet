@@ -25,11 +25,16 @@ import edu.stanford.nlp.time.TimeAnnotator;
 import edu.stanford.nlp.time.TimeExpression;
 import edu.stanford.nlp.util.CoreMap;
 
-public class tagMe {
+public class Tagger {
+	
+	/* 
+	 * Restituisce i valori parziali proposti (titolo e testo) 
+	 */
+	public List<HashMap<String,Integer>> getTagMePartialProposedData(String text) throws IOException {
 
-	public HashMap<String,Integer> getTagMeProposedData(String text) throws IOException {
+		List<HashMap<String,Integer>> result = new ArrayList<HashMap<String,Integer>>();
 		/*Elaborazione del testo da taggare*/
-		//text ="Die Antwoord at Le Zenith  (Paris) on 28 Jan 2015";
+		//text = "Die Antwoord at Le Zenith  (Paris) on 28 Jan 2015";
 		//text = "Giraffage ?  Tickets ? Music Hall of Williamsburg ? Brooklyn, NY ? January 31st, 2015";
 		//text = "Lady Gaga at Radio City Music Hall  (New York) on 23 Jun 2015";
 		//text = "Hozier tour (Concert) 31st January 2015-2nd June 2015";		
@@ -71,7 +76,7 @@ public class tagMe {
 				//nulla
 				e.printStackTrace();
 			}
-			*/
+			 */
 		}
 
 		/*Richiesta verso TagMe*/
@@ -150,13 +155,80 @@ public class tagMe {
 		//System.out.println("\n(PERSONE) - Parole Taggate Rilevanti");
 		//printMap(wordTaggedPerson);
 
-		System.out.println();
+		result.add(wordTaggedPerson);
+		result.add(wordTaggedPlaceCity);
+		result.add(wordTaggedPlaceVenue);
 
-		HashMap<String,Integer> selections = p.choiceDataProposals(wordTaggedPlaceCity,wordTaggedPlaceVenue,wordTaggedPerson);
-		
-		return selections;
+		return result;
 	}
 
+
+	/* 
+	 * Restituisce i valori finali proposti dall'unione delle proposte del titolo e proposte del testo
+	 */
+	public String[] getTagMeFinalProposedData(String[] datiPropostiTitle,String[] datiPropostiText, HashMap<String, Integer> mapPTitle, HashMap<String, Integer> mapCTitle, HashMap<String, Integer> mapVTitle, HashMap<String, Integer> mapPText, HashMap<String, Integer> mapCText, HashMap<String, Integer> mapVText) {
+		String[] datiPropostiFinali = new String[3];
+
+		if(datiPropostiTitle[0].equals("")) {
+			datiPropostiFinali[0]=datiPropostiText[0];
+		}
+		else if(datiPropostiText[0].equals("")) {
+			datiPropostiFinali[0]=datiPropostiTitle[0];
+		}
+		else {
+			int valuePTitle = mapPTitle.get(datiPropostiTitle[0]);
+			int valuePText = mapPText.get(datiPropostiText[0]);
+			if(valuePTitle >= valuePText) {
+				datiPropostiFinali[0]=datiPropostiTitle[0];
+			}
+			else {
+				datiPropostiFinali[0]=datiPropostiText[0];
+			}
+		}
+
+
+		if(datiPropostiTitle[1].equals("")) {
+			datiPropostiFinali[1]=datiPropostiText[1];
+		}
+		else if(datiPropostiText[1].equals("")) {
+			datiPropostiFinali[1]=datiPropostiTitle[1];
+		}
+		else {
+			int valueCTitle = mapCTitle.get(datiPropostiTitle[1]);
+			int valueCText = mapCText.get(datiPropostiText[1]);
+			if(valueCTitle >= valueCText) {
+				datiPropostiFinali[1]=datiPropostiTitle[1];
+			}
+			else {
+				datiPropostiFinali[1]=datiPropostiText[1];
+			}
+		}
+
+		
+		if(datiPropostiTitle[2].equals("")) {
+			datiPropostiFinali[2]=datiPropostiText[2];
+		}
+		else if(datiPropostiText[2].equals("")) {
+			datiPropostiFinali[2]=datiPropostiTitle[2];
+		}
+		else {
+			int valueVTitle = mapVTitle.get(datiPropostiTitle[2]);
+			int valueVText = mapVText.get(datiPropostiText[2]);
+			if(valueVTitle >= valueVText) {
+				datiPropostiFinali[2]=datiPropostiTitle[2];
+			}
+			else {
+				datiPropostiFinali[2]=datiPropostiText[2];
+			}
+		}
+
+		return datiPropostiFinali;
+	}
+
+	
+	/*
+	 * Stampa una mappa
+	 */
 	@SuppressWarnings("rawtypes")
 	public static void printMap(HashMap<String, Integer> wordTaggedPlace) {
 		Iterator iterator = wordTaggedPlace.keySet().iterator();	  
@@ -166,5 +238,4 @@ public class tagMe {
 			System.out.println("La Parola \""+key+"\" contiene "+value+" categorie dal contenuto Top");
 		}
 	}
-
 }

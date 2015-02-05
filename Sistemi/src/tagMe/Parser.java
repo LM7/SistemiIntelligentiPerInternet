@@ -20,6 +20,10 @@ public class Parser {
 		this.occurrencesCount  = new HashMap<String, Integer>();
 	}
 
+	public Parser() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getReplyTagMe() {
 		return result;
 	}
@@ -123,17 +127,15 @@ public class Parser {
 
 	
 	/* Restituisce un array composto dai valori proposti 
-	 * per i campi Persona, Citt� e Sede (Citt� e Sede diventeranno successivamente un unico campo)
+	 * per i campi Persona, Citta' e Sede (Citta' e Sede diventeranno successivamente un unico campo)
 	 */
-	public HashMap<String,Integer> choiceDataProposals(HashMap<String, Integer> mapC, HashMap<String, Integer> mapV, HashMap<String, Integer> mapP) {
+	public String[] choiceDataProposals(HashMap<String, Integer> mapP, HashMap<String, Integer> mapC, HashMap<String, Integer> mapV) {
 		String[] words = new String[3];
-		Integer[] values = new Integer[3];
-
 		int citySize = mapC.size(); int venueSize = mapV.size(); int personSize = mapP.size();
 		String cityTop; String venueTop; String personTop;
-
+		
 		if(personSize==0) {
-			personTop = null;
+			personTop = "";
 		}
 		else {
 			personTop = wordMaximumValue(mapP);
@@ -143,30 +145,24 @@ public class Parser {
 				mapV.remove(personTop);
 		}
 		words[0]=personTop;
-		values[0]=mapP.get(personTop);
 
 		if(citySize==0) {
-			words[1]=null;
-			values[1]=null;
+			words[1]="";
 			if(venueSize==1) {
 				words[2]=getFirstElementKeySet(mapV);
-				values[2]=mapV.get(words[2]);
+				
 			}
 			else if(venueSize>1) {
-				words[2]=wordMaximumValue(mapV);
-				values[2]=mapV.get(words[2]);
+				words[2]=wordMaximumValue(mapV);	
 			}
 		}
 		if(venueSize==0) {
-			words[2]=null;
-			values[2]=null;
+			words[2]="";
 			if(citySize==1) {
 				words[1]=getFirstElementKeySet(mapC);
-				values[1]=mapC.get(words[1]);
 			}
 			else if(citySize>1) {
 				words[1]=wordMaximumValue(mapC);
-				values[1]=mapC.get(words[1]);
 			}
 		}
 		else if(citySize==1 && venueSize==1) {
@@ -174,22 +170,17 @@ public class Parser {
 			if(mapC.containsKey(word) && mapV.containsKey(word)) {
 				if(mapC.get(word)>=mapV.get(word)) {
 					words[1]=word;
-					values[1]=mapC.get(words[1]);
-					words[2]=null;
-					values[2]=null;
+					words[2]="";
 				}
 				else {
-					words[1]=null;
-					values[1]=null;
+					words[1]="";
 					words[2]=word;
-					values[2]=mapV.get(words[2]);
 				}
 			}
 			else {
 				words[1]=word;
-				values[1]=mapC.get(words[1]);
+				
 				words[2]=getFirstElementKeySet(mapV);
-				values[2]=mapV.get(words[2]);
 			}
 		}
 		else {
@@ -198,40 +189,28 @@ public class Parser {
 			if(cityTop.equals(venueTop)) {
 				if(mapC.get(cityTop)>=mapV.get(venueTop)) {
 					words[1]=cityTop;
-					values[1]=mapC.get(words[1]);
 					mapV.remove(venueTop);
 					venueTop=wordMaximumValue(mapV);
 					words[2]=venueTop;
-					values[2]=mapV.get(words[2]);
 				}
 				else {
 					words[2]=venueTop;
-					values[2]=mapV.get(words[2]);
+					
 					mapC.remove(cityTop);
 					cityTop=wordMaximumValue(mapC);
 					words[1]=cityTop;
-					values[1]=mapC.get(words[1]);
 				}
 			}
 			else {
 				words[1]=cityTop;
-				values[1]=mapC.get(words[1]);
 				words[2]=venueTop;
-				values[2]=mapV.get(words[2]);
 			}
 		}
-		
-		HashMap<String,Integer> result = new HashMap<String,Integer>();
-		result.put(words[0], values[0]);
-		result.put(words[1], values[1]);
-		result.put(words[2], values[2]);
-		
-		return result;
+		return words;
 	}
 	
-	
 	/* Data una mappa composta da String (chiave) e Integer (valore)
-	 * restituisce la chiave associata al valore pi� alto
+	 * restituisce la chiave associata al valore piu' alto
 	 */
 	@SuppressWarnings({"rawtypes" })
 	private String wordMaximumValue(HashMap<String, Integer> wordTaggedPerson) {
@@ -249,8 +228,23 @@ public class Parser {
 			}
 		}
 		else
-			wordMaxValue=null;
+			wordMaxValue="";
 		return wordMaxValue;
+	}
+	
+	/*
+	 * Aggiunge un valore (10) alle parole matchate nel titolo
+	 */
+	@SuppressWarnings("rawtypes")
+	public HashMap<String, Integer> addValueTitle(HashMap<String, Integer> map) {
+		HashMap<String, Integer> newMap = new HashMap<String, Integer>();
+		Iterator iteratorMapP = map.keySet().iterator();	  
+		while (iteratorMapP.hasNext()) {
+			String key = iteratorMapP.next().toString();
+			int value = map.get(key)+10; 
+			newMap.put(key,value);
+		}
+		return newMap;
 	}
 	
 	
@@ -267,6 +261,17 @@ public class Parser {
 			}
 		}
 		return value;
+	}
+
+
+	/* Metodo per fondere gli elementi di due mappe
+	 * 
+	 */
+	public HashMap<String, Integer> mergeMap(HashMap<String, Integer> mapA,HashMap<String, Integer> mapB) {
+		HashMap<String, Integer> mapC = new HashMap<String, Integer>();
+		mapC.putAll(mapA);
+		mapC.putAll(mapB);
+	return mapC;
 	}
 
 }

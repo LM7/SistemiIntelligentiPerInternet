@@ -3,7 +3,7 @@ package tagMe;
 
 import java.net.URL;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 
 import events.MsnSearchEngine;
 import boilerpipe.Boilerpipe;
@@ -12,10 +12,9 @@ public class PrincipalForTagMe {
 
 	public final static int numero_query = 1;
 
-	@SuppressWarnings("rawtypes")
 	public static void main(String[] args) throws Exception {
-		String data = "27 February 2015";
-		String evento_cantante = "Fightstar";
+		String data = "23 June 2015";
+		String evento_cantante = "Lady Gaga";
 		String luogo = "";
 
 		String title = "";
@@ -34,64 +33,78 @@ public class PrincipalForTagMe {
 				title = site[0];
 				text = site[1];
 				
-				text= text.replaceAll("\n", " ");
-				text= text.replaceAll("\\<.*?\\>|\\{.*?\\}", "");
-				text= text.replaceAll("\\&.*?\\;", "");
-				//System.out.println("Testo: "+text);
+				title = title.replaceAll("\\&.*?\\;", "");
+				text = text.replaceAll("\n", " ");
+				text = text.replaceAll("\\<.*?\\>|\\{.*?\\}", "");
+				text = text.replaceAll("\\&.*?\\;", "");
 
-				tagMe st = new tagMe();
+				Tagger tagMe = new Tagger();
+				Parser parser = new Parser();
 				
+				List<HashMap<String,Integer>> listaMappeTitleRaw = tagMe.getTagMePartialProposedData(title);
+				HashMap<String,Integer> mapPTitleRaw = listaMappeTitleRaw.get(0);
+				HashMap<String,Integer> mapCTitleRaw = listaMappeTitleRaw.get(1);
+				HashMap<String,Integer> mapVTitleRaw = listaMappeTitleRaw.get(2);
+				/*
+				System.out.println("\nPERSONA: MAPPA TITLE RAW: "+mapPTitleRaw);
+				System.out.println("CITTA': MAPPA TITLE RAW: "+mapCTitleRaw);
+				System.out.println("SEDE: MAPPA TITLE RAW: "+mapVTitleRaw);
+				*/
 				
-				HashMap<String,Integer> datiPropostiTitleRaw = st.getTagMeProposedData(title);
-				HashMap<String,Integer> datiPropostiTitle = new HashMap<String,Integer>();
-				Iterator iterator = datiPropostiTitleRaw.keySet().iterator();	  
-				while (iterator.hasNext()) {
-					String key = iterator.next().toString();
-					int value = datiPropostiTitleRaw.get(key);
-					datiPropostiTitle.put(key, value+10);
-				}
-				
+				HashMap<String,Integer> mapPTitle = parser.addValueTitle(mapPTitleRaw);
+				HashMap<String,Integer> mapCTitle = parser.addValueTitle(mapCTitleRaw);
+				HashMap<String,Integer> mapVTitle = parser.addValueTitle(mapVTitleRaw);
+				/*
+				System.out.println("PERSONA: MAPPA TITLE (+10points): "+mapPTitle);
+				System.out.println("CITTA': MAPPA TITLE (+10points): "+mapCTitle);
+				System.out.println("SEDE: MAPPA TITLE (+10points): "+mapVTitle);
+				*/
+
+				String[] datiPropostiTitle = parser.choiceDataProposals(mapPTitle, mapCTitle, mapVTitle);
+				/*
 				System.out.println("\n=== Dati proposti TITOLO ===");
-				printMap(datiPropostiTitle);
+				System.out.println("PERSONA: "+datiPropostiTitle[0]);
+				System.out.println("CITTA': "+datiPropostiTitle[1]);
+				System.out.println("SEDE: "+datiPropostiTitle[2]);
+				*/
 				
+				List<HashMap<String,Integer>> listaMappeText = tagMe.getTagMePartialProposedData(text);
+				HashMap<String,Integer> mapPText = listaMappeText.get(0);
+				HashMap<String,Integer> mapCText = listaMappeText.get(1);
+				HashMap<String,Integer> mapVText = listaMappeText.get(2);
+				/*
+				System.out.println("PERSONA: MAPPA TEXT: "+mapPText);
+				System.out.println("CITTA': MAPPA TEXT: "+mapCText);
+				System.out.println("SEDE: MAPPA TEXT: "+mapVText);
+				*/
 				
-				HashMap<String,Integer> datiPropostiText = st.getTagMeProposedData(text);
+				String[] datiPropostiText = parser.choiceDataProposals(mapPText, mapCText, mapVText);
+				/*
 				System.out.println("\n=== Dati proposti TESTO ===");
-				printMap(datiPropostiText);
+				System.out.println("PERSONA: "+datiPropostiText[0]);
+				System.out.println("CITTA': "+datiPropostiText[1]);
+				System.out.println("SEDE: "+datiPropostiText[2]);
+				*/
 				
-				HashMap<String,Integer> datiDefinitiviProposti = new HashMap<String,Integer>();
-				Iterator iteratorTitle = datiPropostiTitle.keySet().iterator();	  
-				Iterator iteratorText = datiPropostiText.keySet().iterator();
-				while (iteratorTitle.hasNext() && iteratorText.hasNext()) {
-					String wordTitle = iteratorTitle.next().toString();
-					String wordText = iteratorText.next().toString();
-					int valueTitle = datiPropostiTitle.get(wordTitle);
-					int valueText = datiPropostiText.get(wordText);
-					if(valueTitle>=valueText) {
-						datiDefinitiviProposti.put(wordTitle, valueTitle);
-					}
-					else {
-						datiDefinitiviProposti.put(wordText, valueText);
-					}
-				}
-				
+				String[] datiPropostiFinali = tagMe.getTagMeFinalProposedData(datiPropostiTitle,datiPropostiText,mapPTitle,mapCTitle,mapVTitle,mapPText,mapCText,mapVText);
 				System.out.println("\n=== Dati proposti FINALI ===");
-				printMap(datiDefinitiviProposti);
+				System.out.println("PERSONA: "+datiPropostiFinali[0]);
+				System.out.println("CITTA': "+datiPropostiFinali[1]);
+				System.out.println("SEDE: "+datiPropostiFinali[2]);
 				
+				HashMap<String,Integer> mapPFinal = parser.mergeMap(mapPTitle,mapPText);
+				HashMap<String,Integer> mapCFinal = parser.mergeMap(mapCTitle,mapCText);
+				HashMap<String,Integer> mapVFinal = parser.mergeMap(mapVTitle,mapVText);
+				/*
+				System.out.println("PERSONA: MAPPA FINAL: "+mapPFinal);
+				System.out.println("CITTA': MAPPA FINAL: "+mapCFinal);
+				System.out.println("SEDE: MAPPA FINAL: "+mapVFinal);
+				*/
 				
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
 		}
 	}
-	
-	@SuppressWarnings("rawtypes")
-	public static void printMap(HashMap<String, Integer> wordTaggedPlace) {
-		Iterator iterator = wordTaggedPlace.keySet().iterator();	  
-		while (iterator.hasNext()) {
-			String key = iterator.next().toString();
-			String value = wordTaggedPlace.get(key).toString();	  
-			System.out.println("La Parola proposta \""+key+"\" ha valore "+value);
-		}
-	}
+
 }

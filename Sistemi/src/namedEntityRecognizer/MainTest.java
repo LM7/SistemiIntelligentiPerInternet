@@ -5,9 +5,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
-import tagMe.tagMe;
+import tagMe.Parser;
+import tagMe.Tagger;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -76,51 +78,43 @@ public class MainTest {
 			/*tagme*/
 			
 			System.out.println("PARTE DI TAGME");
-			
-			text= text.replaceAll("\n", " ");
-			text= text.replaceAll("\\<.*?\\>|\\{.*?\\}", "");
-			text= text.replaceAll("\\&.*?\\;", "");
-			//System.out.println("Testo: "+text);
+			/**
+				title = title.replaceAll("\\&.*?\\;", "");
+				text = text.replaceAll("\n", " ");
+				text = text.replaceAll("\\<.*?\\>|\\{.*?\\}", "");
+				text = text.replaceAll("\\&.*?\\;", "");
 
-			tagMe st = new tagMe();
-			
-			
-			HashMap<String,Integer> datiPropostiTitleRaw = st.getTagMeProposedData(title);
-			HashMap<String,Integer> datiPropostiTitle = new HashMap<String,Integer>();
-			Iterator iterator = datiPropostiTitleRaw.keySet().iterator();	  
-			while (iterator.hasNext()) {
-				String key = iterator.next().toString();
-				int value = datiPropostiTitleRaw.get(key);
-				datiPropostiTitle.put(key, value+10);
-			}
-			
-			System.out.println("\n=== Dati proposti TITOLO ===");
-			printMap(datiPropostiTitle);
-			
-			
-			HashMap<String,Integer> datiPropostiText = st.getTagMeProposedData(text);
-			System.out.println("\n=== Dati proposti TESTO ===");
-			printMap(datiPropostiText);
-			
-			HashMap<String,Integer> datiDefinitiviProposti = new HashMap<String,Integer>();
-			Iterator iteratorTitle = datiPropostiTitle.keySet().iterator();	  
-			Iterator iteratorText = datiPropostiText.keySet().iterator();
-			while (iteratorTitle.hasNext() && iteratorText.hasNext()) {
-				String wordTitle = iteratorTitle.next().toString();
-				String wordText = iteratorText.next().toString();
-				int valueTitle = datiPropostiTitle.get(wordTitle);
-				int valueText = datiPropostiText.get(wordText);
-				if(valueTitle>=valueText) {
-					datiDefinitiviProposti.put(wordTitle, valueTitle);
-				}
-				else {
-					datiDefinitiviProposti.put(wordText, valueText);
-				}
-			}
-			
-			System.out.println("\n=== Dati proposti FINALI ===");
-			printMap(datiDefinitiviProposti);
-			
+				Tagger tagMe = new Tagger();
+				Parser parser = new Parser();
+				
+				List<HashMap<String,Integer>> listaMappeTitleRaw = tagMe.getTagMePartialProposedData(title);
+				HashMap<String,Integer> mapPTitleRaw = listaMappeTitleRaw.get(0);
+				HashMap<String,Integer> mapCTitleRaw = listaMappeTitleRaw.get(1);
+				HashMap<String,Integer> mapVTitleRaw = listaMappeTitleRaw.get(2);
+				
+				HashMap<String,Integer> mapPTitle = parser.addValueTitle(mapPTitleRaw);
+				HashMap<String,Integer> mapCTitle = parser.addValueTitle(mapCTitleRaw);
+				HashMap<String,Integer> mapVTitle = parser.addValueTitle(mapVTitleRaw);
+		
+				String[] datiPropostiTitle = parser.choiceDataProposals(mapPTitle, mapCTitle, mapVTitle);
+				
+				List<HashMap<String,Integer>> listaMappeText = tagMe.getTagMePartialProposedData(text);
+				HashMap<String,Integer> mapPText = listaMappeText.get(0);
+				HashMap<String,Integer> mapCText = listaMappeText.get(1);
+				HashMap<String,Integer> mapVText = listaMappeText.get(2);
+				
+				String[] datiPropostiText = parser.choiceDataProposals(mapPText, mapCText, mapVText);
+				
+				String[] datiPropostiFinali = tagMe.getTagMeFinalProposedData(datiPropostiTitle,datiPropostiText,mapPTitle,mapCTitle,mapVTitle,mapPText,mapCText,mapVText);
+				System.out.println("\n=== Dati proposti FINALI ===");
+				System.out.println("PERSONA: "+datiPropostiFinali[0]);
+				System.out.println("CITTA': "+datiPropostiFinali[1]);
+				System.out.println("SEDE: "+datiPropostiFinali[2]);
+				
+				HashMap<String,Integer> mapPFinal = parser.mergeMap(mapPTitle,mapPText);
+				HashMap<String,Integer> mapCFinal = parser.mergeMap(mapCTitle,mapCText);
+				HashMap<String,Integer> mapVFinal = parser.mergeMap(mapVTitle,mapVText);
+			**/
 			
 			
 			
