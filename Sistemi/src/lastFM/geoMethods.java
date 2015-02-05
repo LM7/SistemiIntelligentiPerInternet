@@ -11,10 +11,10 @@ public class geoMethods {
 	// key per accedere alle API
 	public final static String key = "fdc2251ce7ea658e631af3c7709d4d84";
 
-	public static ArrayList<String[]> eventsPusher(ArrayList<String[]> events, String città) {
+	public static ArrayList<String[]> eventsPusher(ArrayList<String[]> events, String citta) {
 
-		// 'top10' è una pagina con i 10 eventi più recenti nella città
-		PaginatedResult<Event> top10 = Geo.getEvents(città, "", key);
+		// 'top10' ï¿½ una pagina con i 10 eventi piï¿½ recenti nella cittï¿½
+		PaginatedResult<Event> top10 = Geo.getEvents(citta, "", key);
 
 		// Per ogni evento di 'top10' popolo 'totale'
 		for (Event evento : top10) {
