@@ -2,14 +2,17 @@ package tagMe;
 
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import events.MsnSearchEngine;
 import boilerpipe.Boilerpipe;
 
 public class PrincipalForTagMe {
 
-	public final static int numero_query = 3;
+	public final static int numero_query = 1;
 
+	@SuppressWarnings("rawtypes")
 	public static void main(String[] args) throws Exception {
 		String data = "27 February 2015";
 		String evento_cantante = "Fightstar";
@@ -39,19 +42,56 @@ public class PrincipalForTagMe {
 				tagMe st = new tagMe();
 				
 				
-				String[] datiPropostiTitle = st.getTagMeProposedData(title);
-				System.out.println("\n=== Dati proposti TITOLO ===");
-				System.out.println("LUOGO: "+datiPropostiTitle[1]);
-				System.out.println("PERSONA: "+datiPropostiTitle[0]);
+				HashMap<String,Integer> datiPropostiTitleRaw = st.getTagMeProposedData(title);
+				HashMap<String,Integer> datiPropostiTitle = new HashMap<String,Integer>();
+				Iterator iterator = datiPropostiTitleRaw.keySet().iterator();	  
+				while (iterator.hasNext()) {
+					String key = iterator.next().toString();
+					int value = datiPropostiTitleRaw.get(key);
+					datiPropostiTitle.put(key, value+10);
+				}
 				
-				String[] datiPropostiText = st.getTagMeProposedData(text);
+				System.out.println("\n=== Dati proposti TITOLO ===");
+				printMap(datiPropostiTitle);
+				
+				
+				HashMap<String,Integer> datiPropostiText = st.getTagMeProposedData(text);
 				System.out.println("\n=== Dati proposti TESTO ===");
-				System.out.println("LUOGO: "+datiPropostiText[1]);
-				System.out.println("PERSONA: "+datiPropostiText[0]);
+				printMap(datiPropostiText);
+				
+				HashMap<String,Integer> datiDefinitiviProposti = new HashMap<String,Integer>();
+				Iterator iteratorTitle = datiPropostiTitle.keySet().iterator();	  
+				Iterator iteratorText = datiPropostiText.keySet().iterator();
+				while (iteratorTitle.hasNext() && iteratorText.hasNext()) {
+					String wordTitle = iteratorTitle.next().toString();
+					String wordText = iteratorText.next().toString();
+					int valueTitle = datiPropostiTitle.get(wordTitle);
+					int valueText = datiPropostiText.get(wordText);
+					if(valueTitle>=valueText) {
+						datiDefinitiviProposti.put(wordTitle, valueTitle);
+					}
+					else {
+						datiDefinitiviProposti.put(wordText, valueText);
+					}
+				}
+				
+				System.out.println("\n=== Dati proposti FINALI ===");
+				printMap(datiDefinitiviProposti);
+				
 				
 			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
+		}
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public static void printMap(HashMap<String, Integer> wordTaggedPlace) {
+		Iterator iterator = wordTaggedPlace.keySet().iterator();	  
+		while (iterator.hasNext()) {
+			String key = iterator.next().toString();
+			String value = wordTaggedPlace.get(key).toString();	  
+			System.out.println("La Parola proposta \""+key+"\" ha valore "+value);
 		}
 	}
 }

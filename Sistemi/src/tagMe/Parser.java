@@ -62,8 +62,8 @@ public class Parser {
 
 			}
 		}
-		/*System.out.println("Parole taggate escluse dall'analisi: "+zeroCategorie);
-		System.out.println("OCCORRENZE: "+occurrencesCount);*/
+		//System.out.println("Parole taggate escluse dall'analisi: "+zeroCategorie);
+		//System.out.println("\nOCCORRENZE: "+occurrencesCount);
 		return tagMeResult;
 	}
 
@@ -112,10 +112,12 @@ public class Parser {
 			int topCategories = wordResult.get(word);
 			if(occurrencesCount.containsKey(word)) {
 				int newValue = topCategories*occurrencesCount.get(word);
+				//System.out.println();
+				//System.out.println("PAROLA: "+word+" Categorie: "+topCategories+" e occorrenze: "+occurrencesCount.get(word));
 				wordResult.put(word, newValue);
 			}
 		}
-		//System.out.println("VALORI NUOVI: "+wordResult);
+		//System.out.println("\nVALORI NUOVI: "+wordResult);
 		return wordResult;
 	}
 
@@ -123,8 +125,9 @@ public class Parser {
 	/* Restituisce un array composto dai valori proposti 
 	 * per i campi Persona, Citt� e Sede (Citt� e Sede diventeranno successivamente un unico campo)
 	 */
-	public String[] choiceDataProposals(HashMap<String, Integer> mapC, HashMap<String, Integer> mapV, HashMap<String, Integer> mapP) {
-		String[] result = new String[3];
+	public HashMap<String,Integer> choiceDataProposals(HashMap<String, Integer> mapC, HashMap<String, Integer> mapV, HashMap<String, Integer> mapP) {
+		String[] words = new String[3];
+		Integer[] values = new Integer[3];
 
 		int citySize = mapC.size(); int venueSize = mapV.size(); int personSize = mapP.size();
 		String cityTop; String venueTop; String personTop;
@@ -139,41 +142,54 @@ public class Parser {
 			else if(mapV.containsKey(personTop))
 				mapV.remove(personTop);
 		}
-		result[0]=personTop;
+		words[0]=personTop;
+		values[0]=mapP.get(personTop);
 
 		if(citySize==0) {
-			result[1]=null;
+			words[1]=null;
+			values[1]=null;
 			if(venueSize==1) {
-				result[2]=getFirstElementKeySet(mapV);
+				words[2]=getFirstElementKeySet(mapV);
+				values[2]=mapV.get(words[2]);
 			}
 			else if(venueSize>1) {
-				result[2]=wordMaximumValue(mapV);
+				words[2]=wordMaximumValue(mapV);
+				values[2]=mapV.get(words[2]);
 			}
 		}
 		if(venueSize==0) {
-			result[2]=null;
+			words[2]=null;
+			values[2]=null;
 			if(citySize==1) {
-				result[1]=getFirstElementKeySet(mapC);
+				words[1]=getFirstElementKeySet(mapC);
+				values[1]=mapC.get(words[1]);
 			}
 			else if(citySize>1) {
-				result[1]=wordMaximumValue(mapC);
+				words[1]=wordMaximumValue(mapC);
+				values[1]=mapC.get(words[1]);
 			}
 		}
 		else if(citySize==1 && venueSize==1) {
 			String word=getFirstElementKeySet(mapC);
 			if(mapC.containsKey(word) && mapV.containsKey(word)) {
 				if(mapC.get(word)>=mapV.get(word)) {
-					result[1]=word;
-					result[2]=null;
+					words[1]=word;
+					values[1]=mapC.get(words[1]);
+					words[2]=null;
+					values[2]=null;
 				}
 				else {
-					result[1]=null;
-					result[2]=word;
+					words[1]=null;
+					values[1]=null;
+					words[2]=word;
+					values[2]=mapV.get(words[2]);
 				}
 			}
 			else {
-				result[1]=word;
-				result[2]=getFirstElementKeySet(mapV);
+				words[1]=word;
+				values[1]=mapC.get(words[1]);
+				words[2]=getFirstElementKeySet(mapV);
+				values[2]=mapV.get(words[2]);
 			}
 		}
 		else {
@@ -181,23 +197,35 @@ public class Parser {
 			venueTop=wordMaximumValue(mapV);
 			if(cityTop.equals(venueTop)) {
 				if(mapC.get(cityTop)>=mapV.get(venueTop)) {
-					result[1]=cityTop;
+					words[1]=cityTop;
+					values[1]=mapC.get(words[1]);
 					mapV.remove(venueTop);
 					venueTop=wordMaximumValue(mapV);
-					result[2]=venueTop;
+					words[2]=venueTop;
+					values[2]=mapV.get(words[2]);
 				}
 				else {
-					result[2]=venueTop;
+					words[2]=venueTop;
+					values[2]=mapV.get(words[2]);
 					mapC.remove(cityTop);
 					cityTop=wordMaximumValue(mapC);
-					result[1]=cityTop;
+					words[1]=cityTop;
+					values[1]=mapC.get(words[1]);
 				}
 			}
 			else {
-				result[1]=cityTop;
-				result[2]=venueTop;
+				words[1]=cityTop;
+				values[1]=mapC.get(words[1]);
+				words[2]=venueTop;
+				values[2]=mapV.get(words[2]);
 			}
 		}
+		
+		HashMap<String,Integer> result = new HashMap<String,Integer>();
+		result.put(words[0], values[0]);
+		result.put(words[1], values[1]);
+		result.put(words[2], values[2]);
+		
 		return result;
 	}
 	

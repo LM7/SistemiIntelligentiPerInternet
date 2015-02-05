@@ -27,7 +27,7 @@ import edu.stanford.nlp.util.CoreMap;
 
 public class tagMe {
 
-	public String[] getTagMeProposedData(String text) throws IOException {
+	public HashMap<String,Integer> getTagMeProposedData(String text) throws IOException {
 		/*Elaborazione del testo da taggare*/
 		//text ="Die Antwoord at Le Zenith  (Paris) on 28 Jan 2015";
 		//text = "Giraffage ?  Tickets ? Music Hall of Williamsburg ? Brooklyn, NY ? January 31st, 2015";
@@ -139,25 +139,22 @@ public class tagMe {
 		topWordPersonList.add("musical groups established in");
 
 		HashMap<String,Integer> wordTaggedPlaceCity = p.filterCategories(tagMeResult, topWordPlaceCityList);
-		System.out.println("\n(LUOGHI: Citta' dell'evento) - Parole Taggate Rilevanti");
+		//System.out.println("\n(LUOGHI: Citta' dell'evento) - Parole Taggate Rilevanti");
 		//printMap(wordTaggedPlaceCity);
 
 		HashMap<String,Integer> wordTaggedPlaceVenue = p.filterCategories(tagMeResult, topWordPlaceVenueList);
-		System.out.println("\n(LUOGHI: Sede dell'evento) - Parole Taggate Rilevanti");
+		//System.out.println("\n(LUOGHI: Sede dell'evento) - Parole Taggate Rilevanti");
 		//printMap(wordTaggedPlaceVenue);
 
 		HashMap<String,Integer> wordTaggedPerson = p.filterCategories(tagMeResult, topWordPersonList);
-		System.out.println("\n(PERSONE) - Parole Taggate Rilevanti");
+		//System.out.println("\n(PERSONE) - Parole Taggate Rilevanti");
 		//printMap(wordTaggedPerson);
 
 		System.out.println();
 
-		String[] selections = p.choiceDataProposals(wordTaggedPlaceCity,wordTaggedPlaceVenue,wordTaggedPerson);
-		String[] resultChoice = new String[2];
-		resultChoice[1] = selections[1]+", "+selections[2];
-		resultChoice[0] = selections[0];
+		HashMap<String,Integer> selections = p.choiceDataProposals(wordTaggedPlaceCity,wordTaggedPlaceVenue,wordTaggedPerson);
 		
-		return resultChoice;
+		return selections;
 	}
 
 	@SuppressWarnings("rawtypes")
