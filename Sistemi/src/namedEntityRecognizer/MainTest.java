@@ -20,8 +20,8 @@ public class MainTest {
 	public final static int numero_query = 1;
 
 	public static void main(String[] args) throws Exception {
-		String data = "10 April 2015";
-		String evento_cantante = "Prodigy";
+		String data = "5 November 2015";
+		String evento_cantante = "Nickelback";
 		String luogo = "";
 		
 		NamedEntityRecognizerTest ner = new NamedEntityRecognizerTest();
@@ -63,14 +63,8 @@ public class MainTest {
 			HashMap<String,Integer> locations = lista.get(0); // la mappa dei luoghi
 			HashMap<String,Integer> people = lista.get(1); // la mappa delle persone-eventi
 			
-			String luogoTop = ner.entityTop(locations, title);
-			String personaTop = ner.entityTop(people, title);
-			
-			//Set<String> luoghi = locations.keySet();    //la lista di luoghi/locations
-			//String luogoTop = ner.locationTop(lista, title); //il luogo proposto
-			
-			//Set<String> persone = people.keySet(); //la lista di persone
-			//String personaTop = ner.personTop(lista, title); // la persona proposta
+			String luogoTop = ner.entityTop(locations);
+			String personaTop = ner.entityTop(people);
 			
 			
 			System.out.println("IL LUOGO PROPOSTO E': "+ luogoTop);
@@ -80,7 +74,7 @@ public class MainTest {
 			
 			/*tagme*/
 			
-			System.out.println("PARTE DI TAGME");
+			/*System.out.println("PARTE DI TAGME");
 			
 			text= text.replaceAll("\n", " ");
 			text= text.replaceAll("\\<.*?\\>|\\{.*?\\}", "");
@@ -98,7 +92,7 @@ public class MainTest {
 			String[] datiPropostiText = st.getTagMeProposedData(text);
 			System.out.println("\n=== Dati proposti TESTO ===");
 			System.out.println("LUOGO: "+datiPropostiText[1]);
-			System.out.println("PERSONA: "+datiPropostiText[0]);
+			System.out.println("PERSONA: "+datiPropostiText[0]);*/
 			
 			/*BasicDBObject document = new BasicDBObject();
 			document.put("data", data);

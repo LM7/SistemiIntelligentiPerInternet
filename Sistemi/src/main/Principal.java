@@ -27,7 +27,7 @@ public class Principal {
 
 	public static void main(String[] args) {
 		
-		// 'totale' è una lista di eventi [artista, luogo, data]
+		// 'totale' ï¿½ una lista di eventi [artista, luogo, data]
 		ArrayList<String[]> totale = new ArrayList<String[]>();
 
 		totale = geoMethods.eventsPusher(totale,"Roma");
@@ -126,8 +126,8 @@ public class Principal {
 				HashMap<String,Integer> locations = lista.get(0); // la mappa dei luoghi
 				HashMap<String,Integer> people = lista.get(1); // la mappa delle persone-eventi
 				
-				String luogoTop = ner.entityTop(locations, title);
-				String personaTop = ner.entityTop(people, title);
+				String luogoTop = ner.entityTop(locations);
+				String personaTop = ner.entityTop(people);
 				
 
 				HashMap<String, Integer> dateString = new HashMap<String, Integer>();	

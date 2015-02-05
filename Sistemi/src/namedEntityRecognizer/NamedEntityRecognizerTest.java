@@ -149,7 +149,8 @@ public class NamedEntityRecognizerTest {
 	public ArrayList<HashMap<String,Integer>> createListOfMapEntity(String[] urls) throws ClassCastException, ClassNotFoundException, IOException {
 		String serializedClassifier = "classifiers/english.all.3class.distsim.crf.ser.gz";
 		AbstractSequenceClassifier<CoreLabel> classifier = CRFClassifier.getClassifier(serializedClassifier);
-
+		
+		
 		HashMap<String,Integer> str2occLoc = new HashMap<String,Integer>(); 
 		HashMap<String,Integer> str2occPer = new HashMap<String,Integer>();
 		HashMap<String,Integer> str2occOrg = new HashMap<String,Integer>();
@@ -166,9 +167,10 @@ public class NamedEntityRecognizerTest {
 		boolean del = false;
 
 		
-
+		int title = 0;
 
 		for (String str : urls) {
+			title = title + 2;
 			for (List<CoreLabel> lcl : classifier.classify(str)) {
 				for (CoreLabel cl : lcl) {
 					String stringa = cl.originalText();
@@ -197,11 +199,25 @@ public class NamedEntityRecognizerTest {
 							for (String key: str2occLoc.keySet() ) { 
 								if (key.equals(stringa)) {
 									trovato = true;
-									str2occLoc.put(key, str2occLoc.get(key) +1 );
+									if (title == 2) {
+										str2occLoc.put(key, str2occLoc.get(key) + IMPORTANZA_TITOLO );
+									}
+									else {
+										str2occLoc.put(key, str2occLoc.get(key) +1 );
+									}
+									
+									
 								}
 							}
 							if (!trovato) {
-								str2occLoc.put(stringa, 1);
+								if (title == 2) {
+									str2occLoc.put(stringa, IMPORTANZA_TITOLO);
+								}
+								else {
+									str2occLoc.put(stringa, 1);
+								}
+								
+								
 							}
 
 						}
@@ -213,11 +229,21 @@ public class NamedEntityRecognizerTest {
 							for (String key: str2occPer.keySet() ) { 
 								if (key.equals(stringa)) {
 									trovato = true;
-									str2occPer.put(key, str2occPer.get(key) +1 );
+									if (title == 2) {
+										str2occPer.put(key, str2occPer.get(key) + IMPORTANZA_TITOLO );
+									}
+									else {
+										str2occPer.put(key, str2occPer.get(key) +1 );
+									}
 								}
 							}
 							if (!trovato) {
-								str2occPer.put(stringa, 1); 
+								if (title == 2) {
+									str2occPer.put(stringa, IMPORTANZA_TITOLO);
+								} 
+								else {
+									str2occPer.put(stringa, 1);
+								}
 							}
 						}
 						if (entity.equals("ORGANIZATION")) {
@@ -238,10 +264,6 @@ public class NamedEntityRecognizerTest {
 
 					}
 					
-					/*else {
-						prev = cl.originalText();
-						concat = "";
-					}*/
 
 					if (entity.equals("LOCATION")) {
 						listEntity.remove(0);
@@ -294,68 +316,83 @@ public class NamedEntityRecognizerTest {
 	
 	
 	
-	public String entityTop(HashMap<String,Integer> mappa, String titolo) throws ClassCastException, ClassNotFoundException, IOException {
-		String serializedClassifier = "classifiers/english.all.3class.distsim.crf.ser.gz";
-		AbstractSequenceClassifier<CoreLabel> classifier = CRFClassifier.getClassifier(serializedClassifier);
+	public String entityTop(HashMap<String,Integer> entities ) {
 		int max = 0;
-		int i;
-		String entityMoreOcc = "";
-		Set<String> entities = mappa.keySet();
-		String categoriaPrev = "";
-		String stringaPrev = "";
-		String categoriaNow = "";
-		String concat = "";
-		for (String entity: entities) {
-			i = mappa.get(entity);
-			for (List<CoreLabel> lcl : classifier.classify(titolo)) {
-				for (CoreLabel cl : lcl) {
-					categoriaNow = cl.get(CoreAnnotations.AnswerAnnotation.class);
-					System.out.println("categoriaNow: "+categoriaNow);
-					System.out.println("entity: "+entity);
-					System.out.println("corelabel: "+cl.originalText());
-					if ( (categoriaPrev.equals(categoriaNow)) && (categoriaNow.equals("LOCATION") || categoriaNow.equals("PERSON") || categoriaNow.equals("ORGANIZATION") ) ) {
-						System.out.println("nella mia mappa: "+entity);
-						concat = stringaPrev + " " + cl.originalText();
-						stringaPrev = concat;
-						System.out.println("il mio concat: "+concat);
-						if (entity.equals(concat)) {
-							mappa.put(entity, mappa.get(entity) + IMPORTANZA_TITOLO -1);
-							i = mappa.get(entity);
-						}
-					}
-					else {
-						if (entity.equals(cl.originalText())) {
-							mappa.put(entity, mappa.get(entity) + IMPORTANZA_TITOLO -1);
-							i = mappa.get(entity);
-						}
-						stringaPrev = cl.originalText();
-						concat = "";
-					}
-					categoriaPrev = cl.get(CoreAnnotations.AnswerAnnotation.class);
-					System.out.println("categoriaPrev: "+categoriaPrev);
-				}
-			}
+		int i = 0;
+		String entTop = "";
+		for (String entita: entities.keySet()) {
+			i = entities.get(entita);
 			if (i>max) {
 				max = i;
-				entityMoreOcc = entity;
+				entTop = entita;
 			}
-			
 		}
-
-		System.out.println("STAMPO LA MIA MAPPA DI LOCATION or PERSON");
-		HashMap<String,Integer> mapHelp = new HashMap<String,Integer>(); //mappa d'appoggio per stampare
-		mapHelp = mappa;
-		System.out.println("LOCATION or PERSON");
-		for (String key: mapHelp.keySet() ) {
-			System.out.println("Key : " + key.toString() + " Value : "+ mapHelp.get(key));
-		}
-
-
-		return entityMoreOcc;
+		return entTop;	
 	}
-	
 
 }
+
+
+// SI POTRA' ELIMINARE
+/*public String entityTop(HashMap<String,Integer> mappa, String titolo) throws ClassCastException, ClassNotFoundException, IOException {
+	String serializedClassifier = "classifiers/english.all.3class.distsim.crf.ser.gz";
+	AbstractSequenceClassifier<CoreLabel> classifier = CRFClassifier.getClassifier(serializedClassifier);
+	int max = 0;
+	int i;
+	String entityMoreOcc = "";
+	Set<String> entities = mappa.keySet();
+	String categoriaPrev = "";
+	String stringaPrev = "";
+	String categoriaNow = "";
+	String concat = "";
+	for (String entity: entities) {
+		i = mappa.get(entity);
+		for (List<CoreLabel> lcl : classifier.classify(titolo)) {
+			for (CoreLabel cl : lcl) {
+				categoriaNow = cl.get(CoreAnnotations.AnswerAnnotation.class);
+				System.out.println("categoriaNow: "+categoriaNow);
+				System.out.println("entity: "+entity);
+				System.out.println("corelabel: "+cl.originalText());
+				if ( (categoriaPrev.equals(categoriaNow)) && (categoriaNow.equals("LOCATION") || categoriaNow.equals("PERSON") || categoriaNow.equals("ORGANIZATION") ) ) {
+					System.out.println("nella mia mappa: "+entity);
+					concat = stringaPrev + " " + cl.originalText();
+					stringaPrev = concat;
+					System.out.println("il mio concat: "+concat);
+					if (entity.equals(concat)) {
+						mappa.put(entity, mappa.get(entity) + IMPORTANZA_TITOLO -1);
+						i = mappa.get(entity);
+					}
+				}
+				else {
+					if (entity.equals(cl.originalText())) {
+						mappa.put(entity, mappa.get(entity) + IMPORTANZA_TITOLO -1);
+						i = mappa.get(entity);
+					}
+					stringaPrev = cl.originalText();
+					concat = "";
+				}
+				categoriaPrev = cl.get(CoreAnnotations.AnswerAnnotation.class);
+				System.out.println("categoriaPrev: "+categoriaPrev);
+			}
+		}
+		if (i>max) {
+			max = i;
+			entityMoreOcc = entity;
+		}
+		
+	}
+
+	System.out.println("STAMPO LA MIA MAPPA DI LOCATION or PERSON");
+	HashMap<String,Integer> mapHelp = new HashMap<String,Integer>(); //mappa d'appoggio per stampare
+	mapHelp = mappa;
+	System.out.println("LOCATION or PERSON");
+	for (String key: mapHelp.keySet() ) {
+		System.out.println("Key : " + key.toString() + " Value : "+ mapHelp.get(key));
+	}
+
+
+	return entityMoreOcc;
+}*/
 
 
 
