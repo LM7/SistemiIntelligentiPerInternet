@@ -319,13 +319,13 @@ public class NamedEntityRecognizerTest {
 						stringaPrev = concat;
 						System.out.println("il mio concat: "+concat);
 						if (entity.equals(concat)) {
-							mappa.put(entity, mappa.get(entity) + IMPORTANZA_TITOLO);
+							mappa.put(entity, mappa.get(entity) + IMPORTANZA_TITOLO -1);
 							i = mappa.get(entity);
 						}
 					}
 					else {
 						if (entity.equals(cl.originalText())) {
-							mappa.put(entity, mappa.get(entity) + IMPORTANZA_TITOLO);
+							mappa.put(entity, mappa.get(entity) + IMPORTANZA_TITOLO -1);
 							i = mappa.get(entity);
 						}
 						stringaPrev = cl.originalText();

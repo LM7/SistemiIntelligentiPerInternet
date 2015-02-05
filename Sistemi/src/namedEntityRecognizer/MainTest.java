@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
+import tagMe.tagMe;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -18,8 +20,8 @@ public class MainTest {
 	public final static int numero_query = 1;
 
 	public static void main(String[] args) throws Exception {
-		String data = "27 April 2015";
-		String evento_cantante = "One Republic at MTS Centre";
+		String data = "10 April 2015";
+		String evento_cantante = "Prodigy";
 		String luogo = "";
 		
 		NamedEntityRecognizerTest ner = new NamedEntityRecognizerTest();
@@ -75,6 +77,28 @@ public class MainTest {
 			
 			System.out.println("LA PERSONA PROPOSTA E': "+ personaTop);
 			System.out.println("TITOLO "+title);
+			
+			/*tagme*/
+			
+			System.out.println("PARTE DI TAGME");
+			
+			text= text.replaceAll("\n", " ");
+			text= text.replaceAll("\\<.*?\\>|\\{.*?\\}", "");
+			text= text.replaceAll("\\&.*?\\;", "");
+			//System.out.println("Testo: "+text);
+
+			tagMe st = new tagMe();
+			
+			
+			String[] datiPropostiTitle = st.getTagMeProposedData(title);
+			System.out.println("\n=== Dati proposti TITOLO ===");
+			System.out.println("LUOGO: "+datiPropostiTitle[1]);
+			System.out.println("PERSONA: "+datiPropostiTitle[0]);
+			
+			String[] datiPropostiText = st.getTagMeProposedData(text);
+			System.out.println("\n=== Dati proposti TESTO ===");
+			System.out.println("LUOGO: "+datiPropostiText[1]);
+			System.out.println("PERSONA: "+datiPropostiText[0]);
 			
 			/*BasicDBObject document = new BasicDBObject();
 			document.put("data", data);

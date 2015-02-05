@@ -40,7 +40,7 @@ public class Parser {
 		reply = gson.fromJson(result,Reply.class);
 		List<Annotation> annotations = reply.getAnnotations();
 		int zeroCategorie=0;
-		System.out.println("ANNOTATIONS: \nsize: "+annotations.size()+"\n");
+		//System.out.println("ANNOTATIONS: \nsize: "+annotations.size()+"\n");
 		String word="";
 		for (Annotation a : annotations) {	
 			//System.out.println("Spot: "+a.getSpot()+"\n(Wikipedia) Title: "+a.getTitle()+"\nCategories: "+a.getDbpediaCategories());
@@ -62,8 +62,8 @@ public class Parser {
 
 			}
 		}
-		System.out.println("Parole taggate escluse dall'analisi: "+zeroCategorie);
-		System.out.println("OCCORRENZE: "+occurrencesCount);
+		/*System.out.println("Parole taggate escluse dall'analisi: "+zeroCategorie);
+		System.out.println("OCCORRENZE: "+occurrencesCount);*/
 		return tagMeResult;
 	}
 
@@ -115,13 +115,13 @@ public class Parser {
 				wordResult.put(word, newValue);
 			}
 		}
-		System.out.println("VALORI NUOVI: "+wordResult);
+		//System.out.println("VALORI NUOVI: "+wordResult);
 		return wordResult;
 	}
 
 	
 	/* Restituisce un array composto dai valori proposti 
-	 * per i campi Persona, Città e Sede (Città e Sede diventeranno successivamente un unico campo)
+	 * per i campi Persona, Cittï¿½ e Sede (Cittï¿½ e Sede diventeranno successivamente un unico campo)
 	 */
 	public String[] choiceDataProposals(HashMap<String, Integer> mapC, HashMap<String, Integer> mapV, HashMap<String, Integer> mapP) {
 		String[] result = new String[3];
@@ -203,7 +203,7 @@ public class Parser {
 	
 	
 	/* Data una mappa composta da String (chiave) e Integer (valore)
-	 * restituisce la chiave associata al valore più alto
+	 * restituisce la chiave associata al valore piï¿½ alto
 	 */
 	@SuppressWarnings({"rawtypes" })
 	private String wordMaximumValue(HashMap<String, Integer> wordTaggedPerson) {
