@@ -28,13 +28,9 @@ public class Principal {
 
 	public static void main(String[] args) {
 		
-		// 'totale' ��� una lista di eventi [artista, luogo, data]
-		ArrayList<String[]> totale = new ArrayList<String[]>();
+		// 'totale' e' una lista di eventi [artista, luogo, data]
+		ArrayList<String[]> totale = geoMethods.eventsPusher("Roma");
 
-		totale = geoMethods.eventsPusher(totale,"Roma");
-		totale = geoMethods.eventsPusher(totale,"Berlino");
-
-		/*
 		// SCOMMENTARE PER VEDERE LE INFO RACCOLTE
 		// Visualizzazione di 'totale'
 		for (String[] a : totale){
@@ -43,8 +39,6 @@ public class Principal {
 			System.out.println("Data: "+a[2]);
 			System.out.println();
 		}
-		*/
-
 		
 		
 		/*String data = "31 January 2015";

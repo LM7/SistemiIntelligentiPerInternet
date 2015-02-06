@@ -12,16 +12,18 @@ public class geoMethods {
 	public final static String key = "fdc2251ce7ea658e631af3c7709d4d84";
 	public final static int NUMEROEVENTI = 10;
 
-	public static ArrayList<String[]> eventsPusher(ArrayList<String[]> events, String citta) {
+	public static ArrayList<String[]> eventsPusher(String citta) {
 
-		// 'top10' ��� una pagina con i 10 eventi pi��� recenti nella citt���
+		// Preparo l'output
+		ArrayList<String[]> output = new ArrayList<String[]>();
+
+		// 'top10' e' una pagina con i 10 eventi piu' recenti nella citta'
 		PaginatedResult<Event> top10 = Geo.getEvents(citta, "", key);
 
 		// Per ogni evento di 'top10' popolo 'totale'
 		for (Event evento : top10) {
 			String artista = evento.getHeadliner();
 			String luogo = evento.getVenue().getName()+", "+evento.getVenue().getCity();
-			//String data = evento.getStartDate().toString();
 
 			SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM dd yyyy");
 			String data = DATE_FORMAT.format(evento.getStartDate());
@@ -44,8 +46,8 @@ public class geoMethods {
 			data = month+data.substring(2);
 
 			String[] tupla = {artista,luogo,data};
-			events.add(tupla);
+			output.add(tupla);
 		}
-		return events;
+		return output;
 	}
 }
