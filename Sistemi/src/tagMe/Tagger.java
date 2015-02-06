@@ -36,6 +36,7 @@ public class Tagger {
 		text = text.replaceAll("\n", " ");
 		text = text.replaceAll("\\<.*?\\>|\\{.*?\\}", "");
 		text = text.replaceAll("\\&.*?\\;", "");
+		text = text.replaceAll(".x-boilerpipe-mark1", "");
 		
 		List<HashMap<String,Integer>> result = new ArrayList<HashMap<String,Integer>>();
 		/*Elaborazione del testo da taggare*/
@@ -69,19 +70,17 @@ public class Tagger {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			String miaData = cm.get(TimeExpression.Annotation.class).getTemporal().getTimexValue();
 			GregorianCalendar c = new GregorianCalendar();
-			/*
 			try {
 				c.setTime(sdf.parse(miaData));
 				//se la parsa la deve toglie
 				String temporalExpression = cm.toString();
 				//System.out.println("Espressione temporale.toString: "+temporalExpression);
 				text= text.replace(temporalExpression, "");
-				System.out.println("Testo pulito: "+text);
-			} catch (ParseException e) {
+				//System.out.println("Testo pulito: "+text);
+			} catch (Exception e) {
 				//nulla
-				e.printStackTrace();
 			}
-			 */
+			 
 		}
 
 		/*Richiesta verso TagMe*/

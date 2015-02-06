@@ -8,7 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import main.NerTagme;
+import nertagme.NerTagme;
 import tagMe.Parser;
 import tagMe.Tagger;
 

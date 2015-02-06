@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import namedEntityRecognizer.NamedEntityRecognizerTest;
+import nertagme.NerTagme;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -27,7 +28,7 @@ public class Principal {
 
 	public static void main(String[] args) {
 		
-		// 'totale' � una lista di eventi [artista, luogo, data]
+		// 'totale' ��� una lista di eventi [artista, luogo, data]
 		ArrayList<String[]> totale = new ArrayList<String[]>();
 
 		totale = geoMethods.eventsPusher(totale,"Roma");
@@ -46,9 +47,9 @@ public class Principal {
 
 		
 		
-		String data = "31 January 2015";
+		/*String data = "31 January 2015";
 		String evento_cantante = "Giraffage";
-		String luogo = "";
+		String luogo = "";*/
 		
 		/*String data = "28 January 2015";
 		String evento_cantante = "Die Antwoord";
@@ -66,9 +67,9 @@ public class Principal {
 		String evento_cantante = "Nickelback";
 		String luogo = "";*/
 		
-		/*String data = "20 March 2015";
+		String data = "20 March 2015";
 		String evento_cantante = "Francesco De Gregori";
-		String luogo = "";*/
+		String luogo = "";
 		
 		/*String data = "10 April 2015";
 		 String evento_cantante = "The Prodigy";
@@ -118,7 +119,7 @@ public class Principal {
 				Date dataProposta = suT.dataEvento(date);
 				
 				
-				
+				/**
 				//NER
 				//Luogo
 				NamedEntityRecognizerTest ner = new NamedEntityRecognizerTest();
@@ -128,29 +129,33 @@ public class Principal {
 				
 				String luogoTop = ner.entityTop(locations);
 				String personaTop = ner.entityTop(people);
-				
+				**/
+				//NERTAGME
+				String[] datiProposti = NerTagme.ritorna(site);
+				String personaProposta = datiProposti[0];
+				String luogoProposto = datiProposti[1];
 
-				HashMap<String, Integer> dateString = new HashMap<String, Integer>();	
+				/*HashMap<String, Integer> dateString = new HashMap<String, Integer>();	
 				for (Date d : date.keySet()){
 					dateString.put(d.toString(), date.get(d));
-				}
-				luogo = "Williamsburg";
+				}*/
+				//luogo = "Williamsburg";
 				//luogo = "Le Zenith, Paris";
 				//luogo = "Radio City Music Hall, New York";
 				//luogo = "Shepherds Bush Empire, London";
 				//luogo = "Razzmatazz, Barcelona";
-				//luogo = "Roma, Palalottomatica";
+				luogo = "Roma, Palalottomatica";
 				BasicDBObject document = new BasicDBObject();
 				document.put("data", data);
 				document.put("evento_cantante", evento_cantante);
 				document.put("luogo", luogo);
 				document.put("url", url.toString());
 				document.put("data proposta", dataProposta.toString());
-				document.put("date", dateString);
-				document.put("luogo proposto", luogoTop );
-				document.put("luoghi", locations);
-				document.put("persona proposta", personaTop );
-				document.put("persone", people);
+				//document.put("date", dateString);
+				document.put("luogo proposto", luogoProposto);
+				//document.put("luoghi", locations);
+				document.put("persona proposta", personaProposta );
+				//document.put("persone", people);
 				collection.insert(document);
 				
 				System.out.println("Documento aggiunto");
