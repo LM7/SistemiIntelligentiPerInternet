@@ -31,7 +31,12 @@ public class Tagger {
 	 * Restituisce i valori parziali proposti (titolo e testo) 
 	 */
 	public List<HashMap<String,Integer>> getTagMePartialProposedData(String text) throws IOException {
-
+		String textOriginal = text;
+		
+		text = text.replaceAll("\n", " ");
+		text = text.replaceAll("\\<.*?\\>|\\{.*?\\}", "");
+		text = text.replaceAll("\\&.*?\\;", "");
+		
 		List<HashMap<String,Integer>> result = new ArrayList<HashMap<String,Integer>>();
 		/*Elaborazione del testo da taggare*/
 		//text = "Die Antwoord at Le Zenith  (Paris) on 28 Jan 2015";
@@ -98,11 +103,34 @@ public class Tagger {
 		wr.close();
 
 		int responseCode = con.getResponseCode();
-		System.out.println("--------------------------------------------------------");
+		/*System.out.println("--------------------------------------------------------");
 		System.out.println("Sending 'POST' request to URL : " + url);
 		System.out.println("Post parameters : " + urlParameters);
 		System.out.println("Response Code : " + responseCode);
-		System.out.println("--------------------------------------------------------");
+		System.out.println("--------------------------------------------------------");*/
+		
+		if(responseCode!=200){
+			urlParameters = "key=41480047b3428dcfe6a5c1bba1f0a93e&text="+textOriginal+"&include_categories=true";
+
+			//send post request
+			con.setDoOutput(true);
+			wr = new DataOutputStream(con.getOutputStream());
+			wr.write(urlParameters.getBytes("UTF-8"));
+			wr.flush();
+			wr.close();
+
+			responseCode = con.getResponseCode();
+			/*System.out.println("--------------------------------------------------------");
+			System.out.println("Sending 'POST' request to URL : " + url);
+			System.out.println("Post parameters : " + urlParameters);
+			System.out.println("Response Code : " + responseCode);
+			System.out.println("--------------------------------------------------------");*/
+			
+			if(responseCode!=200){
+				return null;
+			}
+		}
+		
 
 		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 		String inputLine;

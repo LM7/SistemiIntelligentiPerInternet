@@ -287,7 +287,7 @@ public class NamedEntityRecognizerTest {
 		}
 
 
-		System.out.println("STAMPO LA MIA MAPPA");
+		/*System.out.println("STAMPO LA MIA MAPPA");
 
 		int cont;
 		HashMap<String,Integer> mapHelp = new HashMap<String,Integer>(); //mappa d'appoggio per stampare
@@ -308,7 +308,7 @@ public class NamedEntityRecognizerTest {
 			}
 		}
 
-		System.out.println("Lunghezza della mia lista di mappe: "+ listEntity.size());	
+		System.out.println("Lunghezza della mia lista di mappe: "+ listEntity.size());	*/
 		
 		return listEntity;
 
