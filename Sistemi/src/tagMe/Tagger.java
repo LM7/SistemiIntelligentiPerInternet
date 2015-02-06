@@ -141,8 +141,8 @@ public class Tagger {
 		in.close();
 
 		//print result
-		System.out.println(response.toString());
-		System.out.println("--------------------------------------------------------");
+		//System.out.println(response.toString());
+		//System.out.println("--------------------------------------------------------");
 
 		/* Elaborazione dei risultati*/
 		Parser p = new Parser(response.toString());

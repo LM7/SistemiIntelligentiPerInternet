@@ -75,7 +75,7 @@ public class MsnSearchEngine implements SearchEngine {
 		JSONObject jsonRanking = (JSONObject) jsonObject.get("d");
 		JSONArray jsonResults = (JSONArray) jsonRanking.get("results");
 		Iterator<JSONObject> resultsIt = jsonResults.iterator();
-		System.out.println("Query: " + query);
+		//System.out.println("Query: " + query);
 		int i = 0;
 		while (resultsIt.hasNext() && i < n) {
 			JSONObject jsonResult = resultsIt.next();
