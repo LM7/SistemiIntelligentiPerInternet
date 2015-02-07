@@ -63,7 +63,7 @@ public class Tagger {
 		Annotation annotation = new Annotation(text);
 		annotation.set(CoreAnnotations.DocDateAnnotation.class, "2015-02-04");
 		pipeline.annotate(annotation);
-		System.out.println(annotation.get(CoreAnnotations.TextAnnotation.class));
+		//System.out.println(annotation.get(CoreAnnotations.TextAnnotation.class));
 		List<CoreMap> timexAnnsAll = annotation.get(TimeAnnotations.TimexAnnotations.class);
 
 		for (CoreMap cm : timexAnnsAll) {

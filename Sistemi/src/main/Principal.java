@@ -2,12 +2,12 @@ package main;
 
 import java.io.PrintWriter;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Set;
+import java.util.Locale;
 
-import namedEntityRecognizer.NamedEntityRecognizerTest;
 import nertagme.NerTagme;
 
 import com.mongodb.BasicDBObject;
@@ -16,7 +16,6 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 
-import edu.stanford.nlp.wordseg.affDict;
 import events.MsnSearchEngine;
 import suTime.SUTime;
 import boilerpipe.Boilerpipe;
@@ -24,8 +23,8 @@ import lastFM.*;
 
 public class Principal {
 
-	public final static int numero_query = 1;
-	public final static String[] CITTA = {"Roma","Londra","New York","Los Angeles","Stoccolma","Parigi","Helsinki","Camberra","Chicago","Austin"};
+	public final static int numero_query = 10;
+	public final static String[] CITTA = {"Roma","Londra","New York","Los Angeles","Stoccolma","Parigi","Helsinki","Canberra","Chicago","Austin"};
 
 	public static void main(String[] args) {
 		int i;
@@ -130,7 +129,10 @@ public class Principal {
 						//SUTime
 						SUTime suT = new SUTime();
 						HashMap<Date, Integer> date = suT.getTime(title,text);
-						Date dataProposta = suT.dataEvento(date);
+						//Date dataProposta = suT.dataEvento(date);
+						Locale.setDefault(Locale.ENGLISH);
+						SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MMMMMMMMMM dd yyyy");
+						String dataProposta = DATE_FORMAT.format(suT.dataEvento(date));
 
 
 						/**
@@ -161,29 +163,34 @@ public class Principal {
 						//luogo = "Roma, Palalottomatica";
 						BasicDBObject document = new BasicDBObject();
 						document.put("data", data);
+						document.put("data proposta", dataProposta);
 						document.put("evento_cantante", evento_cantante);
-						document.put("luogo", luogo);
-						document.put("url", url.toString());
-						document.put("data proposta", dataProposta.toString());
-						//document.put("date", dateString);
-						document.put("luogo proposto", luogoProposto);
-						//document.put("luoghi", locations);
 						document.put("persona proposta", personaProposta );
+						document.put("luogo", luogo);
+						document.put("luogo proposto", luogoProposto);
+						document.put("url", url.toString());
+						
+						//document.put("date", dateString);
+						
+						//document.put("luoghi", locations);
+						
 						//document.put("persone", people);
 						collection.insert(document);
 
-						System.out.println("Documento aggiunto");
+						//System.out.println("Documento aggiunto");
 
 					} catch (Exception e) {
-						System.out.println(e.getMessage());
+						//System.out.println(e.getMessage());
 					}
 
 				}
 			}
 		}
+		int k = 1;
 		DBCursor cursor = collection.find();
 		while (cursor.hasNext()) {
-			System.out.println(cursor.next());
+			System.out.println(k+") "+cursor.next());
+			k++;
 		}
 
 		System.out.println("Done"+j);
