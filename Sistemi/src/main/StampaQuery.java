@@ -19,21 +19,21 @@ public class StampaQuery {
 		DB db = mongo.getDB("db");
 		DBCollection collection = db.getCollection("collezione");
 		
-		PrintWriter out = new PrintWriter("contenutoDB.txt", "UTF-8");
+		PrintWriter out = new PrintWriter("contenutoDB2.txt", "UTF-8");
 		
 		DBCursor cursor = collection.find();
 		int j = 1;
 		while (cursor.hasNext()) {
 			String s = cursor.next().toString();
 			System.out.println(j+") "+s);
-			s = j+") "+s.substring(0,1) + s.substring(51);
+			s = s.substring(0,1) + s.substring(51);
 			s = s.replaceAll("\"data\"", "DATA");
-			s = s.replaceAll("\"data proposta\"", "DATA PROPOSTA");
-			s = s.replaceAll("\"evento_cantante\"", "\tPERSONA");
-			s = s.replaceAll("\"persona proposta\"", "PERSONA PROPOSTA");
-			s = s.replaceAll("\"luogo\"", "\tLUOGO");
-			s = s.replaceAll("\"luogo proposto\"", "LUOGO PROPOSTO");
-			s = s.replaceAll("\"url\"", "\t\tURL");
+			s = s.replaceAll(", \"data proposta\"", ": DATA PROPOSTA");
+			s = s.replaceAll(", \"evento_cantante\"", ": PERSONA");
+			s = s.replaceAll(", \"persona proposta\"", ": PERSONA PROPOSTA");
+			s = s.replaceAll(", \"luogo\"", ": LUOGO");
+			s = s.replaceAll(", \"luogo proposto\"", ": LUOGO PROPOSTO");
+			s = s.replaceAll(", \"url\"", ":URL");
 			out.println(s);
 			j++;
 		}
