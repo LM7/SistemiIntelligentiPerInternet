@@ -28,8 +28,12 @@ public class StampaQuery2 {
 			System.out.println(j+") "+s);
 			s = s.substring(0,1) + s.substring(51);
 			s = s.replaceAll("\"url\" :", "URL =");
-			s = s.replaceAll("\"xk male\" :", "xk male =");
-			s = s.replaceAll("\"buono\" :", "buono =");
+			s = s.replaceAll(", \"data\" :", "= DATA =");
+			s = s.replaceAll(", \"evento_cantante\" :", "= CANTANTE =");
+			s = s.replaceAll(", \"luogo\" :", "= LUOGO GIUSTO =");
+			s = s.replaceAll(", \"luoghi\" :", "= LUOGHI =");
+			s = s.replaceAll(", \"xk male\" :", "= xk male =");
+			s = s.replaceAll(", \"buono\" :", "= buono =");
 			out.println(s);
 			j++;
 		}

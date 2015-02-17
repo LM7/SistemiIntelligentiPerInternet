@@ -27,7 +27,7 @@ import lastFM.*;
 
 public class Principal2 {
 
-	public final static int numero_query = 10;
+	public final static int numero_query = 1;
 	public final static String[] CITTA = {"Roma","Londra","New York","Los Angeles","Stoccolma","Parigi","Helsinki","Canberra","Chicago","Austin"};
 
 	public static void main(String[] args) {
@@ -55,7 +55,7 @@ public class Principal2 {
 			ArrayList<String[]> totale = geoMethods.eventsPusher(CITTA[i]);
 
 			int prendiSolo10Eventi;
-			for(prendiSolo10Eventi=11;prendiSolo10Eventi<totale.size();prendiSolo10Eventi++){
+			for(prendiSolo10Eventi=19;prendiSolo10Eventi<totale.size();prendiSolo10Eventi++){
 			//for(String[] trio: totale) {
 				String[] trio = totale.get(prendiSolo10Eventi);
 				String evento_cantante = trio[0];
@@ -71,7 +71,7 @@ public class Principal2 {
 					URL url = null;
 					try {
 						j++;
-						System.out.println("Stiamo a "+j);
+						System.out.println("Stiamo a "+j+"  La citta' e' "+CITTA[i]);
 						url = new URL(s);	
 						String[] site = b.getText(url);
 						String title = site[0];
@@ -115,8 +115,10 @@ public class Principal2 {
 						document.put("evento_cantante", evento_cantante);
 						document.put("luogo", luogo);
 						
-						if(luoghi != null) 
+						if(luoghi != null) {
 							document.put("luoghi", luoghi);
+							document.put("buono", "");
+						}
 						else {
 							document.put("xk male", cosaMale);
 							document.put("buono", false);
