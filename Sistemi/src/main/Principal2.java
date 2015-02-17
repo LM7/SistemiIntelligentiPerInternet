@@ -27,7 +27,7 @@ import lastFM.*;
 
 public class Principal2 {
 
-	public final static int numero_query = 1;
+	public final static int numero_query = 10;
 	public final static String[] CITTA = {"Roma","Londra","New York","Los Angeles","Stoccolma","Parigi","Helsinki","Canberra","Chicago","Austin"};
 
 	public static void main(String[] args) {
@@ -55,7 +55,7 @@ public class Principal2 {
 			ArrayList<String[]> totale = geoMethods.eventsPusher(CITTA[i]);
 
 			int prendiSolo10Eventi;
-			for(prendiSolo10Eventi=19;prendiSolo10Eventi<totale.size();prendiSolo10Eventi++){
+			for(prendiSolo10Eventi=10;prendiSolo10Eventi<totale.size();prendiSolo10Eventi++){
 			//for(String[] trio: totale) {
 				String[] trio = totale.get(prendiSolo10Eventi);
 				String evento_cantante = trio[0];
