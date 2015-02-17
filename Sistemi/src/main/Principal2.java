@@ -7,10 +7,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
 import nertagme.NerTagme;
+import nertagme.NerTagme2;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -75,24 +77,30 @@ public class Principal2 {
 						String title = site[0];
 						String text = site[1];				
 
-						HashSet<String> luoghi = null; 
+						Set<String> luoghi = null; 
 						
 						//SUTime
 						SUTime suT = new SUTime();
 						HashMap<Date, Integer> date = suT.getTime(title,text);
 						boolean continua = contieneDate(date.keySet(),data);
+						
+						
 
 						
-						//NERTAGME
+						//NERTAGME2
+						
+						List<HashMap<String,Integer>> result = NerTagme2.ritorna(site); 
+						
+						
 						String cosaMale = "";
 						if(continua) {
 							//lista di persone presa da NERTAGME hashMap.keySet
-							Set<String> persone = new HashSet<String>();					
+							Set<String> persone = result.get(0).keySet();					
 							continua = persone.contains(evento_cantante);
 							
 							if(continua){
 								//lista di luoghi presa da NERTAGME hashMap.keySet
-								luoghi = new HashSet<String>();
+								luoghi = result.get(1).keySet();
 							}
 							else
 								cosaMale = "No persona";
@@ -103,6 +111,9 @@ public class Principal2 {
 						
 						BasicDBObject document = new BasicDBObject();
 						document.put("url", url.toString());
+						document.put("data", data);
+						document.put("evento_cantante", evento_cantante);
+						document.put("luogo", luogo);
 						
 						if(luoghi != null) 
 							document.put("luoghi", luoghi);
