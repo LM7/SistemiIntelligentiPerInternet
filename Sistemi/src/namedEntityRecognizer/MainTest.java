@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import lastFM.geoMethods;
 import nertagme.NerTagme;
 import tagMe.Parser;
 import tagMe.Tagger;
@@ -21,58 +22,77 @@ import events.MsnSearchEngine;
 import boilerpipe.Boilerpipe;
 
 public class MainTest {
-	public final static int numero_query = 3;
+	public final static int numero_query = 1;
+	public final static String[] CITTA = {"Austin"};
 
 
 	public static void main(String[] args) throws Exception {
-		String data = "5 November";
+		/*String data = "5 November";
 		String evento_cantante = "Nickelback";
-		String luogo = "";
+		String luogo = "";*/
+		int i;
+
+		for(i=0;i<CITTA.length;i++) {
+
+			// 'totale' e' una lista di eventi [artista, luogo, data]
+			ArrayList<String[]> totale = geoMethods.eventsPusher(CITTA[i]);
+
+			int prendiSolo10Eventi;
+			for(prendiSolo10Eventi=11;prendiSolo10Eventi<totale.size();prendiSolo10Eventi++){
+				//for(String[] trio: totale) {
+				String[] trio = totale.get(prendiSolo10Eventi);
+				String evento_cantante = trio[0];
+				String luogo = trio[1];
+				String data = trio[2];
 
 
 
-		NamedEntityRecognizerTest ner = new NamedEntityRecognizerTest();
-		NerTagme nertagme = new NerTagme();
+				NamedEntityRecognizerTest ner = new NamedEntityRecognizerTest();
+				NerTagme nertagme = new NerTagme();
 
-		/*String[] example = {"Good afternoon Rajat Raina, how are you today?",
-		"I go to school at Stanford University, which California is located in California." };
 
-		ArrayList<HashMap<String,Integer>> lista = ner.createListOfMapEntity(example);*/
-
-		MsnSearchEngine se = new MsnSearchEngine();
-		String[] urls = se.getUrls(data+" "+evento_cantante+" "+luogo, numero_query);
+				MsnSearchEngine se = new MsnSearchEngine();
+				String[] urls = se.getUrls(data+" "+evento_cantante+" "+luogo, numero_query);
 
 
 
-		/*parte database---> RICORDA SI SCRIVE "DABABASE"*/
 
 
-		/*MongoClient mongo = null;
-		try {
-			mongo = new MongoClient("localhost", 27017);
-		}catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		DB db = mongo.getDB("db");
-		DBCollection collection = db.getCollection("collezione");		
-		// svuota database
-		BasicDBObject x = new BasicDBObject();
-		collection.remove(x);*/
+				for(String s: urls) {
+					Boilerpipe b = new Boilerpipe();
+					URL url = new URL(s);
+					System.out.println("UUUUURL: "+url);
 
-		for(String s: urls) {
-			Boilerpipe b = new Boilerpipe();
-			URL url = new URL(s);
-			System.out.println("UUUUURL: "+url);
+					
+					try {
+						String title = b.getText(url)[0];
 
-			String title = b.getText(url)[0];
-			String text = b.getText(url)[1];
+						String text = b.getText(url)[1];
 
-			String[] site = {title, text};
-			ArrayList<HashMap<String,Integer>> lista = ner.createListOfMapEntity(site); //restituisce la lista di mappe
-			HashMap<String,Integer> locations = lista.get(0); // la mappa dei luoghi
-			HashMap<String,Integer> people = lista.get(1); // la mappa delle persone-eventi
+						String[] site = {title, text};
+						//System.out.println("TITOLO "+title);
+						//System.out.println("TESTO "+text);
 
-			String luogoTop = ner.entityTop(locations);
+						ArrayList<HashMap<String,Integer>> lista = ner.createListOfMapEntity(site); //restituisce la lista di mappe
+						HashMap<String,Integer> locations = lista.get(0); // la mappa dei luoghi
+						HashMap<String,Integer> people = lista.get(1); // la mappa delle persone-eventi
+
+						System.out.println("LISTA DI LUOGHI"+ locations.keySet());
+						System.out.println("LISTA DI PERSONE"+ people.keySet());
+						
+					}
+					catch(Exception e) {
+						
+					}
+
+
+					
+						
+					
+
+					
+
+					/*String luogoTop = ner.entityTop(locations);
 			String personaTop = ner.entityTop(people);
 
 			String[] result = {personaTop, luogoTop};
@@ -80,12 +100,14 @@ public class MainTest {
 
 			System.out.println("LMLMLMLMLM IL LUOGO PROPOSTO E': "+ luogoTop);
 
-			System.out.println("LMLMLMLMLM LA PERSONA PROPOSTA E': "+ personaTop);
-			System.out.println("TITOLO "+title);
+			System.out.println("LMLMLMLMLM LA PERSONA PROPOSTA E': "+ personaTop);*/
 
-			/*tagme*/
 
-			System.out.println("PARTE DI TAGME");
+
+
+					/*tagme*/
+
+					/*System.out.println("PARTE DI TAGME");
 
 			Tagger tagMe = new Tagger();
 			Parser parser = new Parser();
@@ -129,13 +151,13 @@ public class MainTest {
 				}
 			}
 
-			System.out.println("ECCO LA PERSONA TOP: "+result[0]+" ED ECCO IL LUOGO TOP: "+result[1]);
+			System.out.println("ECCO LA PERSONA TOP: "+result[0]+" ED ECCO IL LUOGO TOP: "+result[1]);*/
 
 
 
 
 
-			/*BasicDBObject document = new BasicDBObject();
+					/*BasicDBObject document = new BasicDBObject();
 			document.put("data", data);
 			document.put("evento_cantante", evento_cantante);
 			document.put("luogo", luogo);
@@ -143,6 +165,8 @@ public class MainTest {
 			document.put("luogo proposto", luogoTop );
 			document.put("luoghi", luoghi);
 			collection.insert(document);*/
+				}
+			}
 
 
 
