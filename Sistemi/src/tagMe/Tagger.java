@@ -2,6 +2,8 @@ package tagMe;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -13,6 +15,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.StringTokenizer;
 
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.pipeline.Annotation;
@@ -27,6 +30,7 @@ import edu.stanford.nlp.util.CoreMap;
 
 public class Tagger {
 	
+	static File stopWordFile = new File("stopWord.txt");
 	/* 
 	 * Restituisce i valori parziali proposti (titolo e testo) 
 	 */
@@ -37,6 +41,14 @@ public class Tagger {
 		text = text.replaceAll("\\<.*?\\>|\\{.*?\\}", "");
 		text = text.replaceAll("\\&.*?\\;", "");
 		text = text.replaceAll(".x-boilerpipe-mark1", "");
+		
+		text = text.toLowerCase();
+		text = text.replaceAll("’", "'");
+		text = removeStopWord(text);
+		text = text.replaceAll("[^a-zA-Z ]", " ");
+		text = removeStopWord(text);
+		//System.out.println(text);
+		
 		
 		List<HashMap<String,Integer>> result = new ArrayList<HashMap<String,Integer>>();
 		/*Elaborazione del testo da taggare*/
@@ -149,21 +161,22 @@ public class Tagger {
 		HashMap<String, List<String>> tagMeResult = p.processingReply();
 
 		List<String> topWordPlaceCityList = new ArrayList<String>(); 
-		topWordPlaceCityList.add("cities");
+		topWordPlaceCityList.add("cities in");
 		topWordPlaceCityList.add("capitals");
-		topWordPlaceCityList.add("city");
+		//topWordPlaceCityList.add("city");
 		topWordPlaceCityList.add("capital");
-		topWordPlaceCityList.add("states");
-		topWordPlaceCityList.add("populated place");
+		//topWordPlaceCityList.add("states");
+		//topWordPlaceCityList.add("populated places in");
 		topWordPlaceCityList.add("boroughs");
 
 		List<String> topWordPlaceVenueList = new ArrayList<String>(); 
-		topWordPlaceVenueList.add("venues");
+		topWordPlaceVenueList.add("music venues");
+		topWordPlaceVenueList.add("event venues");
 		topWordPlaceVenueList.add("arenas");
 		topWordPlaceVenueList.add("buildings and structures");
-		topWordPlaceVenueList.add("hall");
+		topWordPlaceVenueList.add("concert halls");
 		topWordPlaceVenueList.add("theatres");
-		topWordPlaceVenueList.add("populated place");
+		//topWordPlaceVenueList.add("populated places in");
 
 		List<String> topWordPersonList = new ArrayList<String>(); 
 		topWordPersonList.add("singer-songwriters");
@@ -264,5 +277,39 @@ public class Tagger {
 			String value = wordTaggedPlace.get(key).toString();	  
 			System.out.println("La Parola \""+key+"\" contiene "+value+" categorie dal contenuto Top");
 		}
+	}
+
+	
+	/*
+	 * Rimozione delle stopWord
+	 */
+	public static String removeStopWord(String text) throws IOException    {
+		StringTokenizer tokens = new StringTokenizer(text, " ");
+		String newText = "";
+		while (tokens.hasMoreTokens()) {
+			String temp = tokens.nextToken();
+			if (!checkStopWord(temp,stopWordFile)) {
+				newText += temp + " ";
+			}
+		}
+		text = "";
+		text = newText;
+		return text;
+	}
+	
+	
+	/*
+	 * Metodo di supporto per la verifica delle stop word
+	 */
+	@SuppressWarnings("resource")
+	public static boolean checkStopWord(String word, File stopWordFile) throws IOException {
+		BufferedReader stopWordReader = new BufferedReader(new FileReader(stopWordFile));
+		String text2;
+		while ((text2 = stopWordReader.readLine()) != null) {
+			if(word.equals(text2))
+				return true;
+		}
+		stopWordReader.close();
+		return false;
 	}
 }
