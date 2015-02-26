@@ -2,10 +2,11 @@ package posTagger;
 
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
+
 public class PosTaggerTest {
 
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		MaxentTagger tagger = new MaxentTagger("taggers/english-left3words-distsim.tagger");
 
 		String sample = "Good afternoon Rajat Raina, how are you today?"+
