@@ -44,7 +44,7 @@ public class NerTagme2 {
 			String[] datiPropostiTitle = parser.choiceDataProposals(mapPTitle, mapCTitle, mapVTitle);
 
 			List<HashMap<String,Integer>> listaMappeText = tagMe.getTagMePartialProposedData(text);
-			if ( listaMappeText != null  ) {
+			if ( listaMappeText != null && !listaMappeText.isEmpty()) {
 				HashMap<String,Integer> mapPText = listaMappeText.get(0);
 				HashMap<String,Integer> mapCText = listaMappeText.get(1);
 				HashMap<String,Integer> mapVText = listaMappeText.get(2);

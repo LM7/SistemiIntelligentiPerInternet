@@ -113,7 +113,9 @@ public class Tagger {
 		String urlParameters = "key=41480047b3428dcfe6a5c1bba1f0a93e&text="+text+"&include_categories=true";
 
 		//send post request
+		try {
 		con.setDoOutput(true);
+		}catch(Exception e) {}
 		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
 		wr.write(urlParameters.getBytes("UTF-8"));
 		wr.flush();
@@ -130,7 +132,11 @@ public class Tagger {
 			urlParameters = "key=41480047b3428dcfe6a5c1bba1f0a93e&text="+textOriginal+"&include_categories=true";
 
 			//send post request
+			try{
 			con.setDoOutput(true);
+			}catch(Exception e) {
+				return result;
+			}
 			wr = new DataOutputStream(con.getOutputStream());
 			wr.write(urlParameters.getBytes("UTF-8"));
 			wr.flush();
