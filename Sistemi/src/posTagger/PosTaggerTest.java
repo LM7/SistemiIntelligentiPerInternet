@@ -5,7 +5,6 @@ import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 
 public class PosTaggerTest {
 
-
 	public static void main(String[] args) throws Exception {
 		MaxentTagger tagger = new MaxentTagger("taggers/english-left3words-distsim.tagger");
 
@@ -15,5 +14,4 @@ public class PosTaggerTest {
 		String tagged = tagger.tagString(sample);
 		System.out.println(tagged);
 	}
-
 }

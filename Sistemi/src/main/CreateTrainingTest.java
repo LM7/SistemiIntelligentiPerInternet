@@ -28,11 +28,11 @@ public class CreateTrainingTest {
 	//"SII_events"
 	//"siicdll"
 	
-	public final static HashSet<String> STOP_LOCATION = new HashSet<String>(Arrays.asList("venues","venue","WordPress.com","big","big red","local","Gamespot","events","met","Europe","death"));
+	public final static HashSet<String> STOP_LOCATION = new HashSet<String>(Arrays.asList("venues","venue","WordPress.com","big","big red","local","Gamespot","events","met","Europe","death","Songkick"));
 	
 	public final static int numero_query = 1;
 	//public final static String[] CITTA = {"Roma","Londra","New York","Los Angeles","Stoccolma","Parigi","Helsinki","Canberra","Chicago","Austin"};
-	public final static String[] CITTA = {"Stoccolma"};
+	public final static String[] CITTA = {"Londra"};
 
 	public static void main(String[] args) {
 		int i;
