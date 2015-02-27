@@ -42,7 +42,13 @@ public class Tagger {
 		text = text.replaceAll("\\&.*?\\;", "");
 		text = text.replaceAll(".x-boilerpipe-mark1", "");
 		
-		text = text.toLowerCase();
+		/*
+		 * NON PUOI MODIFICARE IL TESTO ORIGINALE IN QUESTO CASO 
+		 * ESEMPIO DI QUELLO CHE SUCCEDE:
+		 * Lorenzo trova il luogo Roma tu trovi il luogo roma -> 2 luoghi diversi
+		 * text = text.toLowerCase();
+		 */
+		
 		text = text.replaceAll("’", "'");
 		text = removeStopWord(text);
 		text = text.replaceAll("[^a-zA-Z ]", " ");
@@ -306,7 +312,11 @@ public class Tagger {
 		BufferedReader stopWordReader = new BufferedReader(new FileReader(stopWordFile));
 		String text2;
 		while ((text2 = stopWordReader.readLine()) != null) {
-			if(word.equals(text2))
+			/*
+			 * SUPPONENDO CHE QUI FAI IL CONFRONTO TRA PAROLA E STOPWORD
+			 * MODIFICHIAMO equals() CON equalsIgnoreCase()
+			 */
+			if(word.equalsIgnoreCase(text2))
 				return true;
 		}
 		stopWordReader.close();
