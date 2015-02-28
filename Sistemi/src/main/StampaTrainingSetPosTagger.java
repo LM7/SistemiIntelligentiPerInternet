@@ -30,6 +30,17 @@ public class StampaTrainingSetPosTagger {
 			s = s.replaceAll("\"", "");
 			s = s.replaceAll("[}]", "");
 			s = s.replaceAll("[{]", "");
+			
+			s = s.replaceAll(", data", ":data");
+			s = s.replaceAll(", evento_cantante", ":cantante");
+			s = s.replaceAll(", luogo", ":luogo");
+			s = s.replaceAll(", Titolo", ":Titolo");
+			s = s.replaceAll(", Frase", ":Frase");
+			s = s.replaceAll(", FrasePOS", ":FrasePOS");
+			s = s.replaceAll(", date", ":date");
+			s = s.replaceAll(", persone", ":persone");
+			s = s.replaceAll(", luoghi", ":luoghi");
+			s = s.replaceAll(", url", ":url");
 			out.println(s);
 			j++;
 		}
