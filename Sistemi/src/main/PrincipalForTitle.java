@@ -19,9 +19,14 @@ import events.MsnSearchEngine;
 
 public class PrincipalForTitle {
 	
-	public final static HashSet<String> STOP_SITE = new HashSet<String>(Arrays.asList("Last.fm","Songkick"));
+	public final static HashSet<String> STOP_SITE = new HashSet<String>(Arrays.asList("StubHub", "Last.fm",
+			"Stereoboard", "www.floramc.org", "rmalife.net", "Gumtree", "Seatwave.com", "Songkick", 
+			"The sound of summer", "504ever.net", "Concertful", "StubHub UK!", "YouPict", "5gig.co.uk", 
+			"mxdwn.com", "Thrillcall", "Kililive.com", "Bandsitown", "MASS EDMC", "Nerds Attack!", 
+			"Plannify", "BoxOffice Lazio", "ConcertWith.Me", "NaviHotels.com", "Heyevent.com", 
+			"Friendfeed", "setlist.fm", "Getty Images", "TicketNetwork", "Ticketfly"));
 
-	public final static int numero_query = 10;
+	public final static int numero_query = 2;
 	public final static String[] CITTA = {"Roma","Londra","New York","Los Angeles","Stoccolma","Parigi","Helsinki","Canberra","Chicago","Austin"};
 	//public final static String[] CITTA = {"Londra","New York"};
 
@@ -71,18 +76,18 @@ public class PrincipalForTitle {
 						String[] site = bolierpipe.getText(url);
 						String title = site[0];
 						//String text = site[1];				
-						
-						String titleTag = title;
-						//RIMUOVI SITI
-						for(String sito: STOP_SITE){
-							titleTag = titleTag.replaceAll(sito, "");
-						}
 
 						SUTime_Titoli SUTT = new SUTime_Titoli();
 						//DATA TAGGATA
-						titleTag = SUTT.getTextTag(title);
+						String titleTag = SUTT.getTextTag(title);
+						
+						//RIMUOVI SITI
+						for(String sito: STOP_SITE){
+							titleTag = titleTag.replace(sito, "");
+						}
+						
 						//PERSONA TAGGATA
-						titleTag = titleTag.replaceAll(evento_cantante_giusto, "PPP");
+						titleTag = titleTag.replace(evento_cantante_giusto, "PPP");
 
 						try {
 							String[] sede_citta = luogo_giusto.split(",");
@@ -90,13 +95,23 @@ public class PrincipalForTitle {
 							String sede = sede_citta[0].trim();
 							String citta = sede_citta[1].trim();
 							//SEDE TAGGATA
-							titleTag = titleTag.replaceAll(sede, "SSS");
+							titleTag = titleTag.replace(sede, "SSS");
 							//CITTA' TAGGATA
-							titleTag = titleTag.replaceAll(citta, "CCC");
+							titleTag = titleTag.replace(citta, "CCC");
 						}catch(Exception e) {
 							System.out.println("ERRORE SEDE_CITTA'");
 							e.printStackTrace();
 						}
+						
+						//ALTRI TAG
+						titleTag = titleTag.replace("|", "SEPA");
+						titleTag = titleTag.replaceAll(",", "SEPA");
+						titleTag = titleTag.replace("–", "SEPA");
+						titleTag = titleTag.replace("-", "SEPA");
+						
+						titleTag = titleTag.replace("@", "AAA");
+						titleTag = titleTag.replace(" at ", " AAA ");
+						
 						
 						
 						String dominio = urlString.split("/")[2];
