@@ -26,7 +26,8 @@ public class PrincipalForTitle {
 			"– Songkick", "The sound of summer", "504ever.net", "Concertful", "StubHub UK!", "YouPict", 
 			"- 5gig.com","5gig.co.uk", "mxdwn.com", "Thrillcall", "Kililive.com", "| Bandsintown", "MASS EDMC", 
 			"Nerds Attack!", "Plannify", "BoxOffice Lazio", "| Ticketfly", "| CheapTickets.com",
-			"| MASS EDMC", "| Kililive.com", "| setlist.fm", "- - Stereoboard", "SoundCrashMusic", "| SoundCrashMusic"));
+			"| MASS EDMC", "| Kililive.com", "| setlist.fm", "- - Stereoboard", "SoundCrashMusic", "| SoundCrashMusic",
+			"TicketsInventory Mobile", "- backpage.com", "from Bandsintown", "| ConcertBank.com", "| clubZone "));
 
 	public final static int numero_query = 10;
 	public final static String[] CITTA = {"Roma","Londra","New York","Los Angeles","Stoccolma","Parigi","Helsinki","Canberra","Chicago","Austin"};
@@ -115,6 +116,8 @@ public class PrincipalForTitle {
 						titleTag = titleTag.replace("SEPA twitter", "SOCIAL");
 						titleTag = titleTag.replace("on twitter", "SOCIAL");
 						titleTag = titleTag.replace("(@", "PREP");
+						
+						titleTag = titleTag.replace("on ","PRED");
 						
 						titleTag = titleTag.replace("@", "AAA");
 						titleTag = titleTag.replace(" at ", " AAA ");
