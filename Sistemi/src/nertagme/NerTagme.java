@@ -72,7 +72,6 @@ public class NerTagme {
 		return result;
 
 
-
 	}
 
 

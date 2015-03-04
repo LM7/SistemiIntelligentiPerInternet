@@ -21,14 +21,14 @@ public class PrincipalForTitle {
 	
 	public final static HashSet<String> STOP_SITE = new HashSet<String>(Arrays.asList("on StubHub!", 
 			"- StubHub UK","- StubHub UK!","– Last.fm", "— Last.fm", "at Last.fm", "@ TicketHold","@ Ultimate-Guitar.Com",
-			"at Last.fm","Stereoboard", "www.floramc.org", "rmalife.net", "Gumtree", "Seatwave.com",
+			"at Last.fm","Stereoboard", "ConcertWith.Me", "NaviHotels.com", "Heyevent.com", "Friendfeed", "setlist.fm",
+			"Getty Images", "TicketNetwork", "www.floramc.org", "rmalife.net", "Gumtree", "Seatwave.com",
 			"– Songkick", "The sound of summer", "504ever.net", "Concertful", "StubHub UK!", "YouPict", 
 			"- 5gig.com","5gig.co.uk", "mxdwn.com", "Thrillcall", "Kililive.com", "| Bandsintown", "MASS EDMC", 
-			"Nerds Attack!", "Plannify", "BoxOffice Lazio", "ConcertWith.Me", "NaviHotels.com", 
-			"Heyevent.com", "Friendfeed", "setlist.fm", "Getty Images", "TicketNetwork", "| Ticketfly",
-			"| CheapTickets.com"));
+			"Nerds Attack!", "Plannify", "BoxOffice Lazio", "| Ticketfly", "| CheapTickets.com",
+			"| MASS EDMC", "| Kililive.com", "| setlist.fm", "- - Stereoboard", "SoundCrashMusic", "| SoundCrashMusic"));
 
-	public final static int numero_query = 2;
+	public final static int numero_query = 10;
 	public final static String[] CITTA = {"Roma","Londra","New York","Los Angeles","Stoccolma","Parigi","Helsinki","Canberra","Chicago","Austin"};
 	//public final static String[] CITTA = {"Londra","New York"};
 
@@ -110,7 +110,7 @@ public class PrincipalForTitle {
 						titleTag = titleTag.replace("|", "SEPA");
 						titleTag = titleTag.replaceAll(",", " SEPA");
 						titleTag = titleTag.replace("–", "SEPA");
-						titleTag = titleTag.replace("-", "SEPA");
+						// titleTag = titleTag.replace("-", "SEPA");
 						
 						titleTag = titleTag.replace("SEPA twitter", "SOCIAL");
 						titleTag = titleTag.replace("on twitter", "SOCIAL");
@@ -126,7 +126,7 @@ public class PrincipalForTitle {
 						titleTag = titleTag.replace(" concerts ", " MMM ");
 						titleTag = titleTag.replace(" concert ", " MMM ");
 						titleTag = titleTag.replace(" tickets ", " MMM ");
-						titleTag = titleTag.replace(" tickets ", " MMM ");
+						// titleTag = titleTag.replace(" tickets ", " MMM ");
 						titleTag = titleTag.replace(" ticket ", " MMM ");
 						titleTag = titleTag.replace(" tour dates ", " MMM ");
 						titleTag = titleTag.replace(" tour ", " MMM ");
