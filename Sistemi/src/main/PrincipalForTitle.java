@@ -19,12 +19,14 @@ import events.MsnSearchEngine;
 
 public class PrincipalForTitle {
 	
-	public final static HashSet<String> STOP_SITE = new HashSet<String>(Arrays.asList("StubHub", "Last.fm",
-			"Stereoboard", "www.floramc.org", "rmalife.net", "Gumtree", "Seatwave.com", "Songkick", 
-			"The sound of summer", "504ever.net", "Concertful", "StubHub UK!", "YouPict", "5gig.co.uk", 
-			"mxdwn.com", "Thrillcall", "Kililive.com", "Bandsitown", "MASS EDMC", "Nerds Attack!", 
-			"Plannify", "BoxOffice Lazio", "ConcertWith.Me", "NaviHotels.com", "Heyevent.com", 
-			"Friendfeed", "setlist.fm", "Getty Images", "TicketNetwork", "Ticketfly"));
+	public final static HashSet<String> STOP_SITE = new HashSet<String>(Arrays.asList("on StubHub!", 
+			"- StubHub UK","- StubHub UK!","– Last.fm", "— Last.fm", "at Last.fm", "@ TicketHold","@ Ultimate-Guitar.Com",
+			"at Last.fm","Stereoboard", "www.floramc.org", "rmalife.net", "Gumtree", "Seatwave.com",
+			"– Songkick", "The sound of summer", "504ever.net", "Concertful", "StubHub UK!", "YouPict", 
+			"- 5gig.com","5gig.co.uk", "mxdwn.com", "Thrillcall", "Kililive.com", "| Bandsintown", "MASS EDMC", 
+			"Nerds Attack!", "Plannify", "BoxOffice Lazio", "ConcertWith.Me", "NaviHotels.com", 
+			"Heyevent.com", "Friendfeed", "setlist.fm", "Getty Images", "TicketNetwork", "| Ticketfly",
+			"| CheapTickets.com"));
 
 	public final static int numero_query = 2;
 	public final static String[] CITTA = {"Roma","Londra","New York","Los Angeles","Stoccolma","Parigi","Helsinki","Canberra","Chicago","Austin"};
@@ -77,17 +79,18 @@ public class PrincipalForTitle {
 						String title = site[0];
 						//String text = site[1];				
 
+						String titleTag = title.toLowerCase();
 						SUTime_Titoli SUTT = new SUTime_Titoli();
 						//DATA TAGGATA
-						String titleTag = SUTT.getTextTag(title);
+						titleTag = SUTT.getTextTag(titleTag);
 						
 						//RIMUOVI SITI
 						for(String sito: STOP_SITE){
-							titleTag = titleTag.replace(sito, "");
+							titleTag = titleTag.replace(sito.toLowerCase(), "");
 						}
 						
 						//PERSONA TAGGATA
-						titleTag = titleTag.replace(evento_cantante_giusto, "PPP");
+						titleTag = titleTag.replace(evento_cantante_giusto.toLowerCase(), "PPP");
 
 						try {
 							String[] sede_citta = luogo_giusto.split(",");
@@ -95,9 +98,9 @@ public class PrincipalForTitle {
 							String sede = sede_citta[0].trim();
 							String citta = sede_citta[1].trim();
 							//SEDE TAGGATA
-							titleTag = titleTag.replace(sede, "SSS");
+							titleTag = titleTag.replace(sede.toLowerCase(), "SSS");
 							//CITTA' TAGGATA
-							titleTag = titleTag.replace(citta, "CCC");
+							titleTag = titleTag.replace(citta.toLowerCase(), "CCC");
 						}catch(Exception e) {
 							System.out.println("ERRORE SEDE_CITTA'");
 							e.printStackTrace();
@@ -105,14 +108,33 @@ public class PrincipalForTitle {
 						
 						//ALTRI TAG
 						titleTag = titleTag.replace("|", "SEPA");
-						titleTag = titleTag.replaceAll(",", "SEPA");
+						titleTag = titleTag.replaceAll(",", " SEPA");
 						titleTag = titleTag.replace("–", "SEPA");
 						titleTag = titleTag.replace("-", "SEPA");
+						
+						titleTag = titleTag.replace("SEPA twitter", "SOCIAL");
+						titleTag = titleTag.replace("on twitter", "SOCIAL");
+						titleTag = titleTag.replace("(@", "PREP");
 						
 						titleTag = titleTag.replace("@", "AAA");
 						titleTag = titleTag.replace(" at ", " AAA ");
 						
+						titleTag = titleTag.replace("tickets & tour dates", "POSTP");
 						
+						titleTag = titleTag.replace(" concert tickets ", " MMM ");
+						titleTag = titleTag.replace(" concert dates ", " MMM ");
+						titleTag = titleTag.replace(" concerts ", " MMM ");
+						titleTag = titleTag.replace(" concert ", " MMM ");
+						titleTag = titleTag.replace(" tickets ", " MMM ");
+						titleTag = titleTag.replace(" tickets ", " MMM ");
+						titleTag = titleTag.replace(" ticket ", " MMM ");
+						titleTag = titleTag.replace(" tour dates ", " MMM ");
+						titleTag = titleTag.replace(" tour ", " MMM ");
+						titleTag = titleTag.replace(" dates ", " MMM ");
+						
+						
+						//toglie spazi finali e iniziali
+						titleTag = titleTag.trim();
 						
 						String dominio = urlString.split("/")[2];
 						
