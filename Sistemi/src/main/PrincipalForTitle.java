@@ -20,14 +20,15 @@ import events.MsnSearchEngine;
 public class PrincipalForTitle {
 	
 	public final static HashSet<String> STOP_SITE = new HashSet<String>(Arrays.asList("on StubHub!", 
-			"- StubHub UK","- StubHub UK!","– Last.fm", "— Last.fm", "at Last.fm", "@ TicketHold","@ Ultimate-Guitar.Com",
+			"- StubHub UK","- StubHub UK!","ï¿½ Last.fm", "ï¿½ Last.fm", "at Last.fm", "@ TicketHold","@ Ultimate-Guitar.Com",
 			"at Last.fm","Stereoboard", "ConcertWith.Me", "NaviHotels.com", "Heyevent.com", "Friendfeed", "setlist.fm",
 			"Getty Images", "TicketNetwork", "www.floramc.org", "rmalife.net", "Gumtree", "Seatwave.com",
-			"– Songkick", "The sound of summer", "504ever.net", "Concertful", "StubHub UK!", "YouPict", 
+			"ï¿½ Songkick", "The sound of summer", "504ever.net", "| Concertful", "StubHub UK!", "YouPict", 
 			"- 5gig.com","5gig.co.uk", "mxdwn.com", "Thrillcall", "Kililive.com", "| Bandsintown", "MASS EDMC", 
 			"Nerds Attack!", "Plannify", "BoxOffice Lazio", "| Ticketfly", "| CheapTickets.com",
 			"| MASS EDMC", "| Kililive.com", "| setlist.fm", "- - Stereoboard", "SoundCrashMusic", "| SoundCrashMusic",
-			"TicketsInventory Mobile", "- backpage.com", "from Bandsintown", "| ConcertBank.com", "| clubZone "));
+			"TicketsInventory Mobile", "- backpage.com", "from Bandsintown", "| ConcertBank.com", "| clubZone", "- univision.com",
+			"- Wikipedia, the free encyclopedia", "| Eventful","| SeatGeek","| Eventsfy","__ Last.fm"," Setlist ","__ Songkick"));
 
 	public final static int numero_query = 10;
 	public final static String[] CITTA = {"Roma","Londra","New York","Los Angeles","Stoccolma","Parigi","Helsinki","Canberra","Chicago","Austin"};
@@ -110,14 +111,14 @@ public class PrincipalForTitle {
 						//ALTRI TAG
 						titleTag = titleTag.replace("|", "SEPA");
 						titleTag = titleTag.replaceAll(",", " SEPA");
-						titleTag = titleTag.replace("–", "SEPA");
-						// titleTag = titleTag.replace("-", "SEPA");
+						titleTag = titleTag.replace("ï¿½", "SEPA");
+						titleTag = titleTag.replace("-", "SEPA");
 						
 						titleTag = titleTag.replace("SEPA twitter", "SOCIAL");
 						titleTag = titleTag.replace("on twitter", "SOCIAL");
 						titleTag = titleTag.replace("(@", "PREP");
 						
-						titleTag = titleTag.replace("on ","PRED");
+						titleTag = titleTag.replace(" on "," PRED ");
 						
 						titleTag = titleTag.replace("@", "AAA");
 						titleTag = titleTag.replace(" at ", " AAA ");
@@ -129,7 +130,7 @@ public class PrincipalForTitle {
 						titleTag = titleTag.replace(" concerts ", " MMM ");
 						titleTag = titleTag.replace(" concert ", " MMM ");
 						titleTag = titleTag.replace(" tickets ", " MMM ");
-						// titleTag = titleTag.replace(" tickets ", " MMM ");
+//						titleTag = titleTag.replace("tickets ", " MMM ");
 						titleTag = titleTag.replace(" ticket ", " MMM ");
 						titleTag = titleTag.replace(" tour dates ", " MMM ");
 						titleTag = titleTag.replace(" tour ", " MMM ");
