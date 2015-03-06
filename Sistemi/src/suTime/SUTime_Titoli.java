@@ -27,12 +27,16 @@ public class SUTime_Titoli {
 	}
 
 	public String getTextTag(String text) {
+		int i;
 		Annotation annotation = new Annotation(text);
 		annotation.set(CoreAnnotations.DocDateAnnotation.class, "2013-07-14");
 		pipeline.annotate(annotation);
 		List<CoreMap> timexAnnsAll = annotation.get(TimeAnnotations.TimexAnnotations.class);
 		for (CoreMap cm : timexAnnsAll) {
-			text = text.replaceAll(cm.toString(), "DDD");
+			String[] dataComposta = cm.toString().split(" ");
+			for(i=0;i<dataComposta.length;i++) {
+				text = text.replaceAll(dataComposta[i], "DDD#"+dataComposta[i]);
+			}
 		}
 		return text;
 	}
