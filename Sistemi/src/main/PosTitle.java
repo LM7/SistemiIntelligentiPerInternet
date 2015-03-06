@@ -1,5 +1,7 @@
 package main;
 
+import hmm.Parser;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,6 +37,7 @@ public class PosTitle {
 	public static void main(String[] args) {
 		int i;
 		int j = 0;
+		int train = 0;
 
 		//Database
 		MongoClient mongo = null;
@@ -88,7 +91,8 @@ public class PosTitle {
 						//trim toglie spazi iniziali e finali
 						titleTag.trim();
 
-
+						titleTag = titleTag.replace(",", " ,");
+						titleTag = titleTag.replace("  ", " ");
 
 						//PERSONA TAGGATA
 						titleTag = insertTag(titleTag,evento_cantante_giusto, "PPP");
@@ -108,8 +112,6 @@ public class PosTitle {
 						}
 
 						//ALTRI TAG
-						titleTag = titleTag.replace(",", " ,");
-						titleTag = titleTag.replace("  ", " ");
 						ArrayList<String> listaSepa = new ArrayList<String>(Arrays.asList("|",",","–","-"));
 						titleTag = insertTag(titleTag,listaSepa,"SEPA");
 
@@ -123,12 +125,13 @@ public class PosTitle {
 
 						titleTag = insertTag(titleTag,"tickets & tour dates", "POSTP");
 
+						titleTag = insertTag(titleTag,"on", "PRED");
 						/*
 						titleTag = insertTag(titleTag,"concert tickets", "MMM");
 						titleTag = insertTag(titleTag,"concert dates", "MMM");
 						titleTag = insertTag(titleTag,"tour dates", "MMM");
 						 */
-						ArrayList<String> listaMMM = new ArrayList<String>(Arrays.asList("concerts","concert","tickets","ticket","tour","dates"));
+						ArrayList<String> listaMMM = new ArrayList<String>(Arrays.asList("concerts","concert","tickets","ticket","tour","dates","calendar"));
 						titleTag = insertTag(titleTag,listaMMM,"MMM");
 
 						//toglie spazi finali e iniziali
@@ -138,6 +141,15 @@ public class PosTitle {
 
 						titleTag = titleTag.trim();
 
+						/*
+						 * CREA FILE DI TRAINING
+						 * solo se contiene sia PPP sia DDD sia (CCC oppure SSS)
+						 */
+						if(contieneDati(titleTag)) {
+							train++;
+							System.out.println("Training numero "+train);
+							Parser.parserForTitle(titleTag);
+						}
 
 
 						String dominio = urlString.split("/")[2];
@@ -169,6 +181,16 @@ public class PosTitle {
 		}
 
 		System.out.println("Done"+j);
+	}
+
+
+
+
+	private static boolean contieneDati(String testo) {
+		if(testo.contains("PPP#") && testo.contains("DDD#") && 
+				(testo.contains("CCC#") || testo.contains("SSS#")) )
+			return true;
+		return false;
 	}
 
 
