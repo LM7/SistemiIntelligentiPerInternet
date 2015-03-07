@@ -16,22 +16,23 @@ import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 
 import events.MsnSearchEngine;
+import events.StringTokenizer;
 
 public class PrincipalForTitle {
-	
+
 	public final static HashSet<String> STOP_SITE = new HashSet<String>(Arrays.asList("on StubHub!", 
-			"- StubHub UK","- StubHub UK!","ï¿½ Last.fm", "ï¿½ Last.fm", "at Last.fm", "@ TicketHold","@ Ultimate-Guitar.Com",
+			"- StubHub UK","- StubHub UK!","– Last.fm", "– Last.fm", "at Last.fm", "@ TicketHold","@ Ultimate-Guitar.Com",
 			"at Last.fm","Stereoboard", "ConcertWith.Me", "NaviHotels.com", "Heyevent.com", "Friendfeed", "setlist.fm",
 			"Getty Images", "TicketNetwork", "www.floramc.org", "rmalife.net", "Gumtree", "Seatwave.com",
-			"ï¿½ Songkick", "The sound of summer", "504ever.net", "| Concertful", "StubHub UK!", "YouPict", 
+			"– Songkick", "The sound of summer", "504ever.net", "| Concertful", "StubHub UK!", "YouPict", 
 			"- 5gig.com","5gig.co.uk", "mxdwn.com", "Thrillcall", "Kililive.com", "| Bandsintown", "MASS EDMC", 
 			"Nerds Attack!", "Plannify", "BoxOffice Lazio", "| Ticketfly", "| CheapTickets.com",
 			"| MASS EDMC", "| Kililive.com", "| setlist.fm", "- - Stereoboard", "SoundCrashMusic", "| SoundCrashMusic",
 			"TicketsInventory Mobile", "- backpage.com", "from Bandsintown", "| ConcertBank.com", "| clubZone", "- univision.com",
 			"- Wikipedia, the free encyclopedia", "| Eventful","| SeatGeek","| Eventsfy","__ Last.fm"," Setlist ","__ Songkick"));
 
-	public final static int numero_query = 10;
-	public final static String[] CITTA = {"Roma","Londra","New York","Los Angeles","Stoccolma","Parigi","Helsinki","Canberra","Chicago","Austin"};
+	public final static int numero_query = 1;
+	public final static String[] CITTA = {"Roma","Londra"};//,"New York","Los Angeles","Stoccolma","Parigi","Helsinki","Canberra","Chicago","Austin"};
 	//public final static String[] CITTA = {"Londra","New York"};
 
 	public static void main(String[] args) {
@@ -85,12 +86,12 @@ public class PrincipalForTitle {
 						SUTime_Titoli SUTT = new SUTime_Titoli();
 						//DATA TAGGATA
 						titleTag = SUTT.getTextTag(titleTag);
-						
+
 						//RIMUOVI SITI
 						for(String sito: STOP_SITE){
 							titleTag = titleTag.replace(sito.toLowerCase(), "");
 						}
-						
+
 						//PERSONA TAGGATA
 						titleTag = titleTag.replace(evento_cantante_giusto.toLowerCase(), "PPP");
 
@@ -108,39 +109,51 @@ public class PrincipalForTitle {
 							e.printStackTrace();
 						}
 						
+						
+						String dominio = urlString.split("/")[2];
+						
+						//rimuove il nome del sito dal titolo
+						titleTag = removeSiteName(titleTag,dominio);
+						
+						
 						//ALTRI TAG
 						titleTag = titleTag.replace("|", "SEPA");
 						titleTag = titleTag.replaceAll(",", " SEPA");
-						titleTag = titleTag.replace("ï¿½", "SEPA");
+						titleTag = titleTag.replace("–", "SEPA");
 						titleTag = titleTag.replace("-", "SEPA");
-						
+						titleTag = titleTag.replace("__", "SEPA");
+
 						titleTag = titleTag.replace("SEPA twitter", "SOCIAL");
 						titleTag = titleTag.replace("on twitter", "SOCIAL");
 						titleTag = titleTag.replace("(@", "PREP");
-						
+
 						titleTag = titleTag.replace(" on "," PRED ");
-						
+
 						titleTag = titleTag.replace("@", "AAA");
 						titleTag = titleTag.replace(" at ", " AAA ");
-						
+
 						titleTag = titleTag.replace("tickets & tour dates", "POSTP");
-						
+
+						titleTag = titleTag.replace(" tickets for sale ", " MMM ");
 						titleTag = titleTag.replace(" concert tickets ", " MMM ");
 						titleTag = titleTag.replace(" concert dates ", " MMM ");
+						titleTag = titleTag.replace(" concert tour ", " MMM ");
 						titleTag = titleTag.replace(" concerts ", " MMM ");
 						titleTag = titleTag.replace(" concert ", " MMM ");
 						titleTag = titleTag.replace(" tickets ", " MMM ");
-//						titleTag = titleTag.replace("tickets ", " MMM ");
+						//						titleTag = titleTag.replace("tickets ", " MMM ");
 						titleTag = titleTag.replace(" ticket ", " MMM ");
+						titleTag = titleTag.replace(" event ", " MMM ");
+						titleTag = titleTag.replace(" events ", " MMM ");
+						titleTag = titleTag.replace(" calendar ", " MMM ");
+						titleTag = titleTag.replace(" theater ", " MMM ");
 						titleTag = titleTag.replace(" tour dates ", " MMM ");
 						titleTag = titleTag.replace(" tour ", " MMM ");
 						titleTag = titleTag.replace(" dates ", " MMM ");
-						
-						
+
+
 						//toglie spazi finali e iniziali
 						titleTag = titleTag.trim();
-						
-						String dominio = urlString.split("/")[2];
 						
 						//eventualmente si puo' togliere
 						//SUTime
@@ -162,14 +175,14 @@ public class PrincipalForTitle {
 
 						document.put("Titolo", title);
 						document.put("TitoloTag", titleTag);
-/*
+						/*
 						document.put("dateTrovate", date);
 						document.put("persone", persone);
 						document.put("luoghi", luoghi);
-*/
+						 */
 						document.put("dominio", dominio);
 						document.put("url", url.toString());
-						
+
 						collection.insert(document);
 					} catch (Exception e) {
 						//System.out.println(e.getMessage());
@@ -187,5 +200,37 @@ public class PrincipalForTitle {
 
 		System.out.println("Done"+j);
 	}
-
+	
+	/*
+	 * Metodo di supporto per la rimozione del nome del sito all'interno del titolo
+	 */
+	private static String removeSiteName(String title, String domain) {
+		domain = domain.replace("www.", "");
+		String[] titleSplit = title.split(" ");
+		String temp;
+		int replace=0;
+		for (int i=0; i<titleSplit.length;i++) {
+			System.out.println(titleSplit[i]);
+			temp = titleSplit[i].toLowerCase();
+			if(domain.contains(temp)) {
+				System.out.println("se "+domain+" contiene #"+temp+"#\n");
+				title = title.replace(titleSplit[i], "");
+				replace++;
+			}
+			else if(temp.contains(".com")) {
+				title = title.replace(titleSplit[i], "");
+				replace++;
+			}
+		}
+		
+		String tokenPrec = titleSplit[titleSplit.length-(replace+1)];
+		System.out.println("TokenPrec: "+tokenPrec);
+		if(tokenPrec.equals("|") || tokenPrec.equals("-") || tokenPrec.equals("—") || tokenPrec.equals("at") || tokenPrec.equals("from")) {
+			title = title.replace(tokenPrec, "");
+		}
+		
+		System.out.println();
+	
+		return title;
+	}
 }
