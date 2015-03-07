@@ -32,7 +32,7 @@ public class PrincipalForTitle {
 			"- Wikipedia, the free encyclopedia", "| Eventful","| SeatGeek","| Eventsfy","__ Last.fm"," Setlist ","__ Songkick"));
 
 	public final static int numero_query = 1;
-	public final static String[] CITTA = {"Roma","Londra"};//,"New York","Los Angeles","Stoccolma","Parigi","Helsinki","Canberra","Chicago","Austin"};
+	public final static String[] CITTA = {"Roma","Londra","New York","Los Angeles","Stoccolma","Parigi","Helsinki","Canberra","Chicago","Austin"};
 	//public final static String[] CITTA = {"Londra","New York"};
 
 	public static void main(String[] args) {
@@ -86,11 +86,13 @@ public class PrincipalForTitle {
 						SUTime_Titoli SUTT = new SUTime_Titoli();
 						//DATA TAGGATA
 						titleTag = SUTT.getTextTag(titleTag);
-
+						
+						
 						//RIMUOVI SITI
 						for(String sito: STOP_SITE){
 							titleTag = titleTag.replace(sito.toLowerCase(), "");
 						}
+						
 
 						//PERSONA TAGGATA
 						titleTag = titleTag.replace(evento_cantante_giusto.toLowerCase(), "PPP");
@@ -108,14 +110,14 @@ public class PrincipalForTitle {
 							System.out.println("ERRORE SEDE_CITTA'");
 							e.printStackTrace();
 						}
-						
-						
+
+
 						String dominio = urlString.split("/")[2];
-						
+
 						//rimuove il nome del sito dal titolo
 						titleTag = removeSiteName(titleTag,dominio);
-						
-						
+
+
 						//ALTRI TAG
 						titleTag = titleTag.replace("|", "SEPA");
 						titleTag = titleTag.replaceAll(",", " SEPA");
@@ -154,7 +156,7 @@ public class PrincipalForTitle {
 
 						//toglie spazi finali e iniziali
 						titleTag = titleTag.trim();
-						
+
 						//eventualmente si puo' togliere
 						//SUTime
 						/*
@@ -200,7 +202,7 @@ public class PrincipalForTitle {
 
 		System.out.println("Done"+j);
 	}
-	
+
 	/*
 	 * Metodo di supporto per la rimozione del nome del sito all'interno del titolo
 	 */
@@ -210,27 +212,36 @@ public class PrincipalForTitle {
 		String temp;
 		int replace=0;
 		for (int i=0; i<titleSplit.length;i++) {
-			System.out.println(titleSplit[i]);
+			//System.out.println(titleSplit[i]);
 			temp = titleSplit[i].toLowerCase();
 			if(domain.contains(temp)) {
-				System.out.println("se "+domain+" contiene #"+temp+"#\n");
+				//System.out.println("se "+domain+" contiene #"+temp+"#\n");
 				title = title.replace(titleSplit[i], "");
 				replace++;
 			}
-			else if(temp.contains(".com")) {
+			else if(temp.contains(".com") || temp.contains(".fm") || temp.contains(".org")) {
 				title = title.replace(titleSplit[i], "");
 				replace++;
 			}
 		}
-		
-		String tokenPrec = titleSplit[titleSplit.length-(replace+1)];
-		System.out.println("TokenPrec: "+tokenPrec);
-		if(tokenPrec.equals("|") || tokenPrec.equals("-") || tokenPrec.equals("—") || tokenPrec.equals("at") || tokenPrec.equals("from")) {
-			title = title.replace(tokenPrec, "");
+		String[] titleSplit2 = title.split(" ");
+		int split2length = titleSplit2.length;
+		String lastToken= titleSplit2[split2length-1];
+		//System.out.println(lastToken);
+		if(lastToken.equals("|") || lastToken.equals("-") || (lastToken.equals("–"))|| lastToken.equals("at") || lastToken.equals("from")) {
+			title = replaceLast(title, lastToken, "");
 		}
-		
-		System.out.println();
-	
 		return title;
+	}
+
+	public static String replaceLast(String string, String toReplace, String replacement) {
+		int pos = string.lastIndexOf(toReplace);
+		if (pos > -1) {
+			return string.substring(0, pos)
+					+ replacement
+					+ string.substring(pos + toReplace.length(), string.length());
+		} else {
+			return string;
+		}
 	}
 }
