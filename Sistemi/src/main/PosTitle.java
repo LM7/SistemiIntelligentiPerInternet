@@ -94,6 +94,7 @@ public class PosTitle {
 						//trim toglie spazi iniziali e finali
 						titleTag.trim();
 
+						titleTag = separaPunteggiatura(titleTag,new String[]{",",":",";",".","?","!","|","\""});
 						titleTag = titleTag.replace(",", " ,");
 						titleTag = titleTag.replace("  ", " ");
 
@@ -134,33 +135,33 @@ public class PosTitle {
 						titleTag = insertTag(titleTag,"concert dates", "MMM");
 						titleTag = insertTag(titleTag,"tour dates", "MMM");
 						 */
-						
+
 						String dominio = urlString.split("/")[2];
 
 						//rimuove il nome del sito dal titolo
 						titleTag = removeSiteName(titleTag,dominio);
-						
+
 						titleTag = insertTag(titleTag,"tickets for sale", "SELL");
 						titleTag = insertTag(titleTag,"concert tickets", "SELL");
 						ArrayList<String> listaSELL = new ArrayList<String>(Arrays.asList("tickets","ticket","sale","sales"));
 						titleTag = insertTag(titleTag,listaSELL,"SELL");
-						
+
 						ArrayList<String> listaCONCERTO = new ArrayList<String>(Arrays.asList("concerts","concert","tour","dates","events","event","annunced","show","live","calendar","schedule"));
 						titleTag = insertTag(titleTag,listaCONCERTO,"CONCERT");
-						
+
 						ArrayList<String> listaMMM = new ArrayList<String>(Arrays.asList("lyrics","listing","music","dance","reviews","voices","opera","ballet","theatre"));
 						titleTag = insertTag(titleTag,listaMMM,"MUSIC");
-						
+
 						ArrayList<String> listaET = new ArrayList<String>(Arrays.asList("&","and","feat"));
 						titleTag = insertTag(titleTag,listaET,"ET");
-						
+
 						ArrayList<String> listaART = new ArrayList<String>(Arrays.asList("the","an","a"));
 						titleTag = insertTag(titleTag,listaART,"ART");
-						
+
 						/*
 						ArrayList<String> listaBAD = new ArrayList<String>(Arrays.asList("cancelled","homepage","forums","album","weather"));
 						titleTag = insertTag(titleTag,listaBAD,"BAD");
-						*/
+						 */
 
 						//toglie spazi finali e iniziali
 						titleTag = titleTag.trim();
@@ -178,7 +179,7 @@ public class PosTitle {
 							System.out.println("Training numero "+train);
 							Parser.parserForTitle(titleTag);
 						}
-						
+
 
 						BasicDBObject document = new BasicDBObject();
 						document.put("data", data_giusta);
@@ -207,6 +208,34 @@ public class PosTitle {
 		}
 
 		System.out.println("Done"+j);
+	}
+
+
+
+
+	private static String separaPunteggiatura(String text, String[] punteggiatura) {
+		int i=0;
+		int j=0;
+		char[] caratteri = text.toCharArray();
+		while(j<caratteri.length) {
+			boolean modificato = false;
+			caratteri = text.toCharArray();
+			for(j=0;j<caratteri.length&&!modificato;j++) {
+				for(i=0;i<punteggiatura.length;i++) {
+					if(caratteri[j] == (punteggiatura[i].charAt(0))) {
+						if(j!=caratteri.length-1 && caratteri[j+1]!=' ') {
+							text = text.substring(0,j+1) + " " + text.substring(j+1);
+							modificato = true;
+						}
+						if(j!=0 && caratteri[j-1]!=' ') {
+							text = text.substring(0,j) + " " + text.substring(j);
+							modificato = true;
+						}
+					}
+				}
+			}
+		}
+		return text;
 	}
 
 
