@@ -33,7 +33,7 @@ public class PosTitle {
 			"- Wikipedia, the free encyclopedia", "| Eventful","| SeatGeek","| Eventsfy","__ Last.fm"," Setlist ","__ Songkick"));
 
 	public final static int numero_query = 1;
-	public final static String[] CITTA = {"Chicago"}; //{"Roma","Londra","New York","Los Angeles","Stoccolma","Parigi","Helsinki","Canberra","Chicago","Austin"};
+	public final static String[] CITTA = {"Roma","Londra","New York","Los Angeles","Stoccolma","Parigi","Helsinki","Canberra","Chicago","Austin"};
 	//public final static String[] CITTA = {"Milano","Liverpool";"Boston","Detroit","Dublino","Berlino","Oslo","Sydney","Philadelphia","Las Vegas"};
 
 	public static void main(String[] args) {
@@ -82,6 +82,7 @@ public class PosTitle {
 						//String text = site[1];				
 
 						String titleTag = title;
+						titleTag = titleTag.replace("  ", " ");
 						SUTime_Titoli SUTT = new SUTime_Titoli();
 						//DATA TAGGATA
 						titleTag = SUTT.getTextTag(titleTag);
@@ -114,7 +115,7 @@ public class PosTitle {
 						}
 
 						//ALTRI TAG
-						ArrayList<String> listaSepa = new ArrayList<String>(Arrays.asList("|",",","–","-"));
+						ArrayList<String> listaSepa = new ArrayList<String>(Arrays.asList("|",",","–","-",":"));
 						titleTag = insertTag(titleTag,listaSepa,"SEPA");
 
 						titleTag = insertTag(titleTag,"SEPA#| twitter", "SOCIAL");
@@ -122,7 +123,7 @@ public class PosTitle {
 
 						titleTag = insertTag(titleTag,"(@", "PREP");
 
-						ArrayList<String> listaAAA = new ArrayList<String>(Arrays.asList("@","at"));
+						ArrayList<String> listaAAA = new ArrayList<String>(Arrays.asList("@","at","in"));
 						titleTag = insertTag(titleTag,listaAAA,"AAA");
 
 						titleTag = insertTag(titleTag,"tickets & tour dates", "POSTP");
@@ -133,8 +134,28 @@ public class PosTitle {
 						titleTag = insertTag(titleTag,"concert dates", "MMM");
 						titleTag = insertTag(titleTag,"tour dates", "MMM");
 						 */
-						ArrayList<String> listaMMM = new ArrayList<String>(Arrays.asList("concerts","concert","tickets","ticket","tour","dates","calendar","events","event","theatre","sale"));
-						titleTag = insertTag(titleTag,listaMMM,"MMM");
+						
+						titleTag = insertTag(titleTag,"tickets for sale", "SELL");
+						titleTag = insertTag(titleTag,"concert tickets", "SELL");
+						ArrayList<String> listaSELL = new ArrayList<String>(Arrays.asList("tickets","ticket","sale","sales"));
+						titleTag = insertTag(titleTag,listaSELL,"SELL");
+						
+						ArrayList<String> listaCONCERTO = new ArrayList<String>(Arrays.asList("concerts","concert","tour","dates","events","event","annunced","show","live","calendar","schedule"));
+						titleTag = insertTag(titleTag,listaCONCERTO,"CONCERTO");
+						
+						ArrayList<String> listaMMM = new ArrayList<String>(Arrays.asList("lyrics","listing","music","dance","reviews","voices","opera","ballet","theatre"));
+						titleTag = insertTag(titleTag,listaMMM,"MUSIC");
+						
+						ArrayList<String> listaET = new ArrayList<String>(Arrays.asList("&","and","feat"));
+						titleTag = insertTag(titleTag,listaET,"ET");
+						
+						ArrayList<String> listaART = new ArrayList<String>(Arrays.asList("the","an","a"));
+						titleTag = insertTag(titleTag,listaART,"ART");
+						
+						/*
+						ArrayList<String> listaBAD = new ArrayList<String>(Arrays.asList("cancelled","homepage","forums","album","weather"));
+						titleTag = insertTag(titleTag,listaBAD,"BAD");
+						*/
 
 						String dominio = urlString.split("/")[2];
 
@@ -157,9 +178,7 @@ public class PosTitle {
 							System.out.println("Training numero "+train);
 							Parser.parserForTitle(titleTag);
 						}
-
-
-
+						
 
 						BasicDBObject document = new BasicDBObject();
 						document.put("data", data_giusta);
