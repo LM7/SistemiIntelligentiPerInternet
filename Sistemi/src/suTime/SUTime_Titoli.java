@@ -33,17 +33,20 @@ public class SUTime_Titoli {
 		annotation.set(CoreAnnotations.DocDateAnnotation.class, "2013-07-14");
 		pipeline.annotate(annotation);
 		List<CoreMap> timexAnnsAll = annotation.get(TimeAnnotations.TimexAnnotations.class);
+		int caratteriAggiunti = 0;
 		for (CoreMap cm : timexAnnsAll) {
 			List<CoreLabel> tokens = cm.get(CoreAnnotations.TokensAnnotation.class);
 			
-			String textPreData = text.substring(0, tokens.get(0).get(CoreAnnotations.CharacterOffsetBeginAnnotation.class));
-			String textData = text.substring(tokens.get(0).get(CoreAnnotations.CharacterOffsetBeginAnnotation.class), tokens.get(tokens.size() - 1).get(CoreAnnotations.CharacterOffsetEndAnnotation.class));
-			String textPostData = text.substring(tokens.get(tokens.size() - 1).get(CoreAnnotations.CharacterOffsetEndAnnotation.class));
+			String textPreData = text.substring(0, tokens.get(0).get(CoreAnnotations.CharacterOffsetBeginAnnotation.class)+caratteriAggiunti);
+			String textData = text.substring(tokens.get(0).get(CoreAnnotations.CharacterOffsetBeginAnnotation.class)+caratteriAggiunti, tokens.get(tokens.size() - 1).get(CoreAnnotations.CharacterOffsetEndAnnotation.class)+caratteriAggiunti);
+			String textPostData = text.substring(tokens.get(tokens.size() - 1).get(CoreAnnotations.CharacterOffsetEndAnnotation.class)+caratteriAggiunti);
+			
 			
 			String[] dataComposta = cm.toString().split(" ");
 			for(i=0;i<dataComposta.length;i++) {					
 				if(!dataComposta[i].equals("") && !dataComposta[i].equals(" ")) {
 					textData = textData.replaceAll(dataComposta[i], "DDD#"+dataComposta[i]);
+					caratteriAggiunti += 4;
 				}
 			}
 			text = textPreData + textData + textPostData;
@@ -60,13 +63,9 @@ public class SUTime_Titoli {
 		String ss = sutt.getTextTag("Baxter, International Inc. (BAX) Ex-Dividend Date Scheduled for March 09, 2015 - NASDAQ.com");
 		System.out.println(ss);
 		*/
-		String sss = sutt.getTextTag("8 (Sunday,  10 April 2018) Connie, Stefny, Steven Letigre Brooklyn concert tickets, Output Club Brooklyn (Sunday,  8 March 2015) - 5gig.com");
-		System.out.println("8 (Sunday,  10 April 2018) Connie, Stefny, Steven Letigre Brooklyn concert tickets, Output Club Brooklyn (Sunday,  8 March 2015) - 5gig.com");
+		String sss = sutt.getTextTag("(Sunday, 10 April 2018) March 10, 2015 - 5gig.com");
+		System.out.println("8 (Sunday,  10 April 2018) Connie, Stefny, Steven Letigre Brooklyn concert tickets, Output Club Brooklyn March 10, 2015 - 5gig.com");
 		System.out.println(sss);
-		
-		String ssss = sutt.getTextTag("The Darkness at Whelan's|08 March 2015 - music listings for Dublin, Ireland - entertainment.ie");
-		System.out.println("The Darkness at Whelan's|08 March 2015 - music listings for Dublin, Ireland - entertainment.ie");
-		System.out.println(ssss);
 	}
 
 }
