@@ -22,17 +22,19 @@ import events.MsnSearchEngine;
 public class PosTitle {
 
 	public final static HashSet<String> STOP_SITE = new HashSet<String>(Arrays.asList("on StubHub!", 
-			"- StubHub UK","- StubHub UK!","– Last.fm", "— Last.fm", "at Last.fm", "@ TicketHold","@ Ultimate-Guitar.Com",
-			"at Last.fm","Stereoboard", "www.floramc.org", "rmalife.net", "Gumtree", "Seatwave.com",
-			"– Songkick", "The sound of summer", "504ever.net", "Concertful", "StubHub UK!", "YouPict", 
+			"- StubHub UK","- StubHub UK!","– Last.fm", "– Last.fm", "at Last.fm", "@ TicketHold","@ Ultimate-Guitar.Com",
+			"at Last.fm","Stereoboard", "ConcertWith.Me", "NaviHotels.com", "Heyevent.com", "Friendfeed", "setlist.fm",
+			"Getty Images", "TicketNetwork", "www.floramc.org", "rmalife.net", "Gumtree", "Seatwave.com",
+			"– Songkick", "The sound of summer", "504ever.net", "| Concertful", "StubHub UK!", "YouPict", 
 			"- 5gig.com","5gig.co.uk", "mxdwn.com", "Thrillcall", "Kililive.com", "| Bandsintown", "MASS EDMC", 
-			"Nerds Attack!", "Plannify", "BoxOffice Lazio", "ConcertWith.Me", "NaviHotels.com", 
-			"Heyevent.com", "Friendfeed", "setlist.fm", "Getty Images", "TicketNetwork", "| Ticketfly",
-			"| CheapTickets.com"));
+			"Nerds Attack!", "Plannify", "BoxOffice Lazio", "| Ticketfly", "| CheapTickets.com",
+			"| MASS EDMC", "| Kililive.com", "| setlist.fm", "- - Stereoboard", "SoundCrashMusic", "| SoundCrashMusic",
+			"TicketsInventory Mobile", "- backpage.com", "from Bandsintown", "| ConcertBank.com", "| clubZone", "- univision.com",
+			"- Wikipedia, the free encyclopedia", "| Eventful","| SeatGeek","| Eventsfy","__ Last.fm"," Setlist ","__ Songkick"));
 
 	public final static int numero_query = 1;
-	public final static String[] CITTA = {"Roma","Londra","New York","Los Angeles","Stoccolma","Parigi","Helsinki","Canberra","Chicago","Austin"};
-	//public final static String[] CITTA = {"Londra","New York"};
+	public final static String[] CITTA = {"Chicago"}; //{"Roma","Londra","New York","Los Angeles","Stoccolma","Parigi","Helsinki","Canberra","Chicago","Austin"};
+	//public final static String[] CITTA = {"Milano","Liverpool";"Boston","Detroit","Dublino","Berlino","Oslo","Sydney","Philadelphia","Las Vegas"};
 
 	public static void main(String[] args) {
 		int i;
@@ -131,8 +133,13 @@ public class PosTitle {
 						titleTag = insertTag(titleTag,"concert dates", "MMM");
 						titleTag = insertTag(titleTag,"tour dates", "MMM");
 						 */
-						ArrayList<String> listaMMM = new ArrayList<String>(Arrays.asList("concerts","concert","tickets","ticket","tour","dates","calendar"));
+						ArrayList<String> listaMMM = new ArrayList<String>(Arrays.asList("concerts","concert","tickets","ticket","tour","dates","calendar","events","event","theatre","sale"));
 						titleTag = insertTag(titleTag,listaMMM,"MMM");
+
+						String dominio = urlString.split("/")[2];
+
+						//rimuove il nome del sito dal titolo
+						titleTag = removeSiteName(titleTag,dominio);
 
 						//toglie spazi finali e iniziali
 						titleTag = titleTag.trim();
@@ -152,7 +159,7 @@ public class PosTitle {
 						}
 
 
-						String dominio = urlString.split("/")[2];
+
 
 						BasicDBObject document = new BasicDBObject();
 						document.put("data", data_giusta);
@@ -271,5 +278,48 @@ public class PosTitle {
 			}
 		}
 		return false;
+	}
+
+	/*
+	 * Metodo di supporto per la rimozione del nome del sito all'interno del titolo
+	 */
+	private static String removeSiteName(String title, String domain) {
+		domain = domain.replace("www.", "");
+		String[] titleSplit = title.split(" ");
+		String temp;
+		String tokenPrec="";
+		for (int i=0; i<titleSplit.length;i++) {
+			temp = titleSplit[i].toLowerCase();
+			if(temp.contains(".com") || temp.contains(".fm") || temp.contains(".org") || temp.contains(".net")) {
+				//System.out.println("Nel titolo "+title+" esiste un .qualcosa da eliminare");
+				title = title.replaceFirst(titleSplit[i], "");
+				//System.out.println("Eliminazione di ["+titleSplit[i]+"]: "+title);
+				if(tokenPrec.contains("SEPA") || tokenPrec.contains("AAA") || tokenPrec.contains("from")) {
+					title = replaceLast(title, tokenPrec, "");
+				}
+			}
+			else if(domain.contains(temp)) {
+				title = title.replaceFirst(titleSplit[i], "");
+				if(tokenPrec.contains("SEPA") || tokenPrec.contains("AAA") || tokenPrec.contains("from")) {
+					title = replaceLast(title, tokenPrec, "");
+				}
+			}
+			tokenPrec = titleSplit[i];
+		}
+		return title;
+	}
+
+	/*
+	 * metodo di supporto per la rimozione dell'ultima occorrenza del contenuto da una stringa
+	 */
+	public static String replaceLast(String string, String toReplace, String replacement) {
+		int pos = string.lastIndexOf(toReplace);
+		if (pos > -1) {
+			return string.substring(0, pos)
+					+ replacement
+					+ string.substring(pos + toReplace.length(), string.length());
+		} else {
+			return string;
+		}
 	}
 }

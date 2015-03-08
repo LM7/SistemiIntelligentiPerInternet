@@ -86,13 +86,13 @@ public class PrincipalForTitle {
 						SUTime_Titoli SUTT = new SUTime_Titoli();
 						//DATA TAGGATA
 						titleTag = SUTT.getTextTag(titleTag);
-						
-						
+
+
 						//RIMUOVI SITI
 						for(String sito: STOP_SITE){
 							titleTag = titleTag.replace(sito.toLowerCase(), "");
 						}
-						
+
 
 						//PERSONA TAGGATA
 						titleTag = titleTag.replace(evento_cantante_giusto.toLowerCase(), "PPP");
@@ -114,7 +114,7 @@ public class PrincipalForTitle {
 
 						String dominio = urlString.split("/")[2];
 
-						
+
 						//ALTRI TAG
 						titleTag = titleTag.replace("|", "SEPA");
 						titleTag = titleTag.replaceAll(",", " SEPA");
@@ -146,14 +146,14 @@ public class PrincipalForTitle {
 						titleTag = titleTag.replace(" event ", " MMM ");
 						titleTag = titleTag.replace(" events ", " MMM ");
 						titleTag = titleTag.replace(" calendar ", " MMM ");
-						titleTag = titleTag.replace(" theater ", " MMM ");
+						titleTag = titleTag.replace(" theatre ", " MMM ");
 						titleTag = titleTag.replace(" tour dates ", " MMM ");
 						titleTag = titleTag.replace(" tour ", " MMM ");
 						titleTag = titleTag.replace(" dates ", " MMM ");
 
 						//rimuove il nome del sito dal titolo
 						titleTag = removeSiteName(titleTag,dominio);
-						
+
 						//toglie spazi finali e iniziali
 						titleTag = titleTag.trim();
 
@@ -210,28 +210,32 @@ public class PrincipalForTitle {
 		domain = domain.replace("www.", "");
 		String[] titleSplit = title.split(" ");
 		String temp;
+		String tokenPrec = "";
 		for (int i=0; i<titleSplit.length;i++) {
 			temp = titleSplit[i].toLowerCase();
 			if(temp.contains(".com") || temp.contains(".fm") || temp.contains(".org") || temp.contains(".net")) {
 				//System.out.println("Nel titolo "+title+" esiste un .qualcosa da eliminare");
 				title = title.replaceFirst(titleSplit[i], "");
 				//System.out.println("Eliminazione di ["+titleSplit[i]+"]: "+title);
-				
+				if(tokenPrec.equals("SEPA") || tokenPrec.equals("AAA") || tokenPrec.equals("from")) {
+					title = replaceLast(title, tokenPrec, "");
+				}
+
 			}
 			else if(domain.contains(temp)) {
 				title = title.replaceFirst(titleSplit[i], "");
+				if(tokenPrec.equals("SEPA") || tokenPrec.equals("AAA") || tokenPrec.equals("from")) {
+					title = replaceLast(title, tokenPrec, "");
+				}
 			}
-		}
-		String[] titleSplit2 = title.split(" ");
-		int split2length = titleSplit2.length;
-		String lastToken= titleSplit2[split2length-1];
-		//System.out.println(lastToken);
-		if(lastToken.equals("SEPA") || lastToken.equals("AAA") || lastToken.equals("from")) {
-			title = replaceLast(title, lastToken, "");
+			tokenPrec = titleSplit[i];
 		}
 		return title;
 	}
 
+	/*
+	 * metodo di supporto per la rimozione dell'ultima occorrenza del contenuto da una stringa
+	 */
 	public static String replaceLast(String string, String toReplace, String replacement) {
 		int pos = string.lastIndexOf(toReplace);
 		if (pos > -1) {
