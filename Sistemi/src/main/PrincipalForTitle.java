@@ -31,7 +31,7 @@ public class PrincipalForTitle {
 			"TicketsInventory Mobile", "- backpage.com", "from Bandsintown", "| ConcertBank.com", "| clubZone", "- univision.com",
 			"- Wikipedia, the free encyclopedia", "| Eventful","| SeatGeek","| Eventsfy","__ Last.fm"," Setlist ","__ Songkick"));
 
-	public final static int numero_query = 1;
+	public final static int numero_query = 10;
 	public final static String[] CITTA = {"Roma","Londra","New York","Los Angeles","Stoccolma","Parigi","Helsinki","Canberra","Chicago","Austin"};
 	//public final static String[] CITTA = {"Londra","New York"};
 
@@ -114,15 +114,13 @@ public class PrincipalForTitle {
 
 						String dominio = urlString.split("/")[2];
 
-						//rimuove il nome del sito dal titolo
-						titleTag = removeSiteName(titleTag,dominio);
-
-
+						
 						//ALTRI TAG
 						titleTag = titleTag.replace("|", "SEPA");
 						titleTag = titleTag.replaceAll(",", " SEPA");
 						titleTag = titleTag.replace("–", "SEPA");
 						titleTag = titleTag.replace("-", "SEPA");
+						titleTag = titleTag.replace("—", "SEPA");
 						titleTag = titleTag.replace("__", "SEPA");
 
 						titleTag = titleTag.replace("SEPA twitter", "SOCIAL");
@@ -153,7 +151,9 @@ public class PrincipalForTitle {
 						titleTag = titleTag.replace(" tour ", " MMM ");
 						titleTag = titleTag.replace(" dates ", " MMM ");
 
-
+						//rimuove il nome del sito dal titolo
+						titleTag = removeSiteName(titleTag,dominio);
+						
 						//toglie spazi finali e iniziali
 						titleTag = titleTag.trim();
 
@@ -210,25 +210,23 @@ public class PrincipalForTitle {
 		domain = domain.replace("www.", "");
 		String[] titleSplit = title.split(" ");
 		String temp;
-		int replace=0;
 		for (int i=0; i<titleSplit.length;i++) {
-			//System.out.println(titleSplit[i]);
 			temp = titleSplit[i].toLowerCase();
-			if(domain.contains(temp)) {
-				//System.out.println("se "+domain+" contiene #"+temp+"#\n");
-				title = title.replace(titleSplit[i], "");
-				replace++;
+			if(temp.contains(".com") || temp.contains(".fm") || temp.contains(".org") || temp.contains(".net")) {
+				//System.out.println("Nel titolo "+title+" esiste un .qualcosa da eliminare");
+				title = title.replaceFirst(titleSplit[i], "");
+				//System.out.println("Eliminazione di ["+titleSplit[i]+"]: "+title);
+				
 			}
-			else if(temp.contains(".com") || temp.contains(".fm") || temp.contains(".org")) {
-				title = title.replace(titleSplit[i], "");
-				replace++;
+			else if(domain.contains(temp)) {
+				title = title.replaceFirst(titleSplit[i], "");
 			}
 		}
 		String[] titleSplit2 = title.split(" ");
 		int split2length = titleSplit2.length;
 		String lastToken= titleSplit2[split2length-1];
 		//System.out.println(lastToken);
-		if(lastToken.equals("|") || lastToken.equals("-") || (lastToken.equals("–"))|| lastToken.equals("at") || lastToken.equals("from")) {
+		if(lastToken.equals("SEPA") || lastToken.equals("AAA") || lastToken.equals("from")) {
 			title = replaceLast(title, lastToken, "");
 		}
 		return title;
