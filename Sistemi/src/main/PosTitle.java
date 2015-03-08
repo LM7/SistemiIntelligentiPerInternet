@@ -34,7 +34,7 @@ public class PosTitle {
 
 	public final static int numero_query = 5;
 	//public final static String[] CITTA = {"Roma","Londra","New York","Los Angeles","Stoccolma","Parigi","Helsinki","Canberra","Chicago","Austin"};
-	public final static String[] CITTA = {"Amsterdam","Liverpool","Boston","Detroit","Dublino","Berlino","Oslo","Sydney","Philadelphia","Las Vegas"};
+	public final static String[] CITTA = {"Amsterdam","Liverpool","Boston","Detroit","Dublino"};
 
 	public static void main(String[] args) {
 		int i;
@@ -83,9 +83,7 @@ public class PosTitle {
 
 						String titleTag = title;
 						titleTag = titleTag.replace("  ", " ");
-						SUTime_Titoli SUTT = new SUTime_Titoli();
-						//DATA TAGGATA
-						titleTag = SUTT.getTextTag(titleTag);
+						
 
 						//RIMUOVI SITI
 						for(String sito: STOP_SITE){
@@ -94,7 +92,7 @@ public class PosTitle {
 						//trim toglie spazi iniziali e finali
 						titleTag.trim();
 
-						titleTag = separaPunteggiatura(titleTag,new String[]{",",":",";",".","?","!","|","\""});
+						titleTag = separaPunteggiatura(titleTag,new String[]{",",":",";","?","!","|","\""});
 						titleTag = titleTag.replace(",", " ,");
 						titleTag = titleTag.replace("  ", " ");
 
@@ -114,6 +112,10 @@ public class PosTitle {
 							System.out.println("ERRORE SEDE_CITTA'");
 							e.printStackTrace();
 						}
+						
+						SUTime_Titoli SUTT = new SUTime_Titoli();
+						//DATA TAGGATA
+						titleTag = SUTT.getTextTag(titleTag);
 
 						//ALTRI TAG
 						ArrayList<String> listaSepa = new ArrayList<String>(Arrays.asList("|",",","–","-",":"));
