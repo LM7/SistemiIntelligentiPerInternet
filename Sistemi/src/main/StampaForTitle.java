@@ -31,13 +31,13 @@ public class StampaForTitle {
 			s = s.replaceAll("[{]", "");
 			
 			System.out.println(j+") "+s);
-			s = s.replaceAll("data :", "data#");
-			s = s.replaceAll(", evento_cantante :", "#cantante#");
-			s = s.replaceAll(", luogo :", "#luogo#");
-			s = s.replaceAll(", Titolo :", "#Titolo#");
-			s = s.replaceAll(", TitoloTag :", "#TitoloTag#");
-			s = s.replaceAll(", dominio :", "#dominio#");
-			s = s.replaceAll(", url :", "#url#");
+			s = s.replaceAll("data :", "data§");
+			s = s.replaceAll(", evento_cantante :", "§cantante§");
+			s = s.replaceAll(", luogo :", "§luogo§");
+			s = s.replaceAll(", Titolo :", "§Titolo§");
+			s = s.replaceAll(", TitoloTag :", "§TitoloTag§");
+			s = s.replaceAll(", dominio :", "§dominio§");
+			s = s.replaceAll(", url :", "§url§");
 			
 			out.println(s);
 			j++;

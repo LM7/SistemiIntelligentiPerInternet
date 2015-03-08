@@ -32,9 +32,9 @@ public class PosTitle {
 			"TicketsInventory Mobile", "- backpage.com", "from Bandsintown", "| ConcertBank.com", "| clubZone", "- univision.com",
 			"- Wikipedia, the free encyclopedia", "| Eventful","| SeatGeek","| Eventsfy","__ Last.fm"," Setlist ","__ Songkick"));
 
-	public final static int numero_query = 10;
-	public final static String[] CITTA = {"Roma","Londra","New York","Los Angeles","Stoccolma","Parigi","Helsinki","Canberra","Chicago","Austin"};
-	//public final static String[] CITTA = {"Amsterdam","Liverpool","Boston","Detroit","Dublino","Berlino","Oslo","Sydney","Philadelphia","Las Vegas"};
+	public final static int numero_query = 5;
+	//public final static String[] CITTA = {"Roma","Londra","New York","Los Angeles","Stoccolma","Parigi","Helsinki","Canberra","Chicago","Austin"};
+	public final static String[] CITTA = {"Amsterdam","Liverpool","Boston","Detroit","Dublino","Berlino","Oslo","Sydney","Philadelphia","Las Vegas"};
 
 	public static void main(String[] args) {
 		int i;
@@ -146,7 +146,7 @@ public class PosTitle {
 						ArrayList<String> listaSELL = new ArrayList<String>(Arrays.asList("tickets","ticket","sale","sales"));
 						titleTag = insertTag(titleTag,listaSELL,"SELL");
 
-						ArrayList<String> listaCONCERTO = new ArrayList<String>(Arrays.asList("concerts","concert","tour","dates","events","event","annunced","show","live","calendar","schedule"));
+						ArrayList<String> listaCONCERTO = new ArrayList<String>(Arrays.asList("concerts","concert","tour","dates","events","event","announced","show","live","calendar","schedule"));
 						titleTag = insertTag(titleTag,listaCONCERTO,"CONCERT");
 
 						ArrayList<String> listaMMM = new ArrayList<String>(Arrays.asList("lyrics","listing","music","dance","reviews","voices","opera","ballet","theatre"));
@@ -162,6 +162,15 @@ public class PosTitle {
 						ArrayList<String> listaBAD = new ArrayList<String>(Arrays.asList("cancelled","homepage","forums","album","weather"));
 						titleTag = insertTag(titleTag,listaBAD,"BAD");
 						 */
+						
+						//toglie eventuali SEPA/AAA/from/PRED finali 
+						String[] titleSplit = titleTag.split(" ");
+						int titleSplitLength = titleSplit.length;
+						String lastToken = titleSplit[titleSplitLength-1];
+						//System.out.println("LastToken: "+lastToken+" del titolo: "+titleTag);
+						if(lastToken.contains("SEPA") || lastToken.contains("AAA") || lastToken.contains("from") || lastToken.contains("PRED")) {
+							titleTag = replaceLast(titleTag, lastToken, "");
+						}
 
 						//toglie spazi finali e iniziali
 						titleTag = titleTag.trim();
