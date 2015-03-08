@@ -27,14 +27,14 @@ public class PosTitle {
 			"Getty Images", "TicketNetwork", "www.floramc.org", "rmalife.net", "Gumtree", "Seatwave.com",
 			"– Songkick", "The sound of summer", "504ever.net", "| Concertful", "StubHub UK!", "YouPict", 
 			"- 5gig.com","5gig.co.uk", "mxdwn.com", "Thrillcall", "Kililive.com", "| Bandsintown", "MASS EDMC", 
-			"Nerds Attack!", "Plannify", "BoxOffice Lazio", "| Ticketfly", "| CheapTickets.com",
-			"| MASS EDMC", "| Kililive.com", "| setlist.fm", "- - Stereoboard", "SoundCrashMusic", "| SoundCrashMusic",
+			"| Nerds Attack!", "Plannify", "BoxOffice Lazio", "| Ticketfly", "| CheapTickets.com",
+			"| MASS EDMC", "| Kililive.com", "| setlist.fm", " - Stereoboard", "SoundCrashMusic", "| SoundCrashMusic",
 			"TicketsInventory Mobile", "- backpage.com", "from Bandsintown", "| ConcertBank.com", "| clubZone", "- univision.com",
 			"- Wikipedia, the free encyclopedia", "| Eventful","| SeatGeek","| Eventsfy","__ Last.fm"," Setlist ","__ Songkick"));
 
-	public final static int numero_query = 1;
+	public final static int numero_query = 10;
 	public final static String[] CITTA = {"Roma","Londra","New York","Los Angeles","Stoccolma","Parigi","Helsinki","Canberra","Chicago","Austin"};
-	//public final static String[] CITTA = {"Milano","Liverpool";"Boston","Detroit","Dublino","Berlino","Oslo","Sydney","Philadelphia","Las Vegas"};
+	//public final static String[] CITTA = {"Amsterdam","Liverpool","Boston","Detroit","Dublino","Berlino","Oslo","Sydney","Philadelphia","Las Vegas"};
 
 	public static void main(String[] args) {
 		int i;
@@ -135,13 +135,18 @@ public class PosTitle {
 						titleTag = insertTag(titleTag,"tour dates", "MMM");
 						 */
 						
+						String dominio = urlString.split("/")[2];
+
+						//rimuove il nome del sito dal titolo
+						titleTag = removeSiteName(titleTag,dominio);
+						
 						titleTag = insertTag(titleTag,"tickets for sale", "SELL");
 						titleTag = insertTag(titleTag,"concert tickets", "SELL");
 						ArrayList<String> listaSELL = new ArrayList<String>(Arrays.asList("tickets","ticket","sale","sales"));
 						titleTag = insertTag(titleTag,listaSELL,"SELL");
 						
 						ArrayList<String> listaCONCERTO = new ArrayList<String>(Arrays.asList("concerts","concert","tour","dates","events","event","annunced","show","live","calendar","schedule"));
-						titleTag = insertTag(titleTag,listaCONCERTO,"CONCERTO");
+						titleTag = insertTag(titleTag,listaCONCERTO,"CONCERT");
 						
 						ArrayList<String> listaMMM = new ArrayList<String>(Arrays.asList("lyrics","listing","music","dance","reviews","voices","opera","ballet","theatre"));
 						titleTag = insertTag(titleTag,listaMMM,"MUSIC");
@@ -156,11 +161,6 @@ public class PosTitle {
 						ArrayList<String> listaBAD = new ArrayList<String>(Arrays.asList("cancelled","homepage","forums","album","weather"));
 						titleTag = insertTag(titleTag,listaBAD,"BAD");
 						*/
-
-						String dominio = urlString.split("/")[2];
-
-						//rimuove il nome del sito dal titolo
-						titleTag = removeSiteName(titleTag,dominio);
 
 						//toglie spazi finali e iniziali
 						titleTag = titleTag.trim();

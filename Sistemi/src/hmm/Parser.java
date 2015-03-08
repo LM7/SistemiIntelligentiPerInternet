@@ -22,7 +22,7 @@ public class Parser {
 		
 	}
 	
-	private void parserForFileTitle(File titoli) throws Exception {
+	public void parserForFileTitle(File titoli) throws Exception {
 		BufferedReader reader = new BufferedReader(new FileReader("contenutoDB.txt")); //titoli appena ottenuti
 		String line = reader.readLine();
 		PrintWriter outForHMM = new PrintWriter("trainForHMM.txt", "UTF-8"); //file che servira' per HMM
