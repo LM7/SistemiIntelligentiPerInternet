@@ -183,12 +183,13 @@ public class PosTitle {
 						 * CREA FILE DI TRAINING
 						 * solo se contiene sia PPP sia DDD sia (CCC oppure SSS)
 						 */
+						/*
 						if(contieneDati(titleTag)) {
 							train++;
 							System.out.println("Training numero "+train);
 							Parser.parserForTitle(titleTag);
 						}
-
+						*/
 
 						BasicDBObject document = new BasicDBObject();
 						document.put("data", data_giusta);
