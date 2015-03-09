@@ -23,7 +23,7 @@ public class Parser {
 	}
 	
 	public void parserForFileTitle(File titoli) throws Exception {
-		BufferedReader reader = new BufferedReader(new FileReader("contenutoDB.txt")); //titoli appena ottenuti
+		BufferedReader reader = new BufferedReader(new FileReader(titoli)); //titoli appena ottenuti
 		String line = reader.readLine();
 		PrintWriter outForHMM = new PrintWriter("trainForHMM.txt", "UTF-8"); //file che servira' per HMM
 		while (line!=null) {
@@ -38,9 +38,13 @@ public class Parser {
 		outForHMM.close();
 	}
 
-	public static void main(String[] args) throws FileNotFoundException, UnsupportedEncodingException {
+	public static void main(String[] args) throws Exception {
 		String title = "CCC#Forza DDD#Roma BBB#Balotelli AAA#Daje";
 		Parser.parserForTitle(title);
+		Parser p = new Parser();
+		/*File f = new File("titoli_tutti.txt");
+		p.parserForFileTitle(f);*/
+		
 	}
 
 }
