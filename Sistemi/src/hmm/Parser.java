@@ -25,25 +25,62 @@ public class Parser {
 	public void parserForFileTitle(File titoli) throws Exception {
 		BufferedReader reader = new BufferedReader(new FileReader(titoli)); //titoli appena ottenuti
 		String line = reader.readLine();
-		PrintWriter outForHMM = new PrintWriter("trainForHMM.txt", "UTF-8"); //file che servira' per HMM
+		PrintWriter outForHMM = new PrintWriter("trainForHMM.pos", "UTF-8"); //file che servira' per HMM
 		while (line!=null) {
 			outForHMM.println("<s> <s>");
 			String[] splits = line.split(" ");
 			for (String s: splits) {
 				s = s.replaceAll("#", " ");
 				outForHMM.println(s);
+
 			}
-		    line = reader.readLine();
+			outForHMM.println(". .");
+			line = reader.readLine();
 		}
+		reader.close();
 		outForHMM.close();
+	}
+	
+	public void parserForBrownTitle(File titoli) throws Exception {
+		BufferedReader reader = new BufferedReader(new FileReader(titoli));
+		String line = reader.readLine();
+		PrintWriter outBrown = new PrintWriter("trainBrown.brown", "UTF-8");
+		int lengSplits, canc,i;
+		String tag, parola, parolaFin;
+		while (line!=null) {
+			i = 0;
+			String[] splits = line.split(" ");
+			lengSplits = splits.length;
+			for (String s:splits) {
+				i = i+1;
+				canc = s.lastIndexOf("#"); 
+				tag = s.substring(0, canc);
+				parola = s.substring(canc+1);
+				parolaFin = parola + "/" + tag;
+				outBrown.print(parolaFin);
+				if (i != lengSplits) {
+					outBrown.print(" ");
+				}
+			}
+			line = reader.readLine();
+			if (line != null) {
+				outBrown.println("");
+				outBrown.println("");
+			}
+		}
+		reader.close();
+		outBrown.close();
+		System.out.println("Done");
 	}
 
 	public static void main(String[] args) throws Exception {
-		String title = "CCC#Forza DDD#Roma BBB#Balotelli AAA#Daje";
-		Parser.parserForTitle(title);
+		/*String title = "CCC#Forza DDD#Roma BBB#Balotelli AAA#Daje";
+		 * CCC#Daje DDD#Ciao
+		 * AAA#Roma BBB#Bau
+		Parser.parserForTitle(title);*/
 		Parser p = new Parser();
-		/*File f = new File("titoli_tutti.txt");
-		p.parserForFileTitle(f);*/
+		File f = new File("titoli_precisi.pos");
+		p.parserForFileTitle(f);
 		
 	}
 
