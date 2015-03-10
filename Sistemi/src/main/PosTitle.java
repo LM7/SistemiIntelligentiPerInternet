@@ -177,6 +177,7 @@ public class PosTitle {
 						//toglie spazi finali e iniziali
 						titleTag = titleTag.trim();
 
+						titleTag = titleTag.replace("  ", " ");
 						titleTag = taggaAltro(titleTag,"ALTRO");
 
 						titleTag = titleTag.trim();
@@ -311,9 +312,10 @@ public class PosTitle {
 		int i;
 		String[] parole = testo.split(" ");
 		for(i=0;i<parole.length;i++) {
-			if(containsCaseInsensitive(parole[i],lista)) {
+			if(parole[i].equals(" "))
+				parole[i] = "";
+			else if(!parole[i].contains("#"))
 				parole[i] = tag+"#"+parole[i];
-			}
 		}
 		return toStringa(parole);
 	}
