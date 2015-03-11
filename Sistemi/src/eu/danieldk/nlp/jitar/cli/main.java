@@ -1,10 +1,6 @@
 package eu.danieldk.nlp.jitar.cli;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-
-import eu.danieldk.nlp.jitar.cli.*;
 
 public class main {
 
@@ -19,12 +15,15 @@ public class main {
 		//Evaluate.doEvaluation(datiForTraining);
 		Train.doTraining(datiForTraining);
 		
+		/*
 		List<String> titoliDaTaggare = new ArrayList<String>();
 		//List<String> titoliDaTaggare = lettura del file test con i titoli da testare
 		titoliDaTaggare.add("The Frontier Ruckus Mercury Lounge January 30 , 2015");
-		
-		Tag.doTagging(datiForTraining[2], titoliDaTaggare);
-		
+		*/
+		String titolo = "The Frontier Ruckus Mercury Lounge January 30 , 2015";
+		String tag = Tag.doTagging(datiForTraining[2], titolo);
+		System.out.println(titolo);
+		System.out.println(tag);
 	}
    
 }

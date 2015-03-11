@@ -37,15 +37,20 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Tag {
+
+	/*
+	// i vari syso verranno buttati
 	public static void doTagging(String corpusModel, List<String> titles) {
+
+		HashMap<String, String> titoli_tag = new HashMap<String, String>();
 		System.out.println("=== Tagging ====");
 
-		/**
-    	if (args.length != 1) {
-            System.out.println("tag model");
-            System.exit(1);
-        }
-		 **/
+
+//    	if (args.length != 1) {
+//            System.out.println("tag model");
+//            System.exit(1);
+//        }
+
 
 		// Load the model.
 		Model model = null;
@@ -91,4 +96,55 @@ public class Tag {
 			}
 		}
 	}
+	 */
+
+	public static String doTagging(String corpusModel, String title) {
+
+		String tag = "";		
+
+		// Load the model.
+		Model model = null;
+		try {
+			model = Model.readModel(new File(corpusModel));
+		} catch (IOException e) {
+			System.out.println("Unable to read training data!");
+			e.printStackTrace();
+			System.exit(1);
+		}
+
+		// Set up word handlers. The suffix word handler is used as a fallback of the
+		// known word handler.
+		SuffixWordHandler swh = new SuffixWordHandler(model.lexicon(), model.uniGrams(),
+				2, 2, 8, 4, 10, 10);
+		WordHandler wh = new LexiconWordHandler(model.lexicon(), model.uniGrams(), swh);
+
+		// Create an n-gram language model.
+		LanguageModel lm = new LinearInterpolationLM(model.uniGrams(),
+				model.biGrams(), model.triGrams());
+
+		// Initialize a tagger with a beam of 1000.0.
+		HMMTagger tagger = new HMMTagger(model, wh, lm, 1000.0);
+
+		// Read from the standard input, and print tags for the input to the standard
+		// output.
+
+		InputStream stream = new ByteArrayInputStream(title.getBytes(StandardCharsets.UTF_8));
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
+			String line;
+			while ((line = reader.readLine()) != null) {
+				String tokens[] = line.split("\\s+");
+
+				List<String> tags =
+						HMMTagger.highestProbabilitySequence(tagger.tag(Arrays.asList(tokens)),
+								model).sequence();
+				//System.out.println("Title: "+title);
+				//System.out.println("Tag: "+ Joiner.on(' ').join(tags)+"\n");
+				tag += Joiner.on(' ').join(tags);
+			}
+		} 
+		catch (IOException ignored) {
+		}
+		return tag;
+	}
+
 }

@@ -11,7 +11,7 @@ import de.umass.lastfm.PaginatedResult;
 public class geoMethods {
 	// key per accedere alle API
 	public final static String key = "96d71caa731a7146cba5085a915ee0dd";
-	public final static int NUMEROEVENTI = 10;
+	public final static int NUMEROEVENTI = 1;
 
 	public static ArrayList<String[]> eventsPusher(String citta) {
 
