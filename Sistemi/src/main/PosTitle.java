@@ -32,9 +32,9 @@ public class PosTitle {
 			"TicketsInventory Mobile", "- backpage.com", "from Bandsintown", "| ConcertBank.com", "| clubZone", "- univision.com",
 			"- Wikipedia, the free encyclopedia", "| Eventful","| SeatGeek","| Eventsfy","__ Last.fm"," Setlist ","__ Songkick"));
 
-	public final static int numero_query = 5;
-	//public final static String[] CITTA = {"Roma","Londra","New York","Los Angeles","Stoccolma","Parigi","Helsinki","Canberra","Chicago","Austin"};
-	public final static String[] CITTA = {"Amsterdam","Liverpool","Boston","Detroit","Dublino"};
+	public final static int numero_query = 2;
+	public final static String[] CITTA = {"Roma","Londra","New York","Los Angeles","Stoccolma"};//,"Parigi","Helsinki","Canberra","Chicago","Austin"};
+	//public final static String[] CITTA = {"Amsterdam","Liverpool","Boston","Detroit","Dublino"};
 
 	public static void main(String[] args) {
 		int i;
@@ -91,9 +91,18 @@ public class PosTitle {
 						}
 						//trim toglie spazi iniziali e finali
 						titleTag.trim();
+						
+						String dominio = urlString.split("/")[2];
+						CleanTitle ct = new CleanTitle(title);
+						dominio = dominio.replace("www.", "");
+						title = ct.removeSiteName(title,dominio);
+						
+						title = title.replaceAll("\\s+", " ");
+						title = title.trim();
+						
 
 						titleTag = separaPunteggiatura(titleTag,new String[]{",",":",";","?","!","|","\""});
-						titleTag = titleTag.replace(",", " ,");
+						//titleTag = titleTag.replace(",", " ,");
 						titleTag = titleTag.replace("  ", " ");
 
 						//PERSONA TAGGATA
@@ -138,10 +147,6 @@ public class PosTitle {
 						titleTag = insertTag(titleTag,"tour dates", "MMM");
 						 */
 
-						String dominio = urlString.split("/")[2];
-
-						//rimuove il nome del sito dal titolo
-						titleTag = removeSiteName(titleTag,dominio);
 
 						titleTag = insertTag(titleTag,"tickets for sale", "SELL");
 						titleTag = insertTag(titleTag,"concert tickets", "SELL");
@@ -165,15 +170,6 @@ public class PosTitle {
 						titleTag = insertTag(titleTag,listaBAD,"BAD");
 						 */
 						
-						//toglie eventuali SEPA/AAA/from/PRED finali 
-						String[] titleSplit = titleTag.split(" ");
-						int titleSplitLength = titleSplit.length;
-						String lastToken = titleSplit[titleSplitLength-1];
-						//System.out.println("LastToken: "+lastToken+" del titolo: "+titleTag);
-						if(lastToken.contains("SEPA") || lastToken.contains("AAA") || lastToken.contains("from") || lastToken.contains("PRED")) {
-							titleTag = replaceLast(titleTag, lastToken, "");
-						}
-
 						//toglie spazi finali e iniziali
 						titleTag = titleTag.trim();
 
@@ -314,7 +310,7 @@ public class PosTitle {
 		for(i=0;i<parole.length;i++) {
 			if(parole[i].equals(" "))
 				parole[i] = "";
-			else if(!parole[i].contains("#"))
+			else if(!parole[i].contains("#") && containsCaseInsensitive(parole[i],lista))
 				parole[i] = tag+"#"+parole[i];
 		}
 		return toStringa(parole);
@@ -340,48 +336,5 @@ public class PosTitle {
 			}
 		}
 		return false;
-	}
-
-	/*
-	 * Metodo di supporto per la rimozione del nome del sito all'interno del titolo
-	 */
-	private static String removeSiteName(String title, String domain) {
-		domain = domain.replace("www.", "");
-		String[] titleSplit = title.split(" ");
-		String temp;
-		String tokenPrec="";
-		for (int i=0; i<titleSplit.length;i++) {
-			temp = titleSplit[i].toLowerCase();
-			if(temp.contains(".com") || temp.contains(".fm") || temp.contains(".org") || temp.contains(".net")) {
-				//System.out.println("Nel titolo "+title+" esiste un .qualcosa da eliminare");
-				title = title.replaceFirst(titleSplit[i], "");
-				//System.out.println("Eliminazione di ["+titleSplit[i]+"]: "+title);
-				if(tokenPrec.contains("SEPA") || tokenPrec.contains("AAA") || tokenPrec.contains("from")) {
-					title = replaceLast(title, tokenPrec, "");
-				}
-			}
-			else if(domain.contains(temp)) {
-				title = title.replaceFirst(titleSplit[i], "");
-				if(tokenPrec.contains("SEPA") || tokenPrec.contains("AAA") || tokenPrec.contains("from")) {
-					title = replaceLast(title, tokenPrec, "");
-				}
-			}
-			tokenPrec = titleSplit[i];
-		}
-		return title;
-	}
-
-	/*
-	 * metodo di supporto per la rimozione dell'ultima occorrenza del contenuto da una stringa
-	 */
-	public static String replaceLast(String string, String toReplace, String replacement) {
-		int pos = string.lastIndexOf(toReplace);
-		if (pos > -1) {
-			return string.substring(0, pos)
-					+ replacement
-					+ string.substring(pos + toReplace.length(), string.length());
-		} else {
-			return string;
-		}
 	}
 }
