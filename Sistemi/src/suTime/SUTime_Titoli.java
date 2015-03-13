@@ -1,5 +1,7 @@
 package suTime;
 
+import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Properties;
 
@@ -12,6 +14,7 @@ import edu.stanford.nlp.pipeline.TokenizerAnnotator;
 import edu.stanford.nlp.pipeline.WordsToSentencesAnnotator;
 import edu.stanford.nlp.time.TimeAnnotations;
 import edu.stanford.nlp.time.TimeAnnotator;
+import edu.stanford.nlp.time.TimeExpression;
 import edu.stanford.nlp.util.CoreMap;
 
 public class SUTime_Titoli {
@@ -52,6 +55,24 @@ public class SUTime_Titoli {
 			text = textPreData + textData + textPostData;
 		}
 		return text;
+	}
+	
+	public boolean containsData(String testo) {
+		Annotation annotation = new Annotation(testo);
+		annotation.set(CoreAnnotations.DocDateAnnotation.class, "2013-07-14");
+		pipeline.annotate(annotation);
+		List<CoreMap> timexAnnsAll = annotation.get(TimeAnnotations.TimexAnnotations.class);
+		for(CoreMap cm : timexAnnsAll) {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String miaData = cm.get(TimeExpression.Annotation.class).getTemporal().getTimexValue();
+			GregorianCalendar c = new GregorianCalendar();
+			try{
+				c.setTime(sdf.parse(miaData));
+				return true;
+			}catch(Exception e) {
+			}
+		}
+		return false;
 	}
 	
 	

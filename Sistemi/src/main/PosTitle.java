@@ -93,17 +93,18 @@ public class PosTitle {
 						titleTag.trim();
 						
 						String dominio = urlString.split("/")[2];
-						CleanTitle ct = new CleanTitle(title);
+						CleanTitle ct = new CleanTitle(titleTag);
 						dominio = dominio.replace("www.", "");
-						title = ct.removeSiteName(title,dominio);
+						titleTag = ct.removeSiteName(titleTag,dominio);
 						
-						title = title.replaceAll("\\s+", " ");
-						title = title.trim();
+						titleTag = titleTag.replaceAll("\\s+", " ");
+						titleTag = titleTag.trim();
 						
 
-						titleTag = separaPunteggiatura(titleTag,new String[]{",",":",";","?","!","|","\""});
-						//titleTag = titleTag.replace(",", " ,");
-						titleTag = titleTag.replace("  ", " ");
+						titleTag = separaPunteggiatura(titleTag,new String[]{",",":",";","?","!","|","\"","(",")"});
+						
+						titleTag = titleTag.replaceAll("\\s+", " ");
+						titleTag = titleTag.trim();
 
 						//PERSONA TAGGATA
 						titleTag = insertTag(titleTag,evento_cantante_giusto, "PPP");
