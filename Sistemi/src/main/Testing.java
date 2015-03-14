@@ -1,7 +1,12 @@
 package main;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 
 public class Testing {
 	
@@ -24,16 +29,28 @@ public class Testing {
 		int luogoTot = 0;
 		int dataTot = 0;
 		double percentualePunti, percentualeTre, percentualeDue, percentualeUno, percentualeZero, percentualeCantante, percentualeLuogo, percentualeData;
+		int treUrl;
+		int dueUrl;
+		int unoUrl;
+		int zeroUrl;
+		int titoliTotUrl;
+		double urlPercentualeTre, urlPercentualeDue, urlPercentualeUno, urlPercentualeZero;
 		
 		
 		for ( String url: mapForTest.keySet() ) {
 			ArrayList<String[]> listaArrayStringhe = mapForTest.get(url);
 			System.out.println("---------------------STAAAART------------------");
 			System.out.println("URL: "+url);
+			treUrl = 0;
+			dueUrl = 0;
+			unoUrl = 0;
+			zeroUrl = 0;
+			titoliTotUrl = 0;
 			for (String[] quadrupla: listaArrayStringhe) {
 				title = quadrupla[0];
 				if (title != null && !(title.equals("")) ) {
 					titoliTot = titoliTot +1;
+					titoliTotUrl = titoliTotUrl +1;
 				}
 				cantante = quadrupla[1];
 				data = quadrupla[2];
@@ -47,10 +64,12 @@ public class Testing {
 					cantanteTot = cantanteTot +1;
 					luogoTot = luogoTot +1;
 					dataTot = dataTot +1;
+					treUrl = treUrl +1;
 					System.out.println("TUTTI GIUSTI");
 				}
 				if (ris == 2) { // giusti due su tre
 					dueTot = dueTot +1;
+					dueUrl = dueUrl +1;
 					if (risArray[1] == 1 ) { //ha sbagliato il cantante
 						luogoTot = luogoTot +1;
 						dataTot = dataTot +1;
@@ -69,6 +88,7 @@ public class Testing {
 				}
 				if (ris == 1) { // uno su tre
 					unoTot = unoTot +1;
+					unoUrl = unoUrl +1;
 					if (risArray[1] == 1 && risArray[2] == 1) {  // ha sbagliato il cantante e il luogo
 						dataTot = dataTot +1;
 						System.out.println("CANTANTE e LUOGO SBAGLIATI");
@@ -85,12 +105,23 @@ public class Testing {
 				}
 				if (ris == 0) { // tutto sbagliato :(
 					zeroTot = zeroTot +1;
+					zeroUrl = zeroUrl +1;
 					System.out.println("TUTTO SBAGLIATO");
 				}
 				System.out.println("TITOLO: "+ title+"; PUNTI PRESI: "+ris);
 				System.out.println("CANTANTE GIUSTO:"+ cantante+"; DATA GIUSTA:"+data+"; LUOGO GIUSTO:"+luogo);
-				System.out.println("EVENTO PREVISION: CANTANTE:"+eventoPrevision[0]+"; CITTA:"+eventoPrevision[1]+";SEDE:"+eventoPrevision[2]+"; DATA:"+eventoPrevision[3]);
+				System.out.println("EVENTO PREVISION: CANTANTE:"+eventoPrevision[0]+"; CITTA:"+eventoPrevision[1]+";SEDE:"+eventoPrevision[2]+"; DATA:"+eventoPrevision[3]+";");
 			}
+			//prima di entrare nel primo for e cambiare url (poi se lo vogliamo spostare si sposta facile)
+			urlPercentualeTre = (treUrl * 100) / (titoliTotUrl);
+			urlPercentualeDue = (dueUrl * 100) / (titoliTotUrl);
+			urlPercentualeUno = (unoUrl * 100) / (titoliTotUrl);
+			urlPercentualeZero = (zeroUrl * 100) / (titoliTotUrl);
+			System.out.println("ECCO LA PERCENTUALE DELL'URL: "+url);
+			System.out.println("PERCENTUALE TRE: "+urlPercentualeTre+"%");
+			System.out.println("PERCENTUALE DUE: "+urlPercentualeDue+"%");
+			System.out.println("PERCENTUALE UNO: "+urlPercentualeUno+"%");
+			System.out.println("PERCENTUALE ZERO: "+urlPercentualeZero+"%");
 		}
 		
 		percentualePunti = (risTot * 100) / (titoliTot*3);
@@ -102,6 +133,8 @@ public class Testing {
 		percentualeCantante = (cantanteTot * 100) / (titoliTot);
 		percentualeLuogo = (luogoTot * 100) / titoliTot;
 		percentualeData = (dataTot * 100) / titoliTot;
+		
+		
 		
 		System.out.println("TUTTE LE PERCENTUALI:");
 		
@@ -137,8 +170,58 @@ public class Testing {
 			}
 		}
 		
+		// ROBA DATE....
+		DateFormat format = new SimpleDateFormat("MMMMMMMMMM dd yyyy", Locale.ENGLISH);
+		DateFormat format2 = new SimpleDateFormat("dd MMMMMMMMMM yyyy", Locale.ENGLISH); //si dovrebbero aggiungere piu' formati possibili
+		boolean dataOK = false;
+		try {
+			Date dataVera = format.parse(data);
+			Date dataPrevisionVera = format.parse(dataPrevision);
+			System.out.println("DATA VERA: "+dataVera+"; DATA PREVISION VERA:"+dataPrevisionVera);
+			if (dataVera.equals(dataPrevisionVera)) {
+				dataOK = true;
+				System.out.println("DAJEEEEEEEEEEEEEEEEEEEE DENTRO IL PRIMO TRYYYYYYYY");
+			}
+		}
+		catch (ParseException e) {
+			//e.printStackTrace();
+			try {
+				Date dataVera = format.parse(data);
+				Date dataPrevisionVera2 = format2.parse(dataPrevision);
+				if (dataVera.equals(dataPrevisionVera2)) {
+					dataOK = true;
+					System.out.println("DAJEEEEEEEEEEEEEEEEEEEE DENTRO IL SECONDO TRYYYYYYYY");
+				}
+			}
+			catch (ParseException ee) {
+				//e.printStackTrace();
+				try {
+					Date dataPrevisionVera = format.parse(dataPrevision);
+					Date dataVera2 = format2.parse(data);
+					if (dataPrevisionVera.equals(dataVera2)) {
+						dataOK = true;
+						System.out.println("DAJEEEEEEEEEEEEEEEEEEEE DENTRO IL TERZO TRYYYYYYYY");
+					}
+				}
+				catch (ParseException eee) {
+					try {
+						Date dataPrevisionVera2 = format2.parse(dataPrevision);
+						Date dataVera2 = format2.parse(data);
+						if (dataPrevisionVera2.equals(dataVera2)) {
+							dataOK = true;
+							System.out.println("DAJEEEEEEEEEEEEEEEEEEEE DENTRO IL QUARTO TRYYYYYYYY");
+						}
+					}
+					catch (ParseException eeee) {
+					}
+				}
+			}
+		}
+		//fino qui parte new delle date
+		
+		
 		if ( (data != null) && (dataPrevision != null) && !(data.equals("")) && !(dataPrevision.equals("")) ) {
-			if ( data.equalsIgnoreCase(dataPrevision) || data.contains(dataPrevision) || dataPrevision.contains(data) ) {
+			if ( data.equalsIgnoreCase(dataPrevision) || data.contains(dataPrevision) || dataPrevision.contains(data) || dataOK ) {
 				risultato[0] = risultato[0] +1;
 				System.out.println("DATAAAAA UGUALEEEEEEEEEEEEEEEEEEE");
 			}
