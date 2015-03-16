@@ -115,22 +115,6 @@ public class PrevisionTitle {
 		}
 		return text;
 	}
-		 
-	public static void main(String[] args) throws Exception {
-		
-		//URL url = new URL("http://justshows.com/toronto/2015/03/06/ultimate-painting/13744/");
-		//URL url = new URL("http://www.last.fm/event/4066436+Brandon+Flowers+at+Webster+Hall+on+24+March+2015");
-		//URL url = new URL("http://www.bandsintown.com/event/9018210-glass-animals-liverpool-the-kazimier-club-2015?artist=Glass+Animals");
-		//URL url = new URL("http://www.cheaptickets.com/events/benjamin-booker-tickets.s769019");
-		//URL url = new URL("http://www.last.fm/event/4034764+Hevia+at+Teatro+Brancaccio+on+17+March+2015");
-		PrevisionTitle pt = new PrevisionTitle();
-		String title = "Hevia at Teatro Brancaccio  (Roma) on 17 Mar 2015 – Last.fm";
-		String[] evento = pt.tagPrevisionTitle(title);
-		System.out.println("PERSONA: " + evento[0]);
-		System.out.println("CITTA: " + evento[1]);
-		System.out.println("SEDE: " + evento[2]);
-		System.out.println("DATA: " + evento[3]);
-	}
 
 
 }
