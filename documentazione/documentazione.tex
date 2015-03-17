@@ -1,0 +1,426 @@
+% !TEX encoding = UTF-8
+% !TEX program = pdflatex
+
+\documentclass[a4paper]{report}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{graphicx}
+
+\begin{document}
+
+
+\begin{titlepage}
+\centering
+Progetto integrativo sviluppato nell'ambito del corso di \\
+\vspace{0.2cm}
+{\LARGE \bf{Sistemi Intelligenti per Internet}}\\
+\vspace{0.2cm}
+(Anno Accademico 2014-2015) \\
+\vspace{2.5cm}
+\centering
+{\Huge\bf Estrazione di riferimenti temporali ad eventi \\ dal Web 2.0\par}
+\vspace{0.2cm}
+Documentazione\\
+\vspace{6cm}
+docente di riferimento: \\
+{\Large \em Fabio Gasparetti\par}
+\vspace{1cm}
+\includegraphics[scale=0.5]{logoRomaTre.jpg}\\
+\vspace{1cm}
+a cura di\\
+{\Large \em L.Martucci, C.Raponi, D.Santilli, L.Tomaselli\par}
+\vspace{0.4cm}
+\vspace*{\stretch{2}}
+\date{\currenttime}
+\end{titlepage}
+
+\tableofcontents
+
+\chapter{Introduzione}
+Il progetto è relativo allo studio ed all'implementazione di un sistema di estrazione di riferimenti temporali ad eventi a partire da informazioni pubblicate su siti Web 2.0. \\
+I riferimenti temporali trattati sono associati allo svolgimento di eventi inerenti al contesto musicale, quindi relativi a concerti e manifestazioni affini. \\
+Lo sviluppo ha seguito un andamento sperimentale, in quanto nel corso dell'implementazione sono state effettuate diverse scelte realizzative, che ci hanno condotto all'utilizzo di alcuni strumenti e tecniche che sono state in parte mantenute e in parte scartate nella versione finale del progetto. \\ 
+\\
+Le informazioni pubblicate sui siti analizzati sono state inizialmente elaborate nella loro interezza, infatti sia i titoli dei siti che i contenuti testuali degli stessi sono stati sottoposti ad un processamento che prevedeva l'applicazione di diversi tool in grado di far emergere i dati rilevanti per la nostra ricerca (protagonista, luogo e data dell'evento). Nello specifico abbiamo impiegato i seguenti \textit{tool}:
+\begin{itemize}
+\item \textbf{Stanford Temporal Tagger, SUTime}\cite{1}: libreria per il riconoscimento di espressioni temporali normalizzate, come ad esempio le date;
+\item \textbf{Stanford Named Entity Recognizer (NER)}\cite{2}:  libreria per l'etichettatura di sequenze di parole in un testo che identificano persone, organizzazioni e luoghi;
+\item \textbf{TagMe}\cite{3}: libreria per l'identificazione di brevi frasi significative all'interno di un testo non strutturato, in grado di fornire un collegamento ad una pagina di Wikipedia pertinente;
+\end{itemize}
+SUTime è stato utilizzato per far emergere dai testi tutte le date significative presenti, mentre NER e TagMe sono stati impiegati in modo combinato per evidenziare la presenza di termini associati ad informazioni che potessero identificare il protagonista/i e il luogo associato all'evento.
+I dati ricavati da questo tipo di approccio sono stati successivamente trattati per la formazione di un training set che fosse in grado di coprire  il più possibile la molteplicità di tipologie di casi con cui tali informazioni sono presenti all'interno dei siti Web 2.0. Sono quindi state valutate diverse \textit{feature} come ad esempio la presenza di questi dati nel titolo della pagina, il numero di occorrenze e il numeroso di categorie di Wikipedia maggiormente rilevanti associate da TagMe ai diversi termini selezionati. Per applicare le tecniche di \textit{Machine Learning} abbiamo fatto uso dei metodi di apprendimento supervisionato offerti da \textbf{SVM} (\textit{Support Vector Machines}), il cui lavoro è stato sviluppato prelevamente attraverso l'uso della libreria \textbf{LIBLINEAR}\cite{4}, in grado di garantire la classificazione e l'analisi di testi brevi. In forma minore abbiamo sperimentato questo lavoro anche attraverso \textbf{Weka}\cite{5} utilizzato in versione backend. \\
+\\
+Successivamente un'attenta analisi dei dati visualizzati, ci ha portato alla scelta di escludere i contenuti delle pagine dei siti selezionati, sia perchè la troppa entropia dei dati presenti conduceva verso valutazioni sbagliate, sia perchè nel corso dell'analisi è emersa una decisiva rilevanza dei contenuti dei titoli dei siti trattati. Analizzando una consistente mole di dati abbiamo quindi notato che le informazioni importanti per i nostri fini realizzativi sono, nella maggior parte dei casi, presenti nel titolo nel quale sono espressi in modo estremamente chiaro e sintetizzato. Tale scelta implementativa ci ha condotto verso l'utilizzo di ulteriori tecniche di elaborazione testuale maggiormente focalizzate sul \textit{Part-of-Speech Tagging} (POST). In questo modo abbiamo creato un nostro sistema di tagging incentrato principalmente sui termini per noi rilevanti, in grado di fornire uno strumento capace di evidenziare, dato un sito Web 2.0, la presenza di termini necessari per la descrizione di un evento musicale. 
+
+\chapter{Studio ed implementazione}
+Il progetto si compone principalmente di tre fasi:
+\begin{itemize}
+\item \textbf{Data Collection}: recupero delle informazioni attraverso l'analisi di siti Web 2.0;
+\item \textbf{Training}: definizione di regole di POST e creazione di un training set consistente;
+\item \textbf{Tagging}: classificazione di un testing set e valutazione dell'efficacia del sistema;
+\end{itemize}
+Di seguito sono approfondite le dinamiche implementative proprie di ciascuna fase.
+
+\section{Data Collection}
+L'oggetto principale dell'analisi sono stati i \textit{titoli} dei siti di interesse, in quanto sufficientemente completi dal punto di vista informativo, per gli scopi realizzativi del progetto. La ricerca di quest'utimi, necessaria per definire un training set quanto più possibile omogeneo, è partita da un insieme di informazioni certe. Infatti per raccogliere una quantità notevole di siti di interesse, è stato preso come riferimento uno dei principali siti musicali, \textbf{Last.fm}\cite{6}, e a partire dagli eventi archiviati nel sito, sono state raccolte una serie di informazioni relative ad eventi futuri. Interagendo con le API messe a disposizione, è stato possibile raccogliere per ogni istanza (evento musicale) i dati relativi a:
+\begin{itemize}
+\item evento (da intendere come protagonista/i dell'evento);
+\item data;
+\item luogo, comprensivo di città e sede;
+\end{itemize}
+Avendo a disposizione quindi delle informazioni di base certe, queste parole sono state utilizzate come \textit{keywords} per estendere la raccolta dati con un motore di ricerca. Questo lavoro è stato sostenuto attraverso l'interfacciamento con \textbf{Bing} al quale sono state sottoposte delle query in grado di fornire una lista di URLs riferiti a siti di interesse. Nello specifico solo due terzi delle informazioni raccolte da Last.fm (evento e data), sono state utilizzate come chiavi di ricerca per ampliare la raccolta dei siti con il supporto di Bing. L'esito di queste operazioni ha fornito una lista di siti, dai quali è stato possibile ricavare i titoli, che sono stati successivamente processati. I risultati così come sono stati restituiti da Bing sono stati ulteriormente filtrati e analizzati dal tool \textbf{boilerpipe}\cite{7}, le cui librerie forniscono algoritmi per la rilevazione e la rimozione del surplus (rumore) all'interno del contenuto testuale principale di una pagina web. \\
+\\
+La fase di collezione dei dati ha permesso quindi di raccogliere i titoli dei siti restituiti da Bing, in seguito ad una query avente come keywords informazioni certe associate ad eventi musicali futuri, recuperate attraverso l'interazione con Last.fm.
+
+\section{Training}
+Le pagine web raccolte nella fase precedente sono state processate al fine di poter costituire un training set consistente. Tale processamento ha previsto una serie di interventi a livello di elaborazione testuale, il primo dei quali è stato la rimozione all'interno del titolo dell'eventuale presenza del nome del sito. Frequentemente all'interno del titolo, è citato il nome del dominio di riferimento, informazione che essendo fortemente dipendente dal contesto è stata esclusa dall'analisi. Ulteriori interventi di questo genere, hanno previsto la riduzione degli spazi bianchi all'interno dei titoli e la separazione della punteggiatura rispetto ai termini presenti, in modo da facilitare le attività successive. \\
+L'operazione principale della fase che precede l'effettivo training automatico è stata la definizione di regole di Part-of-Speech Tagging, in grado di effettuare un processo di labelling automatico rispetto ai termini presenti nel titolo. Sono stati identificati quindi dei \textit{tag} ricorrenti da associare alle parole che costituiscono il titolo, sulla base del significato dei termini e della loro ricorrenza rispetto a determinate posizioni. I tag sono stati scelti partendo dall'osservazione di numerosi casi, prestando particolare attenzione alla presenza e alla collocazione dei termini all'interno del titolo. I tag definiti sono: 
+\\ \\ 
+\begin{tabular}{|c|c|}
+\hline
+\textit{Tag} & \textit{Associazione}\\
+\hline
+\textbf{PPP} & evento\\
+\hline
+\textbf{DDD} & data dell'evento\\
+\hline
+\textbf{CCC} & città dell'evento\\
+\hline
+\textbf{SSS} & sede dell'evento\\
+\hline
+\textbf{SEPA} & termini di punteggiatura più ricorrenti\\
+\hline
+\textbf{ET} & termini di congiunzione (es. \textit{and})\\
+\hline
+\textbf{ART} & articoli (es. \textit{the})\\
+\hline
+\textbf{AAA} & termini che precedono il luogo dell'evento (es. \textit{at})\\
+\hline
+\textbf{PRED} & termini che precedono una data (es. \textit{on})\\
+\hline
+\textbf{POSTP} & termini che seguono l'evento (es. \textit{tickets \& tour dates})\\
+\hline
+\textbf{SOCIAL} & termini legati ai social network (es. \textit{on twitter})\\
+\hline
+\textbf{SELL} & termini legati alla vendita dei biglietti per l'evento (es. \textit{tickets})\\
+\hline
+\textbf{CONCERT} & termini legati all'evento come manifestazione (es. \textit{tour})\\
+\hline
+\textbf{MUSIC} & termini legati in generale al mondo della musica (es. \textit{lyrics})\\
+\hline
+\textbf{ALTRO} & termini restanti\\
+\hline
+\end{tabular}
+\\ \\
+L'associazione di ciascun tag ai termini nel titolo è stata effettuata in modi differenti. Per quanto riguarda l'assegnazione del tag DDD, riferito alla presenza della data, il lavoro è stato supportato dal tool SUTime, mentre per quanto riguarda l'assegnazione dei tag PPP, CCC e SSS si sfruttano le conoscenze dei valori noti per quei determinati campi, che si ricavano inizialmente con l'interazione con Last.fm. Per le restanti assegnazioni di tag si procede semplicemente effettuando delle operazioni di matching tra le parole del titolo e i termini identificati rilevanti per ciascuna categoria riportata in tabella. Tutte le parole restanti, escluse da queste considerazioni, vengono taggate con ALTRO. \\
+L'ultima operazione necessaria per la definizione del training set prevede un \textit{parsing} delle istanze finora considerate nel formato .\textbf{brown}\cite{8}. Tale lavoro è affidato ad un parser capace di convertire i titoli, taggati secondo le regole di POST definite precedentemente, in un file in formato .brown in grado di essere interpretato correttamente in fase di addestramento. Di seguito è mostrato un esempio di istanza trattata: \\ \\
+Titolo originale: \textit{Placebo - Liverpool - Tue, March 10, 2015} \\ \\
+Titolo taggato e convertito in formato brown: Placebo/PPP -/SEPA Liverpool/CCC -/SEPA Tue/DDD ,/SEPA March/DDD 10/DDD ,/SEPA 2015/DDD \\ \\
+Il training set di titoli taggati è stato utilizzato come input di un sistema di addestramento che ha permesso la generazione di un \textit{corpus.model}, ovvero di un modello rappresentante delle conoscenze apprese. Intervenendo sulle regole di POST identificate, sono stati prodotti diversi modelli di apprendimento per valutare quale tipo di conoscenza fosse in grado di fornire le migliori prestazioni. La diversità dei modelli consiste essenzialmente nell'aggiunta, esclusione o variazione di tag rispetto a quelli precedentemente illustrati. \\ \\
+***La costituzione del training set prevede un'ulteriore fase di filtraggio delle istanze considerate. In modo automatico, sono state selezionate per formare il training set solo quei titoli taggati in cui cui fosse presenti i tag associati alle informazioni principali. Sono quindi stati esclusi tutti quei titoli che non menzionavano tra i loro tag quelli riferiti a PPP, DDD, CCC e SSS, associati quindi all'evento, alla sua data e al suo luogo.** \\ \\
+Il sistema utilizzato per il supporto nelle fasi di training e di tagging è \textbf{Jitar}\cite{9}, un semplice Part-of-speech tagger, basato sul trigramma \textit{Hidden Markov Model} (HMM). Un HMM è un modello statistico in cui il sistema da modellare viene assunto essere un processo di Markov con parametri sconosciuti. 
+
+\section{Tagging}
+Il \textit{corpus.model}, creato come risultato della fase di training in risposta ai dati impostati per l'addestramento, è utilizzato a sua volta come input per la fase di tagging. Le conoscenze apprese sono quindi sfruttate dal sistema per taggare nuovi titoli in modo da evidenziare o meno la presenza all'interno di questi, di informazioni consistenti per la descrizione di un evento musicale. \\
+Il procedimento di raccolta dati è analogo a quello effettuato per la costituzione del training set: partendo da informazioni certe recuperate grazie all'interazione con Last.fm, si è estesa la ricerca attravero Bing per ottenere una quantità notevole di siti da sottoporre al sistema. Tali titoli sono stati trattati analogamente alla fase di training anche per quanto riguarda le operazioni di elaborazione testuale, come la riduzione degli spazi e l'esclusione dell'eventuale presenza dei domini. Il successivo tagging è stato affidato al sistema sulla base delle conoscenze descritte nel modello prodotto ed utilizzato come elemento di input. \\
+Il risultato di queste operazioni può essere riassunto nell'esempio base mostrato di seguito: \\ \\
+Titolo test: \textit{Hevia at Teatro Brancaccio  (Roma) on 17 Mar 2015 – Last.fm} \\ \\
+Titolo taggato: PPP AAA SSS SSS (CCC) PRED DDD DDD DDD \\ \\
+Attraverso un'analisi dei tag restituiti dal sistema è possibile osservare la presenza o meno dei termini necessari per la descrizione di un evento musicale. La presenza all'interno dei risultati dei tag PPP, DDD, CCC e SSS associati rispettivamente all'evento, alla data, alla città e alla sede in cui questo si verificherà, è indice della validità del titolo e quindi del sito corrispondente. La validità consiste nella capacità della pagina web di riferirsi ad un evento musicale che avrà luogo in futuro.\\ Le deduzioni relative all'esempio precedente sono: \\ \\
+PERSONA: \textit{Hevia}\\
+CITTA: \textit{Roma}\\
+SEDE: \textit{Teatro Brancaccio}\\
+DATA: \textit{17 Mar 2015} \\ \\
+La completezza o meno di queste informazioni, anche rispetto ai vari tipi di modelli realizzati è stata valutata nella sezione successiva, nella quale si stima l'accuratezza generale del sistema implementato.
+
+
+\chapter{Risultati}
+\section{Modelli analizzati}
+Il sistema realizzato è stato testato su cinque diverse tipologie di \textit{corpus.model}, generati a partire da cinque diversi training set. Ognuno di questi rappresenta un diverso caso analizzato, per testare i miglioramenti o i peggioramenti dipesi dalle differenti conoscenze apprese, rispetto al training precedente. Ogni modello rispecchia un caso specifico:
+\begin{itemize}
+\item \textit{base}: training costituito con le regole di POST definite nella tabella precedente;
+\item \textit{senza punteggiatura}: training in cui le istanze sono prive di punteggiatura;
+\item \textit{gestione punteggiatura}: training in cui la punteggiatura presente nelle istanze è taggata con se stessa (es. il simbolo | ha come tag | );
+\item \textit{gestione parentesi}: training in cui eventuali parentesi presenti nelle istanze sono gestite in modo specifico;
+\item \textit{gestione orario evento}: training in cui l'eventuale presenza dell'orario all'interno delle istanze è esclusa dal tagging;
+\end{itemize}
+La definizione di questi modelli è stata sviluppata in modo incrementale, specializzandosi sempre di più nella ricerca e nella gestione di elementi mirati.\\
+Questi cinque modelli sono stati tutti valutati secondo un duplice punto di vista. Ciascun caso analizzato è stato prima testato attraverso un training di istanze selezionate come più rappresentative e successivamente su un numero di istanze maggiori. Ognuno dei modelli è stato quindi valutato due volte, in base alla diversa quantità di istanze presenti nel training set. Nello specifico, i training set che sono stati valutati per ogni caso sono:
+\\ \\
+\begin{tabular}{|c|c|c|}
+\hline
+caso & training selezionato & training con più istanze\\
+\hline
+\textbf{base} & \textit{trainingSepaSel.brown} & \textit{trainingSepa.brown}\\
+\hline
+\textbf{senza punteggiatura} & \textit{trainingSenzaPuntSel.brown} & \textit{trainingSenzaPunt.brown}\\
+\hline
+\textbf{gestione punteggiatura} & \textit{trainingTaggaPuntSel.brown} & \textit{trainingTaggaPunt.brown}\\
+\hline
+\textbf{gestione parentesi} & \textit{trainingParentesiSel.brown} & \textit{trainingParentesi.brown}\\
+\hline
+\textbf{gestione orario evento} & \textit{trainingSenzaTimeSel.brown} & \textit{trainingSenzaTime.brown}\\
+\hline
+\end{tabular}
+
+\section{Test Set e statistiche}
+Ogni modello è stato valutato rispetto ad un testing set comune che si è formato a partire dalla raccolta automatica che parte dalle informazione di Last.fm e si estende attraverso Bing. In particolare la costituzione del test set è stata realizzata imponendo nelle operazioni di interazione con Last.fm dei luoghi specifici da osservare. Sono state scelte \# città tra le più rappresentative per ricavare una serie di informazioni certe dalle quali far ampliare la ricerca con il supporto di Bing. Le città impostate sono: \{...\}. \\
+La ricerca delle istanze da testare è stata estesa nel seguente modo:
+\begin{itemize}
+\item[\--] per ciascuna città si sono ricavati da Last.fm i \# principali eventi associati;
+\item[\--] da ogni evento sono state estratti 2/3 di informazioni principali (evento e data);
+\item[\--] i 2/3 di informazioni principali sono stati utilizzati come keywords per impostare la ricerca con Bing;
+\item[\--] sono stati selezionati sono i primi \# risultati restituiti da Bing;
+\item[\--] a partire dai risultati selezionati si sono ricavati i titoli per la formazione del test set;
+\end{itemize}
+Avendo quindi impostato \# città da osservare, \# eventi associati e filtrato i risultati di Bing ai primi \# elementi, la dimesione del test set analizzato conta potenzialmente \# istanze. Nel corso dell'estrazione però è possibile perdere e scartare alcune istanze che non sono idonee per l'elaborazione che il sistema deve effettuare. Per questo motivo delle \# istanze potenziali, solo \# sono state scelte per la definizione del test set. \\
+\\
+Per ogni modello analizzato sono state prodotte delle statistiche in grado di valutare analiticamente l'efficacia di ciascuna applicazione. Per quanto riguarda le statistiche rispetto alla fase di training, il lavoro è stato supportato da alcune componenti di Jitar già predefinite in grado di fornire un valore di accuratezza rispetto all'andamento dell'addestramento. I risultati forniti hanno permesso, sia di tener traccia della valutazione di ciascun \textit{fold} della Cross Validation, sia di osservare una stima di precisione complessiva di tutta la fase di training (\textit{Overall accuracy}). \\
+Per la valutazione dell'accuratezza del test set sono stati invece definiti dei parametri specifici. Tale definizione ha avuto due livelli di osservazione:
+\begin{itemize}
+\item analisi rispetto al dominio delle istanze osservate;
+\item analisi generale rispetto all'intero test test;
+\end{itemize}
+L'osservazione a livello di dominio è relativa a delle statistiche associate a sottoinisiemi di istanze del test set, raggruppate sulla base del dominio di appartenenza. Questa tipologia di statistiche sono ad esempio relative a tutte le istanze del test set, ovvero a tutti i titoli di siti, estratti a partire da \textit{songkick.com}, una delle principali pagine web che fornisce informazioni in merito ad eventi musicali. Tali stime sono state fornite in modo da permettere l'osservazione dell'andamento dell'accuratezza rispetto alla diversa tipologie di titoli, e quindi domini, che sono stati studiati. Le valutazioini fornite in merito a questo approccio, per ogni dominio, sono relative al numero di informazioni principali. Per informazioni principali si intendono la presenza dell'evento, della data e del luogo. Per ciascun dominio sono quindi riportate:
+\begin{itemize}
+\item \% di volte che sono taggate 3/3 informazioni principali;
+\item \% di volte che sono taggate 2/3 informazioni principali;
+\item \% di volte che sono taggate 1/3 informazioni principali;
+\item \% di volte che sono taggate 0/3 informazioni principali;
+\end{itemize}
+L'osservazione generale rispetto all'intero test set ha permesso di fornire statistiche meno focalizzate ma di carattere più complessivo. Per l'intero insieme di istanze sono state fatte valutazioni di diversa natura. Inizialmente per l'intero test set è stato definito un valore percentuale di precisione definito nel seguente modo: \\
+$${\bf score (\%)}=\frac{puntiTestSet*100}{max\_puntiTestSet}$$ \\\\
+dove \textit{puntiTestSet} è ottenuta analizzando l'intero test set e sommando, per ogni istanza, il valore 3, 2, 1 o 0 in base al numero di informazioni principali taggate. Un titolo in cui sono presenti tutte e 3 le informazioni darà contributo 3, mentre ad esempio uno in cui non è presente solo la data darà contributo 2. Il valore \textit{max\_puntiTestSet} è invece calcolato considerando il massimo punteggio che un test set può raggiungere, considerando che in ogni sua istanza sono presenti tutte e 3 le informazioni principali; considerando quindi un contributo di 3 da parte di tutte le istanze del test set. Ad esempio su un test set di 60 titoli, il \textit{max\_puntiTestSet} è di 60*3 = 180 punti. \\
+Un' ulterioretipo di valutazione effettuata è relativa alla misurazione della quantità di informazioni rilevanti rispetto a quelle principali. Per l'intero test set sono quindi riportate:
+\begin{itemize}
+\item \% di volte che sono taggate 3/3 informazioni principali;
+\item \% di volte che sono taggate 2/3 informazioni principali;
+\item \% di volte che sono taggate 1/3 informazioni principali;
+\item \% di volte che sono taggate 0/3 informazioni principali;
+\end{itemize}
+Una successiva analisi statistica ha permesso di calcolare invece, rispetto all'interno test set, la percentuale di volte in cui è stato possibile rilevare l'evento, il luogo e la data nello specifico. Per l'intero test set sono quindi riportate:
+\begin{itemize}
+\item \% di volte in cui è stato taggato l'evento;
+\item \% di volte in cui è stato taggato il luogo;
+\item \% di volte in cui è stata taggata la data;
+\end{itemize}
+Per ogni modello descritto in precedenza sono quindi state fornite le seguenti valutazioni statistiche, in grado di stimare l'accuratezza del sistema rispetto ai vari training.
+
+\section{Confronto tra modelli}
+Il primo \textit{corpus.model} che è stato realizzato e analizzato è quello base, costituito a partire dal training costituito con le regole di POST definite inizialmente. Il confronto, tra la versione generata a partire dal training selezionato e quello più esteso, ha prodotto i seguenti risultati per quanto riguardo la fase di training:\\
+\begin{center}
+\begin{tabular}{c c c}
+\hline
+ & \textit{trainingSepaSel.brown} & \textit{trainingSepa.brown}\\
+\hline
+\textbf{Overall accuracy} \\ (cross validation) & 999\% & 999\% \\
+\hline
+\end{tabular}
+\end{center}
+Mentre per quanto riguarda le statistiche relative all'intero test set:\\
+\begin{center}
+\begin{tabular}{|ccc|}
+\hline
+ & \textit{trainingSepaSel.brown} & \textit{trainingSepa.brown}\\
+\hline
+\textbf{Score} & 999\% & 999\% \\
+\hline
+ & &  \\
+\hline
+3/3 info principali & 999\% & 999\% \\
+2/3 info principali & 999\% & 999\% \\
+1/3 info principali & 999\% & 999\% \\
+0/3 info principali & 999\% & 999\% \\
+\hline
+ & &  \\
+\hline
+evento & 999\% & 999\% \\
+luogo & 999\% & 999\% \\
+data & 999\% & 999\% \\
+\hline
+\end{tabular}
+\end{center}
+Successivamente si è pensato di osservare come potesse variare l'accuratezza escludendo completamente la punteggiatura dai titoli dei siti analizzati. In questo modo è stato realizzato il \textit{corpus.model} a partire da un training set che non contemplasse la presenza di segni di interpunzione al proprio interno. I risultati prodotti in fase di training sono stati:
+\begin{center}
+\begin{tabular}{c c c}
+\hline
+ & \textit{trainingSenzaPuntSel.brown} & \textit{trainingSenzaPunt.brown}\\
+\hline
+\textbf{Overall accuracy} \\ (cross validation) & 999\% & 999\% \\
+\hline
+\end{tabular}
+\end{center}
+Mentre per quanto riguarda le statistiche relative all'intero test set:
+\begin{center}
+\begin{tabular}{|ccc|}
+\hline
+ & \textit{trainingSenzaPuntSel.brown} & \textit{trainingSenzaPunt.brown}\\
+\hline
+\textbf{Score} & 999\% & 999\% \\
+\hline
+ & &  \\
+\hline
+3/3 info principali & 999\% & 999\% \\
+2/3 info principali & 999\% & 999\% \\
+1/3 info principali & 999\% & 999\% \\
+0/3 info principali & 999\% & 999\% \\
+\hline
+ & &  \\
+\hline
+evento & 999\% & 999\% \\
+luogo & 999\% & 999\% \\
+data & 999\% & 999\% \\
+\hline
+\end{tabular}
+\end{center}
+L'importanza della punteggiatura all'interno dei titoli è però una caratteristica testuale che deve essere considerata soprattutto per la sua capacità di separare e definire la posizione delle informazioni. Per questo è stato definito un \textit{corpus.model} a partire da un training in cui ogni elemento di interpunzione fosse taggato con se stesso.  I risultati prodotti in fase di training sono stati:
+\begin{center}
+\begin{tabular}{c c c}
+\hline
+ & \textit{trainingTaggaPunSel.brown} & \textit{trainingTaggaPun.brown}\\
+\hline
+\textbf{Overall accuracy} \\ (cross validation) & 999\% & 999\% \\
+\hline
+\end{tabular}
+\end{center}
+Mentre per quanto riguarda le statistiche relative all'intero test set:\\
+\begin{center}
+\begin{tabular}{|ccc|}
+\hline
+ & \textit{trainingTaggaPunSel.brown} & \textit{trainingTaggaPun.brown}\\
+\hline
+\textbf{Score} & 999\% & 999\% \\
+\hline
+ & &  \\
+\hline
+3/3 info principali & 999\% & 999\% \\
+2/3 info principali & 999\% & 999\% \\
+1/3 info principali & 999\% & 999\% \\
+0/3 info principali & 999\% & 999\% \\
+\hline
+ & &  \\
+\hline
+evento & 999\% & 999\% \\
+luogo & 999\% & 999\% \\
+data & 999\% & 999\% \\
+\hline
+\end{tabular}
+\end{center}
+Le valutazioni sui modelli successivi si sono invece focalizzate su dettagli testuali specifici come ad esempio la presenza e la gestione delle parentesi all'interno dei titoli. Questo ha permesso di creare un \textit{corpus.model} a partire da un training set specifico che fosse in grado di trattare con cura questa particolarità. I risultati prodotti in fase di training sono stati: \\
+\begin{center}
+\begin{tabular}{c c c}
+\hline
+ & \textit{trainingParentesiSel.brown} & \textit{trainingParentesi.brown}\\
+\hline
+\textbf{Overall accuracy} \\ (cross validation) & 999\% & 999\% \\
+\hline
+\end{tabular}
+\end{center}
+Mentre per quanto riguarda le statistiche relative all'intero test set:\\
+\begin{center}
+\begin{tabular}{|ccc|}
+\hline
+ & \textit{trainingParentesiSel.brown} & \textit{trainingParentesi.brown}\\
+\hline
+\textbf{Score} & 999\% & 999\% \\
+\hline
+ & &  \\
+\hline
+3/3 info principali & 999\% & 999\% \\
+2/3 info principali & 999\% & 999\% \\
+1/3 info principali & 999\% & 999\% \\
+0/3 info principali & 999\% & 999\% \\
+\hline
+ & &  \\
+\hline
+evento & 999\% & 999\% \\
+luogo & 999\% & 999\% \\
+data & 999\% & 999\% \\
+\hline
+\end{tabular}
+\end{center}
+L'ultimo modello prodotto si è interessato della gestione e in particolare della rimozione all'interno delle istanze delle espressioni legate agli orari degli eventi, in grado di condizionare l'accuratezza delle elaborazioni. Si è quindi prodotto un \textit{corpus.model} da un training in cui fosse tali espressioni fossere completamente rimosse. I risultati prodotti in fase di training sono stati:
+\begin{center}
+\begin{tabular}{c c c}
+\hline
+ & \textit{trainingSenzaTimeSel.brown} & \textit{trainingSenzaTime.brown}\\
+\hline
+\textbf{Overall C} \\ (cross validation) & 999\% & 999\% \\
+\hline
+\end{tabular}
+\end{center}
+Mentre per quanto riguarda le statistiche relative all'intero test set:
+\begin{center}
+\begin{tabular}{|ccc|}
+\hline
+ & \textit{trainingSenzaTimeSel.brown} & \textit{trainingSenzaTime.brown}\\
+\hline
+\textbf{Score} & 999\% & 999\% \\
+\hline
+ & &  \\
+\hline
+3/3 info principali & 999\% & 999\% \\
+2/3 info principali & 999\% & 999\% \\
+1/3 info principali & 999\% & 999\% \\
+0/3 info principali & 999\% & 999\% \\
+\hline
+ & &  \\
+\hline
+evento & 999\% & 999\% \\
+luogo & 999\% & 999\% \\
+data & 999\% & 999\% \\
+\hline
+\end{tabular}
+\end{center}
+Paragonando tutti i modelli testati, il confronto mostra che con il raffinamento del modello, la precisione del sistema tende a migliorare.
+\begin{center}
+\begin{tabular}{|ccc|}
+\hline
+ & \textbf{overall accuracy} & \textbf{score}\\
+\hline
+ & &  \\
+\hline
+\textit{trainingSepaSel.brown} & 999\% & 999\% \\
+\textit{trainingSepa.brown} & 999\% & 999\% \\
+\hline
+ & &  \\
+\hline
+\textit{trainingSenzaPuntSel.brown} & 999\% & 999\% \\
+\textit{trainingSenzaPunt.brown} & 999\% & 999\% \\
+\hline
+ & &  \\
+\hline
+\textit{trainingTaggPuntSel.brown} & 999\% & 999\% \\
+\textit{trainingTaggPunt.brown} & 999\% & 999\% \\
+\hline
+ & &  \\
+\hline
+\textit{trainingParentesiSel.brown} & 999\% & 999\% \\
+\textit{trainingParentesi.brown} & 999\% & 999\% \\
+\hline
+ & &  \\
+\hline
+\textit{trainingSenzaTimeSel.brown} & 999\% & 999\% \\
+\textit{trainingSenzaTime.brown} & 999\% & 999\% \\
+\hline
+\end{tabular}
+\end{center}
+
+\cleardoublepage
+\renewcommand\bibname{Riferimenti}
+\begin{thebibliography}{n}
+\addto\captions{\renewcommand{\thebibliography}{Riferimenti}}
+\bibitem{1} \textbf{Stanford Temporal Tagger, SUTime}: \\http://nlp.stanford.edu/software/sutime.shtml
+\bibitem{2} \textbf{Stanford Named Entity Recognizer (NER)}: \\http://nlp.stanford.edu/software/CRF-NER.shtml
+\bibitem{3} \textbf{TagMe}: http://tagme.di.unipi.it/
+\bibitem{4} \textbf{LIBLINEAR}: http://www.csie.ntu.edu.tw/~cjlin/liblinear/
+\bibitem{5} \textbf{Weka}: http://www.cs.waikato.ac.nz/ml/weka/
+\bibitem{6} \textbf{Last.fm}: http://www.lastfm.it/
+\bibitem{7} \textbf{boilerpipe}: http://boilerpipe-web.appspot.com/
+\bibitem{8} \textbf{brown}: http://en.wikipedia.org/wiki/Brown\_Corpus
+\bibitem{9} \textbf{Jitar}: https://github.com/danieldk/jitar;
+\end{thebibliography}
+
+
+\end{document}
