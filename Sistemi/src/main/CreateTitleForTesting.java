@@ -21,19 +21,19 @@ import events.MsnSearchEngine;
 public class CreateTitleForTesting {
 
 	public final static HashSet<String> STOP_SITE = new HashSet<String>(Arrays.asList("on StubHub!", 
-			"- StubHub UK","- StubHub UK!","– Last.fm", "– Last.fm", "at Last.fm", "@ TicketHold","@ Ultimate-Guitar.Com",
+			"- StubHub UK","- StubHub UK!","ï¿½ Last.fm", "ï¿½ Last.fm", "at Last.fm", "@ TicketHold","@ Ultimate-Guitar.Com",
 			"at Last.fm","Stereoboard", "ConcertWith.Me", "NaviHotels.com", "Heyevent.com", "Friendfeed", "setlist.fm",
 			"Getty Images", "TicketNetwork", "www.floramc.org", "rmalife.net", "Gumtree", "Seatwave.com",
-			"– Songkick", "The sound of summer", "504ever.net", "| Concertful", "StubHub UK!", "YouPict", 
+			"ï¿½ Songkick", "The sound of summer", "504ever.net", "| Concertful", "StubHub UK!", "YouPict", 
 			"- 5gig.com","5gig.co.uk", "mxdwn.com", "Thrillcall", "Kililive.com", "| Bandsintown", "MASS EDMC", 
 			"| Nerds Attack!", "Plannify", "BoxOffice Lazio", "| Ticketfly", "| CheapTickets.com",
 			"| MASS EDMC", "| Kililive.com", "| setlist.fm", " - Stereoboard", "SoundCrashMusic", "| SoundCrashMusic",
 			"TicketsInventory Mobile", "- backpage.com", "from Bandsintown", "| ConcertBank.com", "| clubZone", "- univision.com",
 			"- Wikipedia, the free encyclopedia", "| Eventful","| SeatGeek","| Eventsfy","__ Last.fm"," Setlist ","__ Songkick"));
 
-	public final static int numero_query = 5;
-	public final static String[] CITTA = {"Roma","Londra","New York","Los Angeles","Stoccolma","Parigi","Helsinki","Canberra","Chicago","Austin"};
-	//public final static String[] CITTA = {"Amsterdam","Liverpool","Boston","Detroit","Dublino"};
+	public final static int numero_query = 10;
+	public final static String[] CITTA = {"Roma","Londra","New York","Los Angeles","Stoccolma","Parigi","Helsinki","Canberra","Chicago","Austin", "Amsterdam",
+											"Liverpool", "Boston", "Detroit", "Dublino", "Houston", "Phoenix", "Dallas", "Denver", "Manchester" };
 
 	public static void main(String[] args) {
 		createTitle();
@@ -187,6 +187,10 @@ public class CreateTitleForTesting {
 		System.out.println("Done"+j);
 		
 		Stampa(dominio_dati);
+		
+		//Stampa la mappa in un file
+		FileMapForTesting.fromMapToText(dominio_dati, "Map2Text.txt");
+		
 		return dominio_dati;
 	}
 

@@ -56,7 +56,7 @@ public class Parser {
 	public static void parserForBrownFileTitle(File titoli) throws Exception {
 		BufferedReader reader = new BufferedReader(new FileReader(titoli));
 		String line = reader.readLine();
-		PrintWriter outBrown = new PrintWriter("dataBROWN/training.brown", "UTF-8");
+		PrintWriter outBrown = new PrintWriter("dataBROWN/trainingSepa.brown", "UTF-8");
 		int lengSplits, canc,i;
 		String tag, parola, parolaFin;
 		while (line!=null) {
@@ -91,7 +91,7 @@ public class Parser {
 		 * AAA#Roma BBB#Bau
 		 * Parser.parserForTitle(title);
 		*/
-		File f = new File("titoli_precisi.pos");
+		File f = new File("titoli_tutti.txt");
 		Parser.parserForBrownFileTitle(f);
 		
 		

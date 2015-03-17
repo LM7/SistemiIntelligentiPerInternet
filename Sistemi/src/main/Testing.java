@@ -1,5 +1,8 @@
 package main;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,9 +14,16 @@ import java.util.Locale;
 public class Testing {
 	
 	public void testingTitle() throws Exception {
+		/*File in cui verranno stampati tutti i risultati*/
+		PrintWriter testingResults = new PrintWriter ("TestingResults.txt", "UTF-8");
+		
 		PrevisionTitle previsionTitle = new PrevisionTitle();
-		CreateTitleForTesting createTitleTest = new CreateTitleForTesting();
-		HashMap<String, ArrayList<String[]>> mapForTest = createTitleTest.createTitle();
+		
+		/*CreateTitleForTesting createTitleTest = new CreateTitleForTesting(); NON SERVE PIU'
+		HashMap<String, ArrayList<String[]>> mapForTest = createTitleTest.createTitle();*/
+		
+		HashMap<String, ArrayList<String[]>> mapForTest = FileMapForTesting.fromTextToMap("Map2Text.txt");
+		
 		String[] eventoPrevision = new String[4];
 		String title, cantante, data, luogo;
 		
@@ -117,11 +127,20 @@ public class Testing {
 			urlPercentualeDue = (dueUrl * 100) / (titoliTotUrl);
 			urlPercentualeUno = (unoUrl * 100) / (titoliTotUrl);
 			urlPercentualeZero = (zeroUrl * 100) / (titoliTotUrl);
-			System.out.println("ECCO LA PERCENTUALE DELL'URL: "+url);
+			System.out.println("ECCO LA PERCENTUALE DEL DOMINIO: "+url);
 			System.out.println("PERCENTUALE TRE: "+urlPercentualeTre+"%");
 			System.out.println("PERCENTUALE DUE: "+urlPercentualeDue+"%");
 			System.out.println("PERCENTUALE UNO: "+urlPercentualeUno+"%");
 			System.out.println("PERCENTUALE ZERO: "+urlPercentualeZero+"%");
+			
+			//per file
+		    testingResults.println("ECCO LA PERCENTUALE DEL DOMINIO: "+url);
+		    testingResults.println("PERCENTUALE TRE: "+urlPercentualeTre+"%");
+		    testingResults.println("PERCENTUALE DUE: "+urlPercentualeDue+"%");
+		    testingResults.println("PERCENTUALE UNO: "+urlPercentualeUno+"%");
+		    testingResults.println("PERCENTUALE ZERO: "+urlPercentualeZero+"%");
+		    testingResults.println("");
+		    
 		}
 		
 		percentualePunti = (risTot * 100) / (titoliTot*3);
@@ -137,7 +156,7 @@ public class Testing {
 		
 		
 		System.out.println("TUTTE LE PERCENTUALI:");
-		
+
 		System.out.println("PERCENTUALE PUNTI: "+ percentualePunti+"%");
 		System.out.println("PERCENTUALE TRE: "+ percentualeTre+"%");
 		System.out.println("PERCENTUALE DUE: "+ percentualeDue+"%");
@@ -147,7 +166,22 @@ public class Testing {
 		System.out.println("PERCENTUALE LUOGO: "+ percentualeLuogo+"%");
 		System.out.println("PERCENTUALE DATA: "+ percentualeData+"%");
 		
+		//per file
+
+		testingResults.println("TUTTE LE PERCENTUALI:");
+
+		testingResults.println("PERCENTUALE PUNTI: "+ percentualePunti+"%");
+		testingResults.println("PERCENTUALE TRE: "+ percentualeTre+"%");
+		testingResults.println("PERCENTUALE DUE: "+ percentualeDue+"%");
+		testingResults.println("PERCENTUALE UNO: "+ percentualeUno+"%");
+		testingResults.println("PERCENTUALE ZERO: "+ percentualeZero+"%");
+		testingResults.println("PERCENTUALE CANTANTE: "+ percentualeCantante+"%");
+		testingResults.println("PERCENTUALE LUOGO: "+ percentualeLuogo+"%");
+		testingResults.println("PERCENTUALE DATA: "+ percentualeData+"%");
+
 		System.out.println("---------------------------FINE------------------------");
+		
+		testingResults.close();
 				
 	}
 
