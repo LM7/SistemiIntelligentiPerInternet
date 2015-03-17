@@ -33,6 +33,24 @@ public class SUTime {
 		pipeline.addAnnotator(new POSTaggerAnnotator(false));
 		pipeline.addAnnotator(new TimeAnnotator("sutime", props));
 	}
+	
+	public Date fromDataStringToDataDate (String data) {
+		Annotation annotation = new Annotation(data);
+		annotation.set(CoreAnnotations.DocDateAnnotation.class, "2013-07-14");
+		pipeline.annotate(annotation);
+		List<CoreMap> timexAnnsAll = annotation.get(TimeAnnotations.TimexAnnotations.class);
+		if(!timexAnnsAll.isEmpty()) {
+			CoreMap cm = timexAnnsAll.get(0);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String miaData = cm.get(TimeExpression.Annotation.class).getTemporal().getTimexValue();
+			System.out.println(miaData);
+				try{
+					return sdf.parse(miaData);
+				}catch (Exception e){
+				}
+		}
+		return null;
+	}
 
 	public void getTimeProva(String text) {
 		Annotation annotation = new Annotation(text);
