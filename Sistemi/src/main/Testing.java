@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
+import suTime.SUTime;
+
 public class Testing {
 	
 	public void testingTitle() throws Exception {
@@ -135,6 +137,7 @@ public class Testing {
 			
 			//per file
 		    testingResults.println("ECCO LA PERCENTUALE DEL DOMINIO: "+url);
+		    testingResults.println("TITOLI TROVATI: "+titoliTotUrl);
 		    testingResults.println("PERCENTUALE TRE: "+urlPercentualeTre+"%");
 		    testingResults.println("PERCENTUALE DUE: "+urlPercentualeDue+"%");
 		    testingResults.println("PERCENTUALE UNO: "+urlPercentualeUno+"%");
@@ -167,7 +170,8 @@ public class Testing {
 		System.out.println("PERCENTUALE DATA: "+ percentualeData+"%");
 		
 		//per file
-
+		
+		testingResults.println("TITOLI TOTALI TROVATI: "+titoliTot);
 		testingResults.println("TUTTE LE PERCENTUALI:");
 
 		testingResults.println("PERCENTUALE PUNTI: "+ percentualePunti+"%");
@@ -206,52 +210,18 @@ public class Testing {
 		
 		// ROBA DATE....
 		DateFormat format = new SimpleDateFormat("MMMMMMMMMM dd yyyy", Locale.ENGLISH);
-		DateFormat format2 = new SimpleDateFormat("dd MMMMMMMMMM yyyy", Locale.ENGLISH); //si dovrebbero aggiungere piu' formati possibili
 		boolean dataOK = false;
 		try {
 			Date dataVera = format.parse(data);
-			Date dataPrevisionVera = format.parse(dataPrevision);
-			System.out.println("DATA VERA: "+dataVera+"; DATA PREVISION VERA:"+dataPrevisionVera);
-			if (dataVera.equals(dataPrevisionVera)) {
+			SUTime suTime = new SUTime();
+			Date dataPrevisionVera = suTime.fromDataStringToDataDate(dataPrevision);
+			if ( (dataPrevisionVera != null) && (dataVera != null) && (dataVera.equals(dataPrevisionVera)) ) {
 				dataOK = true;
-				System.out.println("DAJEEEEEEEEEEEEEEEEEEEE DENTRO IL PRIMO TRYYYYYYYY");
 			}
 		}
 		catch (ParseException e) {
 			//e.printStackTrace();
-			try {
-				Date dataVera = format.parse(data);
-				Date dataPrevisionVera2 = format2.parse(dataPrevision);
-				if (dataVera.equals(dataPrevisionVera2)) {
-					dataOK = true;
-					System.out.println("DAJEEEEEEEEEEEEEEEEEEEE DENTRO IL SECONDO TRYYYYYYYY");
-				}
-			}
-			catch (ParseException ee) {
-				//e.printStackTrace();
-				try {
-					Date dataPrevisionVera = format.parse(dataPrevision);
-					Date dataVera2 = format2.parse(data);
-					if (dataPrevisionVera.equals(dataVera2)) {
-						dataOK = true;
-						System.out.println("DAJEEEEEEEEEEEEEEEEEEEE DENTRO IL TERZO TRYYYYYYYY");
-					}
-				}
-				catch (ParseException eee) {
-					try {
-						Date dataPrevisionVera2 = format2.parse(dataPrevision);
-						Date dataVera2 = format2.parse(data);
-						if (dataPrevisionVera2.equals(dataVera2)) {
-							dataOK = true;
-							System.out.println("DAJEEEEEEEEEEEEEEEEEEEE DENTRO IL QUARTO TRYYYYYYYY");
-						}
-					}
-					catch (ParseException eeee) {
-					}
-				}
-			}
 		}
-		//fino qui parte new delle date
 		
 		
 		if ( (data != null) && (dataPrevision != null) && !(data.equals("")) && !(dataPrevision.equals("")) ) {
