@@ -25,7 +25,7 @@ public class PrevisionTitle {
 	public String[] tagPrevisionTitle(String title) throws Exception {
 		String[] datiForTraining = new String[3];
 		datiForTraining[0] = "brown";
-		datiForTraining[1] = "dataBROWN/trainingALLPunt.brown";
+		datiForTraining[1] = "dataBROWN/trainingParentesiSel.brown";
 		datiForTraining[2] = "dataBROWN/corpus.model";
 	
 		CrossValidation.doCrossValidation(datiForTraining);
