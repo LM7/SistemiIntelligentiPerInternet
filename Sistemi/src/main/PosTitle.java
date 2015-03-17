@@ -19,12 +19,22 @@ import com.mongodb.MongoClient;
 
 import events.MsnSearchEngine;
 
+
+/*
+ * Crea il file training.brown che e' un file di titolo taggati che puo' essere
+ * utilizzato come modello di training. Inoltre questi titoli vengono salvati nel DB.
+ * 
+ * Numero di titoli cercati = numero_query * CITTA.length * NUMEROEVENTI(contenuto nella classe 
+ * geoMethods nel package lastFM)
+ * Numero di titolo inseriti nel training = tutti i titoli cercati che contengono
+ * sia il cantante corretto sia (la citta' o la sede) corretta sia una data
+ */
 public class PosTitle {
 
 	public final static HashSet<String> STOP_SITE = new HashSet<String>(Arrays.asList("on StubHub!", 
 			"- StubHub UK","- StubHub UK!","– Last.fm", "– Last.fm", "at Last.fm", "@ TicketHold","@ Ultimate-Guitar.Com",
 			"at Last.fm","Stereoboard", "ConcertWith.Me", "NaviHotels.com", "Heyevent.com", "Friendfeed", "setlist.fm",
-			"Getty Images", "TicketNetwork", "www.floramc.org", "rmalife.net", "Gumtree", "Seatwave.com",
+			"Getty Images", "| TicketNetwork", "www.floramc.org", "rmalife.net", "Gumtree", "Seatwave.com",
 			"– Songkick", "The sound of summer", "504ever.net", "| Concertful", "StubHub UK!", "YouPict", 
 			"- 5gig.com","5gig.co.uk", "mxdwn.com", "Thrillcall", "Kililive.com", "| Bandsintown", "MASS EDMC", 
 			"| Nerds Attack!", "Plannify", "BoxOffice Lazio", "| Ticketfly", "| CheapTickets.com",
@@ -32,13 +42,14 @@ public class PosTitle {
 			"TicketsInventory Mobile", "- backpage.com", "from Bandsintown", "| ConcertBank.com", "| clubZone", "- univision.com",
 			"- Wikipedia, the free encyclopedia", "| Eventful","| SeatGeek","| Eventsfy","__ Last.fm"," Setlist ","__ Songkick"));
 
-	public final static int numero_query = 2;
-	public final static String[] CITTA = {"Roma","Londra","New York","Los Angeles","Stoccolma"};//,"Parigi","Helsinki","Canberra","Chicago","Austin"};
+	public final static int numero_query = 5;
+	public final static String[] CITTA = {"Roma","London","New York","Los Angeles","Stoccolma","Paris","Helsinki","Canberra","Chicago","Austin"};
 	//public final static String[] CITTA = {"Amsterdam","Liverpool","Boston","Detroit","Dublino"};
 
 	public static void main(String[] args) {
 		int i;
 		int j = 0;
+		int k = 0;
 		int train = 0;
 
 		//Database
@@ -82,27 +93,32 @@ public class PosTitle {
 						//String text = site[1];				
 
 						String titleTag = title;
-						titleTag = titleTag.replace("  ", " ");
-						
+						titleTag = titleTag.replaceAll("\\s+", " ");
+						titleTag = titleTag.trim();
+
 
 						//RIMUOVI SITI
 						for(String sito: STOP_SITE){
 							titleTag = titleTag.replace(sito, "");
 						}
 						//trim toglie spazi iniziali e finali
-						titleTag.trim();
-						
+						titleTag = titleTag.trim();
+
 						String dominio = urlString.split("/")[2];
 						CleanTitle ct = new CleanTitle(titleTag);
 						dominio = dominio.replace("www.", "");
 						titleTag = ct.removeSiteName(titleTag,dominio);
-						
+
 						titleTag = titleTag.replaceAll("\\s+", " ");
 						titleTag = titleTag.trim();
-						
+
+
+						SUTime_Titoli SUTT = new SUTime_Titoli();
+						//DATA TAGGATA
+						titleTag = SUTT.getTextTag(titleTag);
 
 						titleTag = separaPunteggiatura(titleTag,new String[]{",",":",";","?","!","|","\"","(",")"});
-						
+
 						titleTag = titleTag.replaceAll("\\s+", " ");
 						titleTag = titleTag.trim();
 
@@ -122,19 +138,24 @@ public class PosTitle {
 							System.out.println("ERRORE SEDE_CITTA'");
 							e.printStackTrace();
 						}
-						
-						SUTime_Titoli SUTT = new SUTime_Titoli();
-						//DATA TAGGATA
-						titleTag = SUTT.getTextTag(titleTag);
+
+						//TAG PUNTEGGIATURA
+						titleTag = insertTag(titleTag,"\"","\"");
+						titleTag = insertTag(titleTag,"?","?");
+						titleTag = insertTag(titleTag,"!","!");
+						titleTag = insertTag(titleTag,"|","|");
+						titleTag = insertTag(titleTag,",",",");
+						titleTag = insertTag(titleTag,"-","-");
+						titleTag = insertTag(titleTag,"–","–");
+						titleTag = insertTag(titleTag,":",":");
+						titleTag = insertTag(titleTag,";",";");
+						titleTag = insertTag(titleTag,"(","(");
+						titleTag = insertTag(titleTag,")",")");
+
 
 						//ALTRI TAG
-						ArrayList<String> listaSepa = new ArrayList<String>(Arrays.asList("|",",","–","-",":"));
-						titleTag = insertTag(titleTag,listaSepa,"SEPA");
-
-						titleTag = insertTag(titleTag,"SEPA#| twitter", "SOCIAL");
+						titleTag = insertTag(titleTag,"|#| twitter", "SOCIAL");
 						titleTag = insertTag(titleTag,"on twitter", "SOCIAL");
-
-						titleTag = insertTag(titleTag,"(@", "PREP");
 
 						ArrayList<String> listaAAA = new ArrayList<String>(Arrays.asList("@","at","in"));
 						titleTag = insertTag(titleTag,listaAAA,"AAA");
@@ -142,12 +163,6 @@ public class PosTitle {
 						titleTag = insertTag(titleTag,"tickets & tour dates", "POSTP");
 
 						titleTag = insertTag(titleTag,"on", "PRED");
-						/*
-						titleTag = insertTag(titleTag,"concert tickets", "MMM");
-						titleTag = insertTag(titleTag,"concert dates", "MMM");
-						titleTag = insertTag(titleTag,"tour dates", "MMM");
-						 */
-
 
 						titleTag = insertTag(titleTag,"tickets for sale", "SELL");
 						titleTag = insertTag(titleTag,"concert tickets", "SELL");
@@ -166,15 +181,10 @@ public class PosTitle {
 						ArrayList<String> listaART = new ArrayList<String>(Arrays.asList("the","an","a"));
 						titleTag = insertTag(titleTag,listaART,"ART");
 
-						/*
-						ArrayList<String> listaBAD = new ArrayList<String>(Arrays.asList("cancelled","homepage","forums","album","weather"));
-						titleTag = insertTag(titleTag,listaBAD,"BAD");
-						 */
-						
 						//toglie spazi finali e iniziali
 						titleTag = titleTag.trim();
+						titleTag = titleTag.replaceAll("\\s+", " ");
 
-						titleTag = titleTag.replace("  ", " ");
 						titleTag = taggaAltro(titleTag,"ALTRO");
 
 						titleTag = titleTag.trim();
@@ -183,26 +193,28 @@ public class PosTitle {
 						 * CREA FILE DI TRAINING
 						 * solo se contiene sia PPP sia DDD sia (CCC oppure SSS)
 						 */
-						
+
 						if(contieneDati(titleTag)) {
 							train++;
 							System.out.println("Training numero "+train);
 							Parser.parserForBrownTitle(titleTag);
+
+							BasicDBObject document = new BasicDBObject();
+							document.put("data", data_giusta);
+							document.put("evento_cantante", evento_cantante_giusto);
+							document.put("luogo", luogo_giusto);
+
+							document.put("Titolo", title);
+							document.put("TitoloTag", titleTag);
+
+							document.put("dominio", dominio);
+							document.put("url", url.toString());
+
+							collection.insert(document);
 						}
-						
-
-						BasicDBObject document = new BasicDBObject();
-						document.put("data", data_giusta);
-						document.put("evento_cantante", evento_cantante_giusto);
-						document.put("luogo", luogo_giusto);
-
-						document.put("Titolo", title);
-						document.put("TitoloTag", titleTag);
-
-						document.put("dominio", dominio);
-						document.put("url", url.toString());
-
-						collection.insert(document);
+						else {
+							k++;
+						}
 					} catch (Exception e) {
 						//System.out.println(e.getMessage());
 					}
@@ -210,7 +222,8 @@ public class PosTitle {
 				}
 			}
 		}
-		int k = 1;
+		System.out.println("buttate: "+k);
+		k = 1;
 		DBCursor cursor = collection.find();
 		while (cursor.hasNext()) {
 			System.out.println(k+") "+cursor.next());
