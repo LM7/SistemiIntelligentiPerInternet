@@ -1,17 +1,15 @@
 package main;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.FileWriter;
-import java.net.URL;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map.Entry;
-import java.util.Scanner;
 
 public class FileMapForTesting {
 
@@ -48,31 +46,34 @@ public class FileMapForTesting {
 		}
 	}
 
+	@SuppressWarnings("resource")
 	public static HashMap<String, ArrayList<String[]>> fromTextToMap(String text){
-		Scanner scanner = null;
-
+		BufferedReader in = null;
 		try {
-			scanner = new Scanner(new FileReader(text));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			in = new BufferedReader(new InputStreamReader(new FileInputStream(text), "UTF-8"));
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		HashMap<String, ArrayList<String[]>> output = new HashMap<String, ArrayList<String[]>>();
 
 		// Finchè ho righe da leggere
-		while (scanner.hasNextLine()) {
-			String[] columns = scanner.nextLine().split(" : ");
+		String str;
+		try {
+			while ((str = in.readLine()) != null) {
+				String[] columns = str.split(" : ");
 
-			ArrayList<String[]> alInfo = output.get(columns[0]);
-			if(alInfo == null)
-				alInfo = new ArrayList<String[]>();
-				String[] info = {columns[1],columns[2],columns[3],columns[4]};
-				alInfo.add(info);
-				output.put(columns[0], alInfo);
+				ArrayList<String[]> alInfo = output.get(columns[0]);
+				if(alInfo == null)
+					alInfo = new ArrayList<String[]>();
+					String[] info = {columns[1],columns[2],columns[3],columns[4]};
+					alInfo.add(info);
+					output.put(columns[0], alInfo);
+			}
+		} catch (IOException e) {
+			System.out.println("Error file");
+			e.printStackTrace();
 		}
-
-		scanner.close();
 
 		System.out.println(output.toString());
 
