@@ -2,7 +2,6 @@ package main;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -19,17 +18,6 @@ import com.mongodb.MongoClient;
 import events.MsnSearchEngine;
 
 public class CreateTitleForTesting {
-
-	public final static HashSet<String> STOP_SITE = new HashSet<String>(Arrays.asList("on StubHub!", 
-			"- StubHub UK","- StubHub UK!","� Last.fm", "� Last.fm", "at Last.fm", "@ TicketHold","@ Ultimate-Guitar.Com",
-			"at Last.fm","Stereoboard", "ConcertWith.Me", "NaviHotels.com", "Heyevent.com", "Friendfeed", "setlist.fm",
-			"Getty Images", "TicketNetwork", "www.floramc.org", "rmalife.net", "Gumtree", "Seatwave.com",
-			"� Songkick", "The sound of summer", "504ever.net", "| Concertful", "StubHub UK!", "YouPict", 
-			"- 5gig.com","5gig.co.uk", "mxdwn.com", "Thrillcall", "Kililive.com", "| Bandsintown", "MASS EDMC", 
-			"| Nerds Attack!", "Plannify", "BoxOffice Lazio", "| Ticketfly", "| CheapTickets.com",
-			"| MASS EDMC", "| Kililive.com", "| setlist.fm", " - Stereoboard", "SoundCrashMusic", "| SoundCrashMusic",
-			"TicketsInventory Mobile", "- backpage.com", "from Bandsintown", "| ConcertBank.com", "| clubZone", "- univision.com",
-			"- Wikipedia, the free encyclopedia", "| Eventful","| SeatGeek","| Eventsfy","__ Last.fm"," Setlist ","__ Songkick"));
 
 	public final static int numero_query = 10;
 	public final static String[] CITTA = {"Roma","Londra","New York","Los Angeles","Stoccolma","Parigi","Helsinki","Canberra","Chicago","Austin", "Amsterdam",
@@ -92,6 +80,7 @@ public class CreateTitleForTesting {
 
 
 						//RIMUOVI SITI
+						HashSet<String> STOP_SITE = CleanTitle.STOP_SITE;
 						for(String sito: STOP_SITE){
 							titleTag = titleTag.replace(sito, "");
 						}
@@ -102,6 +91,7 @@ public class CreateTitleForTesting {
 						CleanTitle ct = new CleanTitle(titleTag);
 						dominio = dominio.replace("www.", "");
 						titleTag = ct.removeSiteName(titleTag,dominio);
+						titleTag = ct.replaceLastToken(titleTag);
 
 						titleTag = titleTag.replaceAll("\\s+", " ");
 						titleTag = titleTag.trim();

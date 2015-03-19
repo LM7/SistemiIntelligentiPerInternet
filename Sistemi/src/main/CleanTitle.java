@@ -1,13 +1,26 @@
 package main;
 
+import java.util.Arrays;
+import java.util.HashSet;
+
 public class CleanTitle {
 	String title;
-
+	public final static HashSet<String> STOP_SITE = new HashSet<String>(Arrays.asList("on StubHub!", 
+			"- StubHub UK","- StubHub UK!","– Last.fm", "at Last.fm", "@ TicketHold","@ Ultimate-Guitar.Com",
+			"Stereoboard", "ConcertWith.Me", "NaviHotels.com", "Heyevent.com", "Friendfeed", "setlist.fm",
+			"Getty Images", "TicketNetwork", "www.floramc.org", "rmalife.net", "Gumtree", "Seatwave.com",
+			"– Songkick", "The sound of summer", "504ever.net", "| Concertful", "StubHub UK!", "YouPict", 
+			"- 5gig.com","5gig.co.uk", "mxdwn.com", "Thrillcall", "Kililive.com", "| Bandsintown", "MASS EDMC", 
+			"| Nerds Attack!", "Plannify", "BoxOffice Lazio", "| Ticketfly", "| CheapTickets.com",
+			"| MASS EDMC", "| Kililive.com", "| setlist.fm", " - Stereoboard", "SoundCrashMusic", "| SoundCrashMusic",
+			"TicketsInventory Mobile", "- backpage.com", "from Bandsintown", "| ConcertBank.com", "| clubZone", "- univision.com",
+			"- Wikipedia, the free encyclopedia", "| Eventful","| SeatGeek","| Eventsfy","__ Last.fm"," Setlist ","__ Songkick"));
+	
 	public CleanTitle(String title) {
 		super();
 		this.title = title;
 	}
-
+	
 	/*
 	 * Metodo di supporto per la rimozione del nome del sito all'interno del titolo
 	 */
@@ -39,7 +52,7 @@ public class CleanTitle {
 				String tempTokenPrec = tokenPrec.toLowerCase();
 				if(tempTokenPrec.equals("|") || tempTokenPrec.equals(",") || tempTokenPrec.equals("–") || tempTokenPrec.equals("-") || tempTokenPrec.equals("/") ||	tempTokenPrec.equals(":") 
 				|| tempTokenPrec.equals("at") ||tempTokenPrec.equals("in") ||tempTokenPrec.equals("from") ||tempTokenPrec.equals("with")) {
-					title = replaceLast(title, tokenPrec, " ");
+					title = replaceLastOccurrence(title, tokenPrec, " ");
 				}
 			}
 
@@ -51,31 +64,9 @@ public class CleanTitle {
 					check=true;
 				}
 				else if(domain.contains(tokenPrec.toLowerCase())) {
-					title = replaceLast(title,titleSplit[i], "");
+					title = replaceLastOccurrence(title,titleSplit[i], "");
 					//System.out.println(tokenPrec.toLowerCase());
 				}
-				/***
-				//System.out.println(temp+ " è contenuto nel dominio");
-				if(check==true) {
-					i=i+1;
-					System.out.println(titleSplit[i]);
-					title = replaceLast(title,titleSplit[i], "");
-					//System.out.println("nel check");
-					check=false;
-				}
-				if(domain.contains(tokenSucc.toLowerCase())) {
-					if(!tokenSucc.equals("")) {
-						System.out.println("qua con: "+tokenSucc+i);
-						title = title.replace(titleSplit[i]+" "+tokenSucc, "");
-						i=i+1;
-						check = true;
-						if(tokenPrec.equals("|") || tokenPrec.equals(",") || tokenPrec.equals("–") || tokenPrec.equals("-") ||
-								tokenPrec.equals(":") || tokenPrec.equals("at") ||tokenPrec.equals("in") ||tokenPrec.equals("from")) {
-							title = replaceLast(title, tokenPrec, "");
-						}
-					}
-				}
-				 ***/
 			}
 			tokenPrec = titleSplit[i];
 			if(check) {
@@ -89,21 +80,20 @@ public class CleanTitle {
 		return title;
 	}
 
-
 	public String doThis(String domain, String tokenSucc, String tokenPrec, String token, int i) {
 		//System.out.println("qua con: "+tokenSucc+i);
 		title = title.replace(token+" "+tokenSucc, "");
 		String tempTokenPrec = tokenPrec.toLowerCase();
 		if(tempTokenPrec.equals("|") || tempTokenPrec.equals(",") || tempTokenPrec.equals("–") || tempTokenPrec.equals("-") || tempTokenPrec.equals("/") ||	tempTokenPrec.equals(":") 
 		|| tempTokenPrec.equals("at") ||tempTokenPrec.equals("in") ||tempTokenPrec.equals("from") ||tempTokenPrec.equals("with")) {
-			title = replaceLast(title, tokenPrec, "");
+			title = replaceLastOccurrence(title, tokenPrec, "");
 		}
 		return title;
 	}
 	/*
 	 * metodo di supporto per la rimozione dell'ultima occorrenza del contenuto da una stringa
 	 */
-	public static String replaceLast(String string, String toReplace, String replacement) {
+	public static String replaceLastOccurrence(String string, String toReplace, String replacement) {
 		int pos = string.lastIndexOf(toReplace);
 		if (pos > -1) {
 			return string.substring(0, pos)
@@ -112,5 +102,16 @@ public class CleanTitle {
 		} else {
 			return string;
 		}
+	}
+	
+	public String replaceLastToken(String title) {
+		String[] titleSplit = title.split(" ");
+		int titleLength = titleSplit.length;
+		String lastToken = titleSplit[titleLength-1];
+		if(lastToken.equals("|") || lastToken.equals(",") || lastToken.equals("–") || lastToken.equals("-") || lastToken.equals("/") ||	lastToken.equals(":") 
+				|| lastToken.equals("at") ||lastToken.equals("in") ||lastToken.equals("from") ||lastToken.equals("with")) {
+		title = replaceLastOccurrence(title, lastToken, "");
+		}
+		return title;
 	}
 }

@@ -31,17 +31,6 @@ import events.MsnSearchEngine;
  */
 public class PosTitle {
 
-	public final static HashSet<String> STOP_SITE = new HashSet<String>(Arrays.asList("on StubHub!", 
-			"- StubHub UK","- StubHub UK!","– Last.fm", "– Last.fm", "at Last.fm", "@ TicketHold","@ Ultimate-Guitar.Com",
-			"at Last.fm","Stereoboard", "ConcertWith.Me", "NaviHotels.com", "Heyevent.com", "Friendfeed", "setlist.fm",
-			"Getty Images", "| TicketNetwork", "www.floramc.org", "rmalife.net", "Gumtree", "Seatwave.com",
-			"– Songkick", "The sound of summer", "504ever.net", "| Concertful", "StubHub UK!", "YouPict", 
-			"- 5gig.com","5gig.co.uk", "mxdwn.com", "Thrillcall", "Kililive.com", "| Bandsintown", "MASS EDMC", 
-			"| Nerds Attack!", "Plannify", "BoxOffice Lazio", "| Ticketfly", "| CheapTickets.com",
-			"| MASS EDMC", "| Kililive.com", "| setlist.fm", " - Stereoboard", "SoundCrashMusic", "| SoundCrashMusic",
-			"TicketsInventory Mobile", "- backpage.com", "from Bandsintown", "| ConcertBank.com", "| clubZone", "- univision.com",
-			"- Wikipedia, the free encyclopedia", "| Eventful","| SeatGeek","| Eventsfy","__ Last.fm"," Setlist ","__ Songkick"));
-
 	public final static int numero_query = 5;
 	public final static String[] CITTA = {"Roma","London","New York","Los Angeles","Stoccolma","Paris","Helsinki","Canberra","Chicago","Austin"};
 	//public final static String[] CITTA = {"Amsterdam","Liverpool","Boston","Detroit","Dublino"};
@@ -98,6 +87,7 @@ public class PosTitle {
 
 
 						//RIMUOVI SITI
+						HashSet<String> STOP_SITE = CleanTitle.STOP_SITE;
 						for(String sito: STOP_SITE){
 							titleTag = titleTag.replace(sito, "");
 						}
@@ -108,6 +98,7 @@ public class PosTitle {
 						CleanTitle ct = new CleanTitle(titleTag);
 						dominio = dominio.replace("www.", "");
 						titleTag = ct.removeSiteName(titleTag,dominio);
+						titleTag = ct.replaceLastToken(titleTag);
 
 						titleTag = titleTag.replaceAll("\\s+", " ");
 						titleTag = titleTag.trim();
