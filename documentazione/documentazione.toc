@@ -3,8 +3,10 @@
 \contentsline {chapter}{\numberline {2}Studio ed implementazione}{4}
 \contentsline {section}{\numberline {2.1}Data Collection}{4}
 \contentsline {section}{\numberline {2.2}Training}{5}
-\contentsline {section}{\numberline {2.3}Tagging}{6}
+\contentsline {section}{\numberline {2.3}Tagging}{7}
 \contentsline {chapter}{\numberline {3}Risultati}{8}
 \contentsline {section}{\numberline {3.1}Modelli analizzati}{8}
 \contentsline {section}{\numberline {3.2}Test Set e statistiche}{9}
 \contentsline {section}{\numberline {3.3}Confronto tra modelli}{11}
+\contentsline {subsection}{\numberline {3.3.1}Valutazioni rispetto all'intero test set}{11}
+\contentsline {subsection}{\numberline {3.3.2}Valutazioni rispetto ai domini}{14}

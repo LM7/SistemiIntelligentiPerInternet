@@ -75,7 +75,9 @@ La fase di collezione dei dati ha permesso quindi di raccogliere i titoli dei si
 
 \section{Training}
 Le pagine web raccolte nella fase precedente sono state processate al fine di poter costituire un training set consistente. Tale processamento ha previsto una serie di interventi a livello di elaborazione testuale, il primo dei quali è stato la rimozione all'interno del titolo dell'eventuale presenza del nome del sito. Frequentemente all'interno del titolo, è citato il nome del dominio di riferimento, informazione che essendo fortemente dipendente dal contesto è stata esclusa dall'analisi. Ulteriori interventi di questo genere, hanno previsto la riduzione degli spazi bianchi all'interno dei titoli e la separazione della punteggiatura rispetto ai termini presenti, in modo da facilitare le attività successive. \\
-L'operazione principale della fase che precede l'effettivo training automatico è stata la definizione di regole di Part-of-Speech Tagging, in grado di effettuare un processo di labelling automatico rispetto ai termini presenti nel titolo. Sono stati identificati quindi dei \textit{tag} ricorrenti da associare alle parole che costituiscono il titolo, sulla base del significato dei termini e della loro ricorrenza rispetto a determinate posizioni. I tag sono stati scelti partendo dall'osservazione di numerosi casi, prestando particolare attenzione alla presenza e alla collocazione dei termini all'interno del titolo. I tag definiti sono: 
+L'operazione principale della fase che precede l'effettivo training automatico è stata la definizione di regole di Part-of-Speech Tagging (POST), in grado di effettuare un processo di labelling automatico rispetto ai termini presenti nel titolo. Sono stati identificati quindi dei \textit{tag} ricorrenti da associare alle parole che costituiscono il titolo, sulla base del significato dei termini e della loro ricorrenza rispetto a determinate posizioni. I tag sono stati scelti partendo dall'osservazione di numerosi casi, prestando particolare attenzione alla presenza e alla collocazione dei termini all'interno del titolo. \\ \\
+Il training set di titoli taggati è stato successivamente utilizzato come input di un sistema di addestramento che ha permesso la generazione di un \textit{corpus.model}, ovvero di un modello rappresentante delle conoscenze apprese. Intervenendo sulle regole di POST identificate, sono stati prodotti diversi modelli di apprendimento per valutare quale tipo di conoscenza fosse in grado di fornire le migliori prestazioni. La diversità dei modelli consiste essenzialmente nell'aggiunta, esclusione o variazione di alcuni tag. \\
+L'ultimo modello prodotto, utilizza i seguenti tag per etichettare i titoli che costituiscono il training set: 
 \\ \\ 
 \begin{tabular}{|c|c|}
 \hline
@@ -88,8 +90,6 @@ L'operazione principale della fase che precede l'effettivo training automatico �
 \textbf{CCC} & città dell'evento\\
 \hline
 \textbf{SSS} & sede dell'evento\\
-\hline
-\textbf{SEPA} & termini di punteggiatura più ricorrenti\\
 \hline
 \textbf{ET} & termini di congiunzione (es. \textit{and})\\
 \hline
@@ -112,12 +112,12 @@ L'operazione principale della fase che precede l'effettivo training automatico �
 \textbf{ALTRO} & termini restanti\\
 \hline
 \end{tabular}
-\\ \\
+\\ \\ \\
+Una variante rispetto ai tag precedentemente illustrati è utilizzata nel primo modello prodotto (\textit{base}) in cui è stato inserito il tag \textbf{SEPA} per identificare la presenza dei termini di punteggiatura più ricorrenti. Tale approccio è stato successivamente abbandonato in seguito a diverse scelte implementative intraprese (vedi paragrafo 3.1). \\
 L'associazione di ciascun tag ai termini nel titolo è stata effettuata in modi differenti. Per quanto riguarda l'assegnazione del tag DDD, riferito alla presenza della data, il lavoro è stato supportato dal tool SUTime, mentre per quanto riguarda l'assegnazione dei tag PPP, CCC e SSS si sfruttano le conoscenze dei valori noti per quei determinati campi, che si ricavano inizialmente con l'interazione con Last.fm. Per le restanti assegnazioni di tag si procede semplicemente effettuando delle operazioni di matching tra le parole del titolo e i termini identificati rilevanti per ciascuna categoria riportata in tabella. Tutte le parole restanti, escluse da queste considerazioni, vengono taggate con ALTRO. \\
 L'ultima operazione necessaria per la definizione del training set prevede un \textit{parsing} delle istanze finora considerate nel formato .\textbf{brown}\cite{8}. Tale lavoro è affidato ad un parser capace di convertire i titoli, taggati secondo le regole di POST definite precedentemente, in un file in formato .brown in grado di essere interpretato correttamente in fase di addestramento. Di seguito è mostrato un esempio di istanza trattata: \\ \\
 Titolo originale: \textit{Placebo - Liverpool - Tue, March 10, 2015} \\ \\
 Titolo taggato e convertito in formato brown: Placebo/PPP -/SEPA Liverpool/CCC -/SEPA Tue/DDD ,/SEPA March/DDD 10/DDD ,/SEPA 2015/DDD \\ \\
-Il training set di titoli taggati è stato utilizzato come input di un sistema di addestramento che ha permesso la generazione di un \textit{corpus.model}, ovvero di un modello rappresentante delle conoscenze apprese. Intervenendo sulle regole di POST identificate, sono stati prodotti diversi modelli di apprendimento per valutare quale tipo di conoscenza fosse in grado di fornire le migliori prestazioni. La diversità dei modelli consiste essenzialmente nell'aggiunta, esclusione o variazione di tag rispetto a quelli precedentemente illustrati. \\ \\
 ***La costituzione del training set prevede un'ulteriore fase di filtraggio delle istanze considerate. In modo automatico, sono state selezionate per formare il training set solo quei titoli taggati in cui cui fosse presenti i tag associati alle informazioni principali. Sono quindi stati esclusi tutti quei titoli che non menzionavano tra i loro tag quelli riferiti a PPP, DDD, CCC e SSS, associati quindi all'evento, alla sua data e al suo luogo.** \\ \\
 Il sistema utilizzato per il supporto nelle fasi di training e di tagging è \textbf{Jitar}\cite{9}, un semplice Part-of-speech tagger, basato sul trigramma \textit{Hidden Markov Model} (HMM). Un HMM è un modello statistico in cui il sistema da modellare viene assunto essere un processo di Markov con parametri sconosciuti. 
 
@@ -137,9 +137,9 @@ La completezza o meno di queste informazioni, anche rispetto ai vari tipi di mod
 
 \chapter{Risultati}
 \section{Modelli analizzati}
-Il sistema realizzato è stato testato su cinque diverse tipologie di \textit{corpus.model}, generati a partire da cinque diversi training set. Ognuno di questi rappresenta un diverso caso analizzato, per testare i miglioramenti o i peggioramenti dipesi dalle differenti conoscenze apprese, rispetto al training precedente. Ogni modello rispecchia un caso specifico:
+Il sistema realizzato è stato testato su cinque diverse tipologie di \textit{corpus.model}, generati a partire da cinque diversi training set. Ognuno di questi rappresenta un diverso caso analizzato, per testare i miglioramenti o i peggioramenti dipendenti dalle differenti conoscenze apprese, rispetto al training precedenti. Ogni modello rispecchia un caso specifico:
 \begin{itemize}
-\item \textit{base}: training costituito con le regole di POST definite nella tabella precedente;
+\item \textit{base}: training costituito con le regole di POST definite nella tabella precedente (con l'aggiunta del tag \textbf{SEPA});
 \item \textit{senza punteggiatura}: training in cui le istanze sono prive di punteggiatura;
 \item \textit{gestione punteggiatura}: training in cui la punteggiatura presente nelle istanze è taggata con se stessa (es. il simbolo | ha come tag | );
 \item \textit{gestione parentesi}: training in cui eventuali parentesi presenti nelle istanze sono gestite in modo specifico;
@@ -165,24 +165,24 @@ caso & training selezionato & training con più istanze\\
 \end{tabular}
 
 \section{Test Set e statistiche}
-Ogni modello è stato valutato rispetto ad un testing set comune che si è formato a partire dalla raccolta automatica che parte dalle informazione di Last.fm e si estende attraverso Bing. In particolare la costituzione del test set è stata realizzata imponendo nelle operazioni di interazione con Last.fm dei luoghi specifici da osservare. Sono state scelte \# città tra le più rappresentative per ricavare una serie di informazioni certe dalle quali far ampliare la ricerca con il supporto di Bing. Le città impostate sono: \{...\}. \\
+Ogni modello è stato valutato rispetto ad un testing set comune che si è formato a partire dalla raccolta automatica dei dati, che parte dalle informazioni di Last.fm e che si estende attraverso Bing. In particolare la costituzione del test set è stata realizzata imponendo, nelle operazioni di interazione con Last.fm, dei luoghi specifici da osservare. Sono state scelte 20 città tra le più rappresentative per ricavare una serie di informazioni certe dalle quali far ampliare la ricerca con il supporto di Bing. Le città selezionate sono: \textit{Roma}, \textit{Londra}, \textit{New York}, \textit{Los Angeles}, \textit{Stoccolma}, \textit{Parigi}, \textit{Helsinki}, \textit{Canberra}, \textit{Chicago}, \textit{Austin}, \textit{Amsterdam}, \textit{Liverpool}, \textit{Boston}, \textit{Detroit}, \textit{Dublino}, \textit{Houston}, \textit{Phoenix}, \textit{Dallas}, \textit{Denver} e \textit{Manchester}. \\
 La ricerca delle istanze da testare è stata estesa nel seguente modo:
 \begin{itemize}
-\item[\--] per ciascuna città si sono ricavati da Last.fm i \# principali eventi associati;
+\item[\--] per ciascuna città è stato ricavato da Last.fm il principale evento associato;
 \item[\--] da ogni evento sono state estratti 2/3 di informazioni principali (evento e data);
 \item[\--] i 2/3 di informazioni principali sono stati utilizzati come keywords per impostare la ricerca con Bing;
-\item[\--] sono stati selezionati sono i primi \# risultati restituiti da Bing;
+\item[\--] sono stati selezionati sono i primi 10 risultati restituiti da Bing;
 \item[\--] a partire dai risultati selezionati si sono ricavati i titoli per la formazione del test set;
 \end{itemize}
-Avendo quindi impostato \# città da osservare, \# eventi associati e filtrato i risultati di Bing ai primi \# elementi, la dimesione del test set analizzato conta potenzialmente \# istanze. Nel corso dell'estrazione però è possibile perdere e scartare alcune istanze che non sono idonee per l'elaborazione che il sistema deve effettuare. Per questo motivo delle \# istanze potenziali, solo \# sono state scelte per la definizione del test set. \\
+Avendo quindi impostato 20 città da osservare, 1 evento associato e avendo filtrato i risultati di Bing ai primi 10 elementi, la dimesione del test set analizzato conta potenzialmente 2000 istanze. Nel corso dell'estrazione però è possibile perdere e scartare alcune istanze che non sono idonee per l'elaborazione che il sistema deve effettuare. Per questo motivo delle 2000 istanze potenziali, solo circa 500 sono state scelte per la definizione del test set. \\
 \\
-Per ogni modello analizzato sono state prodotte delle statistiche in grado di valutare analiticamente l'efficacia di ciascuna applicazione. Per quanto riguarda le statistiche rispetto alla fase di training, il lavoro è stato supportato da alcune componenti di Jitar già predefinite in grado di fornire un valore di accuratezza rispetto all'andamento dell'addestramento. I risultati forniti hanno permesso, sia di tener traccia della valutazione di ciascun \textit{fold} della Cross Validation, sia di osservare una stima di precisione complessiva di tutta la fase di training (\textit{Overall accuracy}). \\
+Per ogni modello analizzato sono state prodotte delle statistiche in grado di valutare analiticamente l'efficacia di ciascuna applicazione. Per quanto riguarda le statistiche rispetto alla fase di training, il lavoro è stato supportato da alcune componenti di Jitar già predefinite in grado di fornire un valore di accuratezza rispetto all'andamento dell'addestramento. I risultati forniti hanno permesso, sia di tener traccia della valutazione di ciascun \textit{fold} della Cross Validation, sia di osservare una stima di precisione complessiva di tutta la fase di training (\textit{overall accuracy}). \\
 Per la valutazione dell'accuratezza del test set sono stati invece definiti dei parametri specifici. Tale definizione ha avuto due livelli di osservazione:
 \begin{itemize}
 \item analisi rispetto al dominio delle istanze osservate;
 \item analisi generale rispetto all'intero test test;
 \end{itemize}
-L'osservazione a livello di dominio è relativa a delle statistiche associate a sottoinisiemi di istanze del test set, raggruppate sulla base del dominio di appartenenza. Questa tipologia di statistiche sono ad esempio relative a tutte le istanze del test set, ovvero a tutti i titoli di siti, estratti a partire da \textit{songkick.com}, una delle principali pagine web che fornisce informazioni in merito ad eventi musicali. Tali stime sono state fornite in modo da permettere l'osservazione dell'andamento dell'accuratezza rispetto alla diversa tipologie di titoli, e quindi domini, che sono stati studiati. Le valutazioini fornite in merito a questo approccio, per ogni dominio, sono relative al numero di informazioni principali. Per informazioni principali si intendono la presenza dell'evento, della data e del luogo. Per ciascun dominio sono quindi riportate:
+L'osservazione a livello di dominio è relativa a delle statistiche associate a sottoinisiemi di istanze del test set, raggruppate sulla base del dominio di appartenenza. Questa tipologia di statistiche sono ad esempio relative a tutte le istanze del test set, ovvero a tutti i titoli di siti, estratti a partire da \textit{songkick.com}, una delle principali pagine web che fornisce informazioni in merito ad eventi musicali. Tali stime sono state fornite in modo da permettere l'osservazione dell'andamento dell'accuratezza rispetto alla diversa tipologie di titoli, e quindi domini, che sono stati studiati. Le valutazioini fornite in merito a questo approccio, per ogni dominio, sono relative al numero di informazioni principali presenti. Per informazioni principali si intendono la presenza dell'evento, della data e del luogo. Per ciascun dominio sono quindi riportate:
 \begin{itemize}
 \item \% di volte che sono taggate 3/3 informazioni principali;
 \item \% di volte che sono taggate 2/3 informazioni principali;
@@ -191,8 +191,8 @@ L'osservazione a livello di dominio è relativa a delle statistiche associate a 
 \end{itemize}
 L'osservazione generale rispetto all'intero test set ha permesso di fornire statistiche meno focalizzate ma di carattere più complessivo. Per l'intero insieme di istanze sono state fatte valutazioni di diversa natura. Inizialmente per l'intero test set è stato definito un valore percentuale di precisione definito nel seguente modo: \\
 $${\bf score (\%)}=\frac{puntiTestSet*100}{max\_puntiTestSet}$$ \\\\
-dove \textit{puntiTestSet} è ottenuta analizzando l'intero test set e sommando, per ogni istanza, il valore 3, 2, 1 o 0 in base al numero di informazioni principali taggate. Un titolo in cui sono presenti tutte e 3 le informazioni darà contributo 3, mentre ad esempio uno in cui non è presente solo la data darà contributo 2. Il valore \textit{max\_puntiTestSet} è invece calcolato considerando il massimo punteggio che un test set può raggiungere, considerando che in ogni sua istanza sono presenti tutte e 3 le informazioni principali; considerando quindi un contributo di 3 da parte di tutte le istanze del test set. Ad esempio su un test set di 60 titoli, il \textit{max\_puntiTestSet} è di 60*3 = 180 punti. \\
-Un' ulterioretipo di valutazione effettuata è relativa alla misurazione della quantità di informazioni rilevanti rispetto a quelle principali. Per l'intero test set sono quindi riportate:
+dove \textit{puntiTestSet} è ottenuto analizzando l'intero test set e sommando, per ogni istanza, il valore 3, 2, 1 o 0 in base al numero di informazioni principali taggate. Un titolo in cui sono presenti tutte e 3 le informazioni darà contributo 3, mentre ad esempio uno privo della sola data darà contributo 2. Il valore \textit{max\_puntiTestSet} è invece calcolato considerando il massimo punteggio che un test set può raggiungere, considerando che in ogni sua istanza possano essere presenti tutte e 3 le informazioni principali; considerando quindi un contributo di 3 da parte di tutte le istanze del test set. Ad esempio su un test set di 60 titoli, il \textit{max\_puntiTestSet} è di 60*3 = 180 punti, con un conseguente \textbf{score} pari al 100\%. \\
+Un' ulteriore tipo di valutazione effettuata è relativa alla misurazione della quantità di informazioni rilevanti rispetto a quelle principali. Per l'intero test set sono quindi riportate:
 \begin{itemize}
 \item \% di volte che sono taggate 3/3 informazioni principali;
 \item \% di volte che sono taggate 2/3 informazioni principali;
@@ -205,20 +205,21 @@ Una successiva analisi statistica ha permesso di calcolare invece, rispetto all'
 \item \% di volte in cui è stato taggato il luogo;
 \item \% di volte in cui è stata taggata la data;
 \end{itemize}
-Per ogni modello descritto in precedenza sono quindi state fornite le seguenti valutazioni statistiche, in grado di stimare l'accuratezza del sistema rispetto ai vari training.
+Per ogni modello descritto in precedenza sono quindi state fornite le seguenti valutazioni statistiche, in grado di stimare l'accuratezza del sistema rispetto ai vari training set e quindi sulla base di diversi \textit{corpus.model}.
 
 \section{Confronto tra modelli}
-Il primo \textit{corpus.model} che è stato realizzato e analizzato è quello base, costituito a partire dal training costituito con le regole di POST definite inizialmente. Il confronto, tra la versione generata a partire dal training selezionato e quello più esteso, ha prodotto i seguenti risultati per quanto riguardo la fase di training:\\
+\subsection{Valutazioni rispetto all'intero test set}
+Il primo \textit{corpus.model} che è stato realizzato e analizzato è quello base, costituito a partire dal training costituito con le regole di POST definite inizialmente (con l'aggiunta del tag \textbf{SEPA}). Il confronto, tra la versione generata a partire dal training selezionato e quello più esteso, ha prodotto i seguenti risultati per quanto riguardo la fase di training:
 \begin{center}
 \begin{tabular}{c c c}
 \hline
  & \textit{trainingSepaSel.brown} & \textit{trainingSepa.brown}\\
 \hline
-\textbf{Overall accuracy} \\ (cross validation) & 999\% & 999\% \\
+\textbf{overall accuracy} \\ (cross validation) & 999\% & 999\% \\
 \hline
 \end{tabular}
 \end{center}
-Mentre per quanto riguarda le statistiche relative all'intero test set:\\
+Mentre per quanto riguarda le statistiche relative all'intero test set:
 \begin{center}
 \begin{tabular}{|ccc|}
 \hline
@@ -247,7 +248,7 @@ Successivamente si è pensato di osservare come potesse variare l'accuratezza es
 \hline
  & \textit{trainingSenzaPuntSel.brown} & \textit{trainingSenzaPunt.brown}\\
 \hline
-\textbf{Overall accuracy} \\ (cross validation) & 999\% & 999\% \\
+\textbf{overall accuracy} \\ (cross validation) & 999\% & 999\% \\
 \hline
 \end{tabular}
 \end{center}
@@ -268,9 +269,9 @@ Mentre per quanto riguarda le statistiche relative all'intero test set:
 \hline
  & &  \\
 \hline
-evento & 999\% & 999\% \\
-luogo & 999\% & 999\% \\
-data & 999\% & 999\% \\
+evento & 49\% & 999\% \\
+luogo & 73\% & 999\% \\
+data & 74\% & 999\% \\
 \hline
 \end{tabular}
 \end{center}
@@ -280,11 +281,11 @@ L'importanza della punteggiatura all'interno dei titoli è però una caratterist
 \hline
  & \textit{trainingTaggaPunSel.brown} & \textit{trainingTaggaPun.brown}\\
 \hline
-\textbf{Overall accuracy} \\ (cross validation) & 999\% & 999\% \\
+\textbf{overall accuracy} \\ (cross validation) & 999\% & 999\% \\
 \hline
 \end{tabular}
 \end{center}
-Mentre per quanto riguarda le statistiche relative all'intero test set:\\
+Mentre per quanto riguarda le statistiche relative all'intero test set:
 \begin{center}
 \begin{tabular}{|ccc|}
 \hline
@@ -307,17 +308,17 @@ data & 999\% & 999\% \\
 \hline
 \end{tabular}
 \end{center}
-Le valutazioni sui modelli successivi si sono invece focalizzate su dettagli testuali specifici come ad esempio la presenza e la gestione delle parentesi all'interno dei titoli. Questo ha permesso di creare un \textit{corpus.model} a partire da un training set specifico che fosse in grado di trattare con cura questa particolarità. I risultati prodotti in fase di training sono stati: \\
+Le valutazioni sui modelli successivi si sono invece focalizzate su dettagli testuali specifici come ad esempio la presenza e la gestione delle parentesi all'interno dei titoli. Questo ha permesso di creare un \textit{corpus.model} a partire da un training set specifico che fosse in grado di trattare con cura questa particolarità testuale. I risultati prodotti in fase di training sono stati: 
 \begin{center}
 \begin{tabular}{c c c}
 \hline
  & \textit{trainingParentesiSel.brown} & \textit{trainingParentesi.brown}\\
 \hline
-\textbf{Overall accuracy} \\ (cross validation) & 999\% & 999\% \\
+\textbf{overall accuracy} \\ (cross validation) & 999\% & 999\% \\
 \hline
 \end{tabular}
 \end{center}
-Mentre per quanto riguarda le statistiche relative all'intero test set:\\
+Mentre per quanto riguarda le statistiche relative all'intero test set:
 \begin{center}
 \begin{tabular}{|ccc|}
 \hline
@@ -340,13 +341,13 @@ data & 999\% & 999\% \\
 \hline
 \end{tabular}
 \end{center}
-L'ultimo modello prodotto si è interessato della gestione e in particolare della rimozione all'interno delle istanze delle espressioni legate agli orari degli eventi, in grado di condizionare l'accuratezza delle elaborazioni. Si è quindi prodotto un \textit{corpus.model} da un training in cui fosse tali espressioni fossere completamente rimosse. I risultati prodotti in fase di training sono stati:
+L'ultimo modello prodotto si è interessato della gestione e in particolare della rimozione all'interno delle istanze delle espressioni legate agli orari degli eventi, in grado di condizionare l'accuratezza delle elaborazioni. Si è quindi prodotto un \textit{corpus.model} da un training in cui tali espressioni fossere completamente rimosse. I risultati prodotti in fase di training sono stati:
 \begin{center}
 \begin{tabular}{c c c}
 \hline
  & \textit{trainingSenzaTimeSel.brown} & \textit{trainingSenzaTime.brown}\\
 \hline
-\textbf{Overall C} \\ (cross validation) & 999\% & 999\% \\
+\textbf{overall accuracy} \\ (cross validation) & 999\% & 999\% \\
 \hline
 \end{tabular}
 \end{center}
@@ -386,13 +387,13 @@ Paragonando tutti i modelli testati, il confronto mostra che con il raffinamento
 \hline
  & &  \\
 \hline
-\textit{trainingSenzaPuntSel.brown} & 999\% & 999\% \\
+\textit{trainingSenzaPuntSel.brown} & 999\% & 69\% \\
 \textit{trainingSenzaPunt.brown} & 999\% & 999\% \\
 \hline
  & &  \\
 \hline
-\textit{trainingTaggPuntSel.brown} & 999\% & 999\% \\
-\textit{trainingTaggPunt.brown} & 999\% & 999\% \\
+\textit{trainingTaggaPuntSel.brown} & 999\% & 999\% \\
+\textit{trainingTaggaPunt.brown} & 999\% & 999\% \\
 \hline
  & &  \\
 \hline
@@ -406,6 +407,47 @@ Paragonando tutti i modelli testati, il confronto mostra che con il raffinamento
 \hline
 \end{tabular}
 \end{center}
+
+\subsection{Valutazioni rispetto ai domini}
+Un'analisi più dettagliata rispetto ai risultati ha permesso anche di evidenziare le prestazioni rispetto ai domini più frequentemente riscontrati all'interno del test set. Di seguito sono mostrate le stime associate all'analisi dei principali domini rintracciati e le relative valutazioni prestazionali dipendenti dai vari modelli utilizzati. \\ \\
+Leggenda:\\ A= \textit{trainingSepaSel.brown}; B=\textit{trainingSepa.brown}; \\C=\textit{trainingSenzaPuntSel.brown}; D=\textit{trainingSenzaPunt.brown}; \\E=\textit{trainingTaggaPuntSel.brown} F=\textit{trainingTaggaPunt.brown};\\ G=\textit{trainingParentesiSel.brown};  H=\textit{trainingParentesi.brown};\\ I=\textit{trainingSenzaTimeSel.brown}; L=\textit{trainingSenzaTime.brown}; \\
+
+\begin{tabular}{|ccccccccccccc|}
+\hline
+dominio & \# & info & A &  B & C & D & E & F & G & H & I & L\\
+\hline
+\textit{americantowns} &99 & (3/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+& & (2/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+& & (1/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+& & (0/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+\hline
+\textit{last.fm} &99 & (3/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+& & (2/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+& & (1/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+& & (0/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+\hline
+\textit{songkick} &99 & (3/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+& & (2/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+& & (1/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+& & (0/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+\hline
+\textit{concertful} &99 & (3/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+& & (2/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+& & (1/3) &99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+& & (0/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+\hline
+\textit{bandsintown} &99 & (3/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+& & (2/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+& & (1/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+& & (0/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+\hline
+\textit{ticketnetwork} &99 & (3/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+& & (2/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+& & (1/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+& & (0/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+\hline
+\end{tabular}
+
 
 \cleardoublepage
 \renewcommand\bibname{Riferimenti}
