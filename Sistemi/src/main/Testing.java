@@ -1,6 +1,8 @@
 package main;
 
 import java.io.PrintWriter;
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,23 +29,23 @@ public class Testing {
 		String[] eventoPrevision = new String[4];
 		String title, cantante, data, luogo;
 		
-		int risTot = 0;
-		int titoliTot = 0;
+		double risTot = 0;
+		double titoliTot = 0;
 		int ris;
 		int[] risArray = new int[4];
-		int treTot = 0;
-		int dueTot = 0;
-		int unoTot = 0;
-		int zeroTot = 0;
-		int cantanteTot = 0;
-		int luogoTot = 0;
-		int dataTot = 0;
+		double treTot = 0;
+		double dueTot = 0;
+		double unoTot = 0;
+		double zeroTot = 0;
+		double cantanteTot = 0;
+		double luogoTot = 0;
+		double dataTot = 0;
 		double percentualePunti, percentualeTre, percentualeDue, percentualeUno, percentualeZero, percentualeCantante, percentualeLuogo, percentualeData;
-		int treUrl;
-		int dueUrl;
-		int unoUrl;
-		int zeroUrl;
-		int titoliTotUrl;
+		double treUrl;
+		double dueUrl;
+		double unoUrl;
+		double zeroUrl;
+		double titoliTotUrl;
 		double urlPercentualeTre, urlPercentualeDue, urlPercentualeUno, urlPercentualeZero;
 		
 		
@@ -122,11 +124,17 @@ public class Testing {
 				System.out.println("CANTANTE GIUSTO:"+ cantante+"; DATA GIUSTA:"+data+"; LUOGO GIUSTO:"+luogo);
 				System.out.println("EVENTO PREVISION: CANTANTE:"+eventoPrevision[0]+"; CITTA:"+eventoPrevision[1]+";SEDE:"+eventoPrevision[2]+"; DATA:"+eventoPrevision[3]+";");
 			}
-			//prima di entrare nel primo for e cambiare url (poi se lo vogliamo spostare si sposta facile)
+			
 			urlPercentualeTre = (treUrl * 100) / (titoliTotUrl);
 			urlPercentualeDue = (dueUrl * 100) / (titoliTotUrl);
 			urlPercentualeUno = (unoUrl * 100) / (titoliTotUrl);
 			urlPercentualeZero = (zeroUrl * 100) / (titoliTotUrl);
+			
+			urlPercentualeTre = Testing.only2Decimals(urlPercentualeTre);
+			urlPercentualeDue = Testing.only2Decimals(urlPercentualeDue);
+			urlPercentualeUno = Testing.only2Decimals(urlPercentualeUno);
+			urlPercentualeZero = Testing.only2Decimals(urlPercentualeZero);
+			
 			System.out.println("ECCO LA PERCENTUALE DEL DOMINIO: "+url);
 			System.out.println("PERCENTUALE TRE: "+urlPercentualeTre+"%");
 			System.out.println("PERCENTUALE DUE: "+urlPercentualeDue+"%");
@@ -153,6 +161,18 @@ public class Testing {
 		percentualeCantante = (cantanteTot * 100) / (titoliTot);
 		percentualeLuogo = (luogoTot * 100) / titoliTot;
 		percentualeData = (dataTot * 100) / titoliTot;
+		
+		percentualePunti = Testing.only2Decimals(percentualePunti);
+		percentualeTre = Testing.only2Decimals(percentualeTre);
+		percentualeDue = Testing.only2Decimals(percentualeDue);
+		percentualeUno = Testing.only2Decimals(percentualeUno);
+		percentualeZero = Testing.only2Decimals(percentualeZero);
+		
+		percentualeCantante = Testing.only2Decimals(percentualeCantante);
+		percentualeLuogo = Testing.only2Decimals(percentualeLuogo);
+		percentualeData = Testing.only2Decimals(percentualeData);
+		
+		
 		
 		
 		
@@ -247,6 +267,12 @@ public class Testing {
 		
 		return risultato;
 		
+	}
+	
+	private static double only2Decimals(double numero) {
+		BigDecimal i = new BigDecimal(numero, new MathContext(3));
+		numero = i.doubleValue();
+		return numero;
 	}
 
 	public static void main(String[] args) throws Exception {
