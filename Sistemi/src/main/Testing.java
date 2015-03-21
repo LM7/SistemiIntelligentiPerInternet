@@ -17,7 +17,7 @@ public class Testing {
 	
 	public void testingTitle() throws Exception {
 		/*File in cui verranno stampati tutti i risultati*/
-		PrintWriter testingResults = new PrintWriter ("TestingResults.txt", "UTF-8");
+		PrintWriter testingResults = new PrintWriter ("TestingResults_TaggaPuntSel.txt", "UTF-8");
 		
 		PrevisionTitle previsionTitle = new PrevisionTitle();
 		

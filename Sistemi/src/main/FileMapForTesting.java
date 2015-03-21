@@ -5,7 +5,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -31,10 +30,10 @@ public class FileMapForTesting {
 				// Per ogni dominio stampo su ogni riga la lista degli eventi
 				for(String[] info : value)
 				{
-					writer.write(key + " ยง ");
-					writer.write(info[0] + " ยง ");
-					writer.write(info[1] + " ยง ");
-					writer.write(info[2] + " ยง ");
+					writer.write(key + " ง ");
+					writer.write(info[0] + " ง ");
+					writer.write(info[1] + " ง ");
+					writer.write(info[2] + " ง ");
 					writer.write(info[3] + "\n");
 				}
 
@@ -64,7 +63,7 @@ public class FileMapForTesting {
 		String str;
 		try {
 			while ((str = in.readLine()) != null) {
-				String[] columns = str.split(" ยง ");
+				String[] columns = str.split(" ง ");
 
 				ArrayList<String[]> alInfo = output.get(columns[0]);
 				if(alInfo == null)
