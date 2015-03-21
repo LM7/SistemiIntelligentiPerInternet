@@ -4,9 +4,12 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -18,7 +21,7 @@ public class FileMapForTesting {
 		{
 			// Mi prendo di prepotenza il txt 
 			File logFile = new File(text);
-			BufferedWriter writer = new BufferedWriter(new FileWriter(logFile));
+			Writer writer = new BufferedWriter(new OutputStreamWriter( new FileOutputStream(logFile), "UTF-8"));
 
 			// Mi prendo tutte le combinazioni
 			for(Entry<String, ArrayList<String[]>> entry : test.entrySet()) {
@@ -28,10 +31,10 @@ public class FileMapForTesting {
 				// Per ogni dominio stampo su ogni riga la lista degli eventi
 				for(String[] info : value)
 				{
-					writer.write(key + " : ");
-					writer.write(info[0] + " : ");
-					writer.write(info[1] + " : ");
-					writer.write(info[2] + " : ");
+					writer.write(key + " § ");
+					writer.write(info[0] + " § ");
+					writer.write(info[1] + " § ");
+					writer.write(info[2] + " § ");
 					writer.write(info[3] + "\n");
 				}
 
@@ -57,11 +60,11 @@ public class FileMapForTesting {
 
 		HashMap<String, ArrayList<String[]>> output = new HashMap<String, ArrayList<String[]>>();
 
-		// Finchè ho righe da leggere
+		// FinchÃ¨ ho righe da leggere
 		String str;
 		try {
 			while ((str = in.readLine()) != null) {
-				String[] columns = str.split(" : ");
+				String[] columns = str.split(" § ");
 
 				ArrayList<String[]> alInfo = output.get(columns[0]);
 				if(alInfo == null)
@@ -81,7 +84,7 @@ public class FileMapForTesting {
 	}
 
 	/*public static void main(String[] args) {
-		// Inizializzo la mappa che userò come test..
+		// Inizializzo la mappa che userÃ² come test..
 				HashMap<String, ArrayList<String[]>> test;
 
 				// ..la popolo con varie query..

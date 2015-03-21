@@ -22,6 +22,7 @@ public class CreateTitleForTesting {
 	public final static int numero_query = 10;
 	public final static String[] CITTA = {"Roma","Londra","New York","Los Angeles","Stoccolma","Parigi","Helsinki","Canberra","Chicago","Austin", "Amsterdam",
 											"Liverpool", "Boston", "Detroit", "Dublino", "Houston", "Phoenix", "Dallas", "Denver", "Manchester" };
+	//public final static String[] CITTA = {"Roma","Londra","New York","Los Angeles","Stoccolma"};
 
 	public static void main(String[] args) {
 		createTitle();
