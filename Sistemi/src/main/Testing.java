@@ -17,14 +17,14 @@ public class Testing {
 	
 	public void testingTitle() throws Exception {
 		/*File in cui verranno stampati tutti i risultati*/
-		PrintWriter testingResults = new PrintWriter ("TestingResults_TaggaPuntSel.txt", "UTF-8");
+		PrintWriter testingResults = new PrintWriter ("TestingResults_SenzaPunt.txt", "UTF-8");
 		
 		PrevisionTitle previsionTitle = new PrevisionTitle();
 		
 		/*CreateTitleForTesting createTitleTest = new CreateTitleForTesting(); NON SERVE PIU'
 		HashMap<String, ArrayList<String[]>> mapForTest = createTitleTest.createTitle();*/
 		
-		HashMap<String, ArrayList<String[]>> mapForTest = FileMapForTesting.fromTextToMap("Map2Text.txt");
+		HashMap<String, ArrayList<String[]>> mapForTest = FileMapForTesting.fromTextToMap("Map2Text_SenzaPunt.txt");
 		
 		String[] eventoPrevision = new String[4];
 		String title, cantante, data, luogo;

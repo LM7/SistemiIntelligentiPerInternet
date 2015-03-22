@@ -9,7 +9,7 @@ public class PrevisionTitle {
 	public String[] tagPrevisionTitle(String title) throws Exception {
 		String[] datiForTraining = new String[3];
 		datiForTraining[0] = "brown";
-		datiForTraining[1] = "dataBROWN/trainingTaggaPuntSel.brown";
+		datiForTraining[1] = "dataBROWN/trainingSenzaPunt.brown";
 		datiForTraining[2] = "dataBROWN/corpus.model";
 	
 		CrossValidation.doCrossValidation(datiForTraining);
