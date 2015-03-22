@@ -143,7 +143,7 @@ Il sistema realizzato è stato testato su cinque diverse tipologie di \textit{co
 \item \textit{senza punteggiatura}: training in cui le istanze sono prive di punteggiatura;
 \item \textit{gestione punteggiatura}: training in cui la punteggiatura presente nelle istanze è taggata con se stessa (es. il simbolo | ha come tag | );
 \item \textit{gestione parentesi}: training in cui eventuali parentesi presenti nelle istanze sono gestite in modo specifico;
-\item \textit{gestione orario evento}: training in cui l'eventuale presenza dell'orario all'interno delle istanze è esclusa dal tagging;
+\item \textit{gestione orario evento}: training in cui l'eventuale presenza dell'orario all'interno delle istanze è gestita in modo specifico;
 \end{itemize}
 La definizione di questi modelli è stata sviluppata in modo incrementale, specializzandosi sempre di più nella ricerca e nella gestione di elementi mirati.\\
 Questi cinque modelli sono stati tutti valutati secondo un duplice punto di vista. Ciascun caso analizzato è stato prima testato attraverso un training di istanze selezionate come più rappresentative e successivamente su un numero di istanze maggiori. Ognuno dei modelli è stato quindi valutato due volte, in base alla diversa quantità di istanze presenti nel training set. Nello specifico, i training set che sono stati valutati per ogni caso sono:
@@ -215,7 +215,7 @@ Il primo \textit{corpus.model} che è stato realizzato e analizzato è quello ba
 \hline
  & \textit{trainingSepaSel.brown} & \textit{trainingSepa.brown}\\
 \hline
-\textbf{overall accuracy} \\ (cross validation) & 999\% & 999\% \\
+\textbf{overall accuracy} \\ (cross validation) & 91,25\% & 88,80\% \\
 \hline
 \end{tabular}
 \end{center}
@@ -225,20 +225,20 @@ Mentre per quanto riguarda le statistiche relative all'intero test set:
 \hline
  & \textit{trainingSepaSel.brown} & \textit{trainingSepa.brown}\\
 \hline
-\textbf{Score} & 999\% & 999\% \\
+\textbf{Score} & 79,9\% & 81,1\% \\
 \hline
  & &  \\
 \hline
-3/3 info principali & 999\% & 999\% \\
-2/3 info principali & 999\% & 999\% \\
-1/3 info principali & 999\% & 999\% \\
-0/3 info principali & 999\% & 999\% \\
+3/3 info principali & 54,1\% & 53,4\% \\
+2/3 info principali & 31,8\% & 36,4\% \\
+1/3 info principali & 13,1\% & 10,2\% \\
+0/3 info principali & 0.963\% & 0\% \\
 \hline
  & &  \\
 \hline
-evento & 999\% & 999\% \\
-luogo & 999\% & 999\% \\
-data & 999\% & 999\% \\
+evento & 66,9\% & 63,2\% \\
+luogo & 73,0\% & 74,8\% \\
+data & 81,9\% & 78,2\% \\
 \hline
 \end{tabular}
 \end{center}
@@ -248,7 +248,7 @@ Successivamente si è pensato di osservare come potesse variare l'accuratezza es
 \hline
  & \textit{trainingSenzaPuntSel.brown} & \textit{trainingSenzaPunt.brown}\\
 \hline
-\textbf{overall accuracy} \\ (cross validation) & 999\% & 999\% \\
+\textbf{overall accuracy} \\ (cross validation) & 79,99\% & 85,78\% \\
 \hline
 \end{tabular}
 \end{center}
@@ -258,20 +258,20 @@ Mentre per quanto riguarda le statistiche relative all'intero test set:
 \hline
  & \textit{trainingSenzaPuntSel.brown} & \textit{trainingSenzaPunt.brown}\\
 \hline
-\textbf{Score} & 999\% & 999\% \\
+\textbf{Score} & 80,8\% & 82,7\% \\
 \hline
  & &  \\
 \hline
-3/3 info principali & 999\% & 999\% \\
-2/3 info principali & 999\% & 999\% \\
-1/3 info principali & 999\% & 999\% \\
-0/3 info principali & 999\% & 999\% \\
+3/3 info principali & 52\% & 56,8\% \\
+2/3 info principali & 38,3\% & 34,3\% \\
+1/3 info principali & 9,63\% & 8,86\% \\
+0/3 info principali & 0\% & 0\% \\
 \hline
  & &  \\
 \hline
-evento & 49\% & 999\% \\
-luogo & 73\% & 999\% \\
-data & 74\% & 999\% \\
+evento & 58,2\% & 63,8\% \\
+luogo & 80,2\% & 77,8\% \\
+data & 73,8\% & 78,8\% \\
 \hline
 \end{tabular}
 \end{center}
@@ -281,7 +281,7 @@ L'importanza della punteggiatura all'interno dei titoli è però una caratterist
 \hline
  & \textit{trainingTaggaPunSel.brown} & \textit{trainingTaggaPun.brown}\\
 \hline
-\textbf{overall accuracy} \\ (cross validation) & 999\% & 999\% \\
+\textbf{overall accuracy} \\ (cross validation) & 84,43\% & 88,93\% \\
 \hline
 \end{tabular}
 \end{center}
@@ -291,20 +291,20 @@ Mentre per quanto riguarda le statistiche relative all'intero test set:
 \hline
  & \textit{trainingTaggaPunSel.brown} & \textit{trainingTaggaPun.brown}\\
 \hline
-\textbf{Score} & 999\% & 999\% \\
+\textbf{Score} & 83,0\% & 78,8\% \\
 \hline
  & &  \\
 \hline
-3/3 info principali & 999\% & 999\% \\
-2/3 info principali & 999\% & 999\% \\
-1/3 info principali & 999\% & 999\% \\
-0/3 info principali & 999\% & 999\% \\
+3/3 info principali & 56,5\% & 50,5\% \\
+2/3 info principali & 36,4\% & 36,0\% \\
+1/3 info principali & 6,74\% & 12,5\% \\
+0/3 info principali & 0,385\% & 0\% \\
 \hline
  & &  \\
 \hline
-evento & 999\% & 999\% \\
-luogo & 999\% & 999\% \\
-data & 999\% & 999\% \\
+evento & 62,0\% & 63,6\% \\
+luogo & 86,5\% & 70,1\% \\
+data & 80,2\% & 80,2\% \\
 \hline
 \end{tabular}
 \end{center}
@@ -314,7 +314,7 @@ Le valutazioni sui modelli successivi si sono invece focalizzate su dettagli tes
 \hline
  & \textit{trainingParentesiSel.brown} & \textit{trainingParentesi.brown}\\
 \hline
-\textbf{overall accuracy} \\ (cross validation) & 999\% & 999\% \\
+\textbf{overall accuracy} \\ (cross validation) & 84,53\% & 88,93\% \\
 \hline
 \end{tabular}
 \end{center}
@@ -324,20 +324,20 @@ Mentre per quanto riguarda le statistiche relative all'intero test set:
 \hline
  & \textit{trainingParentesiSel.brown} & \textit{trainingParentesi.brown}\\
 \hline
-\textbf{Score} & 999\% & 999\% \\
+\textbf{Score} & 82,3\% & 83,6\% \\
 \hline
  & &  \\
 \hline
-3/3 info principali & 999\% & 999\% \\
-2/3 info principali & 999\% & 999\% \\
-1/3 info principali & 999\% & 999\% \\
-0/3 info principali & 999\% & 999\% \\
+3/3 info principali & 56,1\% & 58,6\% \\
+2/3 info principali & 35,5\% & 33,5\% \\
+1/3 info principali & 7,9\% & 7,9\% \\
+0/3 info principali & 0,578\% & 0\% \\
 \hline
  & &  \\
 \hline
-evento & 999\% & 999\% \\
-luogo & 999\% & 999\% \\
-data & 999\% & 999\% \\
+evento & 62,6\% & 64,5\% \\
+luogo & 82,3\% & 79,0\% \\
+data & 81,3\% & 77,3\% \\
 \hline
 \end{tabular}
 \end{center}
@@ -347,7 +347,7 @@ L'ultimo modello prodotto si è interessato della gestione e in particolare dell
 \hline
  & \textit{trainingSenzaTimeSel.brown} & \textit{trainingSenzaTime.brown}\\
 \hline
-\textbf{overall accuracy} \\ (cross validation) & 999\% & 999\% \\
+\textbf{overall accuracy} \\ (cross validation) & 84,29\% & 89,20\% \\
 \hline
 \end{tabular}
 \end{center}
@@ -357,20 +357,20 @@ Mentre per quanto riguarda le statistiche relative all'intero test set:
 \hline
  & \textit{trainingSenzaTimeSel.brown} & \textit{trainingSenzaTime.brown}\\
 \hline
-\textbf{Score} & 999\% & 999\% \\
+\textbf{Score} & 82,1\% & 83,9\% \\
 \hline
  & &  \\
 \hline
-3/3 info principali & 999\% & 999\% \\
-2/3 info principali & 999\% & 999\% \\
-1/3 info principali & 999\% & 999\% \\
-0/3 info principali & 999\% & 999\% \\
+3/3 info principali & 55,7\% & 59\% \\
+2/3 info principali & 35,6\% & 33,7\% \\
+1/3 info principali & 8,09\% & 7,32\% \\
+0/3 info principali & 0,578\% & 0\% \\
 \hline
  & &  \\
 \hline
-evento & 999\% & 999\% \\
-luogo & 999\% & 999\% \\
-data & 999\% & 999\% \\
+evento & 62,6\% & 64,7\% \\
+luogo & 82,5\% & 79,0\% \\
+data & 81,1\% & 78,0\% \\
 \hline
 \end{tabular}
 \end{center}
@@ -382,69 +382,115 @@ Paragonando tutti i modelli testati, il confronto mostra che con il raffinamento
 \hline
  & &  \\
 \hline
-\textit{trainingSepaSel.brown} & 999\% & 999\% \\
-\textit{trainingSepa.brown} & 999\% & 999\% \\
+\textit{trainingSepaSel.brown} & 91,25\% & 79,9\% \\
+\textit{trainingSepa.brown} & 88,80\% & 81,1\% \\
 \hline
  & &  \\
 \hline
-\textit{trainingSenzaPuntSel.brown} & 999\% & 69\% \\
-\textit{trainingSenzaPunt.brown} & 999\% & 999\% \\
+\textit{trainingSenzaPuntSel.brown} & 79,99\% & 80,8\% \\
+\textit{trainingSenzaPunt.brown} & 85,78\% & 82,7\% \\
 \hline
  & &  \\
 \hline
-\textit{trainingTaggaPuntSel.brown} & 999\% & 999\% \\
-\textit{trainingTaggaPunt.brown} & 999\% & 999\% \\
+\textit{trainingTaggaPuntSel.brown} & 84,43\% & 83,0\% \\
+\textit{trainingTaggaPunt.brown} & 88,93\% & 78,8\% \\
 \hline
  & &  \\
 \hline
-\textit{trainingParentesiSel.brown} & 999\% & 999\% \\
-\textit{trainingParentesi.brown} & 999\% & 999\% \\
+\textit{trainingParentesiSel.brown} & 84,53\% &  82,3\% \\
+\textit{trainingParentesi.brown} & 88,93\% & 83,6\% \\
 \hline
  & &  \\
 \hline
-\textit{trainingSenzaTimeSel.brown} & 999\% & 999\% \\
-\textit{trainingSenzaTime.brown} & 999\% & 999\% \\
+\textit{trainingSenzaTimeSel.brown} & 84,29\% & 82,1\% \\
+\textit{trainingSenzaTime.brown} & 89,20\% & 83,9\% \\
 \hline
 \end{tabular}
 \end{center}
-
 \subsection{Valutazioni rispetto ai domini}
-Un'analisi più dettagliata rispetto ai risultati ha permesso anche di evidenziare le prestazioni rispetto ai domini più frequentemente riscontrati all'interno del test set. Di seguito sono mostrate le stime associate all'analisi dei principali domini rintracciati e le relative valutazioni prestazionali dipendenti dai vari modelli utilizzati. \\ \\
-Leggenda:\\ A= \textit{trainingSepaSel.brown}; B=\textit{trainingSepa.brown}; \\C=\textit{trainingSenzaPuntSel.brown}; D=\textit{trainingSenzaPunt.brown}; \\E=\textit{trainingTaggaPuntSel.brown} F=\textit{trainingTaggaPunt.brown};\\ G=\textit{trainingParentesiSel.brown};  H=\textit{trainingParentesi.brown};\\ I=\textit{trainingSenzaTimeSel.brown}; L=\textit{trainingSenzaTime.brown}; \\
+Un'analisi più dettagliata rispetto ai risultati ha permesso anche di evidenziare le prestazioni rispetto ai domini più frequentemente riscontrati all'interno del test set. Di seguito sono mostrate le stime associate all'analisi dei principali domini rintracciati e le relative valutazioni prestazionali dipendenti dai vari modelli utilizzati. Per questione di visibilità le prestazioni dei vari modelli sono separti in due tabelle: nella prima sono presenti i risultati associati ai training selezionati, mentre nella seconda quelli associali ai training con un numero più ampio di istanze.\\ \\
+Leggenda:\\
+A=\textit{trainingSepaSel.brown};\\
+B=\textit{trainingSepa.brown}; \\
+C=\textit{trainingSenzaPuntSel.brown}; \\
+D=\textit{trainingSenzaPunt.brown}; \\
+E=\textit{trainingTaggaPuntSel.brown};\\
+F=\textit{trainingTaggaPunt.brown};\\
+G=\textit{trainingParentesiSel.brown}; \\
+H=\textit{trainingParentesi.brown};\\
+I =\textit{trainingSenzaTimeSel.brown}; \\
+L=\textit{trainingSenzaTime.brown}; \\
 
-\begin{tabular}{|ccccccccccccc|}
+\begin{tabular}{|cccccccc|}
 \hline
-dominio & \# & info & A &  B & C & D & E & F & G & H & I & L\\
+dominio & \# & info & A & C & E & G & I \\
 \hline
-\textit{americantowns} &99 & (3/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
-& & (2/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
-& & (1/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
-& & (0/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+\textit{ticketfly} &22& (3/3) & 59,1\%& 45,5\%& 40,9\%& 45,5\%& 40,9\% \\
+& & (2/3) & 31,8\%& 50\%& 50\%& 54,5\%& 59,1\% \\
+& & (1/3) & 9,09\%&4,55\%& 9,09\%& 0\%& 0\% \\
+& & (0/3) & 0\%& 0\%& 0\%& 0\%& 0\% \\
 \hline
-\textit{last.fm} &99 & (3/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
-& & (2/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
-& & (1/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
-& & (0/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+\textit{last.fm} &55& (3/3) & 43,6\%& 70,9\%& 70,9\%& 67,3\%& 67,3\%\\ 
+ & & (2/3) & 52,7\%& 29,1\%& 27,3\%& 27,3\%& 27,3\% \\
+ & & (1/3) & 3,64\%& 0\%& 1,82\%& 5,45\%& 5,45\% \\
+ & & (0/3) & 0\%& 0\%& 0\%& 0\%& 0\% \\
 \hline
-\textit{songkick} &99 & (3/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
-& & (2/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
-& & (1/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
-& & (0/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+\textit{songkick} &49& (3/3) & 71,4\%& 38,8\%& 61,2\%& 61,2\%& 61,2\%\\
+ & & (2/3) & 22,4\%& 42,9\%& 38,8\%& 38,8\%& 38,8\%\\
+ & & (1/3) & 6,12\%& 18,4\%& 0\%& 0\%& 0\%\\
+ & & (0/3) & 0\%& 0\%& 0\%& 0\%& 0\%\\
 \hline
-\textit{concertful} &99 & (3/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
-& & (2/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
-& & (1/3) &99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
-& & (0/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+
+\textit{concertful} &19& (3/3) & 100\%& 63,6\%& 78,9\%& 78,9\%& 78,9\% \\
+& & (2/3) & 0\%& 36,8\%& 21,1\%& 21,1\%& 21,1\% \\
+& & (1/3) & 0\%& 0\%& 0\%& 0\%& 0\% \\
+& & (0/3) & 0\%& 0\%& 0\%& 0\%& 0\% \\
 \hline
-\textit{bandsintown} &99 & (3/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
-& & (2/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
-& & (1/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
-& & (0/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+\textit{bandsintown} &55& (3/3) & 38,2\%& 63,2\%& 63,6\%& 63,6\%& 63,6\% \\
+& & (2/3) & 27,3\%& 58,2\%& 32,7\%& 32,7\%& 32,7\% \\
+& & (1/3) & 9,09\%& 3,64\%& 3,64\%& 3,64\%& 3,64\% \\
+& & (0/3) & 0\%& 0\%& 0\%& 0\%& 0\% \\
 \hline
-\textit{ticketnetwork} &99 & (3/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
-& & (2/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
-& & (1/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
-& & (0/3) & 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\%& 99\% & 99\% \\
+\textit{ticketnetwork} &22& (3/3) & 50\%& 59,1\%& 45,5\%& 45,5\%& 45,5\% \\
+& & (2/3) & 27,3\%& 36,4\%& 50\%& 50\%& 50\% \\
+& & (1/3) & 22,7\%& 4,55\%& 4,55\%& 4,55\%& 4,55\% \\
+& & (0/3) & 0\%& 0\%& 0\%& 0\%& 0\% \\
+\hline
+\end{tabular}
+
+\begin{tabular}{|cccccccc|}
+\hline
+dominio & \# & info & B & D & F & H & L \\
+\hline
+\textit{ticketfly} &22& (3/3) & 40,9\%& 50\%& 36,4\%& 50\%& 54,5\% \\
+& & (2/3) & 50\%& 40,9\%& 40,9\%& 45,5\%& 40,9\% \\
+& & (1/3) & 9,09\%& 9,09\%& 18,2\%& 4,55\%& 4,55\% \\
+& & (0/3) & 0\%& 0\%& 4,55\%& 0\%& 0\% \\
+\hline
+\textit{last.fm} &55& (3/3) & 40\%& 72,7\%& 16,4\%& 72,7\%& 72,7\% \\
+& & (2/3) & 50,9\%& 27,3\%& 69,1\%& 27,3\%& 27,3\% \\
+& & (1/3) & 9,09\%& 0\%& 14,5\%& 0\%& 0\% \\
+& & (0/3) & 0\%& 0\%& 0\%& 0\%& 0\% \\
+\hline
+\textit{songkick} &49& (3/3) & 65,3\%& 73,5\%& 57,1\%& 65,3\%& 67,3\% \\
+& & (2/3) & 32,7\%& 22,4\%& 36,7\%& 32,7\%& 30,6\% \\
+& & (1/3) & 2,04\%& 4,08\%& 6,12\%& 2,04\%& 2,04\% \\
+& & (0/3) & 0\%& 0\%& 0\%& 0\%& 0\% \\
+\hline
+\textit{concertful} &19& (3/3) & 100\%& 89,5\%& 100\%& 100\%& 100\% \\
+& & (2/3) & 0\%& 10,5\%& 0\%& 0\%& 0\% \\
+& & (1/3) & 0\%& 0\%& 0\%& 0\%& 0\% \\
+& & (0/3) & 0\%& 0\%& 0\%& 0\%& 0\% \\
+\hline
+\textit{bandsintown} &55& (3/3) & 61,8\%& 63,6\%& 69,1\%& 67,3\%& 67,3\% \\
+& & (2/3) & 36,4\%& 32,7\%& 29,1\%& 30,9\%& 30,9\% \\
+& & (1/3) & 1,82\%& 3,64\%& 1,82\%& 1,82\%& 1,82\% \\
+& & (0/3) & 0\%& 0\%& 0\%& 0\%& 0\% \\
+\hline
+\textit{ticketnetwork} &22& (3/3) & 50\%& 50\%& 50\%& 50\%& 45,5\% \\
+& & (2/3) & 27,3\%& 36,4\%& 31,8\%& 36,4\%& 40,9\% \\
+& & (1/3) & 22,7\%& 13,6\%& 18,2\%& 13,6\%& 13,6\% \\
+& & (0/3) & 0\%& 0\%& 0\%& 0\%& 0\% \\
 \hline
 \end{tabular}
 
