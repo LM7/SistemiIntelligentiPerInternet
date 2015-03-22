@@ -38,7 +38,7 @@ a cura di\\
 \tableofcontents
 
 \chapter{Introduzione}
-Il progetto è relativo allo studio ed all'implementazione di un sistema di estrazione di riferimenti temporali ad eventi a partire da informazioni pubblicate su siti Web 2.0. \\
+Il progetto\cite{0} è relativo allo studio ed all'implementazione di un sistema di estrazione di riferimenti temporali ad eventi a partire da informazioni pubblicate su siti Web 2.0. \\
 I riferimenti temporali trattati sono associati allo svolgimento di eventi inerenti al contesto musicale, quindi relativi a concerti e manifestazioni affini. \\
 Lo sviluppo ha seguito un andamento sperimentale, in quanto nel corso dell'implementazione sono state effettuate diverse scelte realizzative, che ci hanno condotto all'utilizzo di alcuni strumenti e tecniche che sono state in parte mantenute e in parte scartate nella versione finale del progetto. \\ 
 \\
@@ -147,7 +147,7 @@ Il sistema realizzato è stato testato su cinque diverse tipologie di \textit{co
 \end{itemize}
 La definizione di questi modelli è stata sviluppata in modo incrementale, specializzandosi sempre di più nella ricerca e nella gestione di elementi mirati.\\
 Questi cinque modelli sono stati tutti valutati secondo un duplice punto di vista. Ciascun caso analizzato è stato prima testato attraverso un training di istanze selezionate come più rappresentative e successivamente su un numero di istanze maggiori. Ognuno dei modelli è stato quindi valutato due volte, in base alla diversa quantità di istanze presenti nel training set. Nello specifico, i training set che sono stati valutati per ogni caso sono:
-\\ \\
+\begin{center}
 \begin{tabular}{|c|c|c|}
 \hline
 caso & training selezionato & training con più istanze\\
@@ -163,6 +163,7 @@ caso & training selezionato & training con più istanze\\
 \textbf{gestione orario evento} & \textit{trainingSenzaTimeSel.brown} & \textit{trainingSenzaTime.brown}\\
 \hline
 \end{tabular}
+\end{center}
 
 \section{Test Set e statistiche}
 Ogni modello è stato valutato rispetto ad un testing set comune che si è formato a partire dalla raccolta automatica dei dati, che parte dalle informazioni di Last.fm e che si estende attraverso Bing. In particolare la costituzione del test set è stata realizzata imponendo, nelle operazioni di interazione con Last.fm, dei luoghi specifici da osservare. Sono state scelte 20 città tra le più rappresentative per ricavare una serie di informazioni certe dalle quali far ampliare la ricerca con il supporto di Bing. Le città selezionate sono: \textit{Roma}, \textit{Londra}, \textit{New York}, \textit{Los Angeles}, \textit{Stoccolma}, \textit{Parigi}, \textit{Helsinki}, \textit{Canberra}, \textit{Chicago}, \textit{Austin}, \textit{Amsterdam}, \textit{Liverpool}, \textit{Boston}, \textit{Detroit}, \textit{Dublino}, \textit{Houston}, \textit{Phoenix}, \textit{Dallas}, \textit{Denver} e \textit{Manchester}. \\
@@ -341,7 +342,7 @@ data & 81,3\% & 77,3\% \\
 \hline
 \end{tabular}
 \end{center}
-L'ultimo modello prodotto si è interessato della gestione e in particolare della rimozione all'interno delle istanze delle espressioni legate agli orari degli eventi, in grado di condizionare l'accuratezza delle elaborazioni. Si è quindi prodotto un \textit{corpus.model} da un training in cui tali espressioni fossere completamente rimosse. I risultati prodotti in fase di training sono stati:
+L'ultimo modello prodotto si è interessato della gestione, all'interno delle istanze, delle espressioni legate agli orari degli eventi. Tale informazione, in grado di condizionare l'accuratezza delle elaborazioni, è stata esclusa dai tag identificativi della data. Si è quindi prodotto un \textit{corpus.model} da un training in cui tali espressioni fossere trattate secondo quest'approccio. I risultati prodotti in fase di training sono stati:
 \begin{center}
 \begin{tabular}{c c c}
 \hline
@@ -374,7 +375,9 @@ data & 81,1\% & 78,0\% \\
 \hline
 \end{tabular}
 \end{center}
-Paragonando tutti i modelli testati, il confronto mostra che con il raffinamento del modello, la precisione del sistema tende a migliorare.
+I risultati associati ad ogni modello mostrano che, per quanto riguarda il numero di informazioni principali taggate correttamente, in tutti i test le percentuali più alte sono associate al caso in cui sono rilevate 3/3 informazioni. Seguono subito dopo i casi in cui le informazioni rilevanti matchate sono 2/3, mentre i casi in cui nessuna delle informazioni principali è identificata non superano mai valori del 1\%. Analizzando invece, per l'intero test set, le volte in cui è possibile taggare in modo specifico l'evento, la data e il luogo, è emerso che le due informazioni che più frequentemente risultano rilevate in modo corretto sono il luogo e la data con range di valori che oscillano tra il 70\% e l'80\%. Mentre la rilevazione dell'evento si attesta mediamente intorno al 65\%. Tali risultati sono dovuti al modo in cui sono espressi tali tipi di informazioni all'interno dei titoli dei siti. I dati associati all'evento, ovvero il nome del cantante o della manifestazioni musicale, sono più facilmente soggetti a fraintedimenti e ambiguità di natura linguistica rispetto alle altre tipologie di informazioni.
+\\\\
+Paragonando tutti i modelli testati, il confronto mostra che con il raffinamento del modello, la prestazioni del sistema tendono a migliorare. In particolare per quanto riguarda l'\textit{overall accuracy}, il valore indice della fase di addestramento, è possibile notare come la gestione di un numero più consistente di istanze, fa crescere la precisione. Questo a dimostrazione del fatto che un maggior numero di esempi di training, forniscono al sistema una base conoscitiva più ampia dalla quale apprendere informazioni importanti per la definizione del modello. Con un andamento meno incisivo, ma pur sempre incrementale, con l'aumentare delle istanze aumenta anche il valore di score per ogni modello. Tale risultato testimonia che con un addestramento più accurato, anche le prestazioni in fase di test migliorano, portando alla rilevazione corretta di più informazioni. La tabella che segue mostra il confronto tra i vari modelli, per quanto riguarda i soli valori complessivi di accuratezza (in fase di training) e score (in fase di testing).
 \begin{center}
 \begin{tabular}{|ccc|}
 \hline
@@ -408,19 +411,25 @@ Paragonando tutti i modelli testati, il confronto mostra che con il raffinamento
 \end{tabular}
 \end{center}
 \subsection{Valutazioni rispetto ai domini}
-Un'analisi più dettagliata rispetto ai risultati ha permesso anche di evidenziare le prestazioni rispetto ai domini più frequentemente riscontrati all'interno del test set. Di seguito sono mostrate le stime associate all'analisi dei principali domini rintracciati e le relative valutazioni prestazionali dipendenti dai vari modelli utilizzati. Per questione di visibilità le prestazioni dei vari modelli sono separti in due tabelle: nella prima sono presenti i risultati associati ai training selezionati, mentre nella seconda quelli associali ai training con un numero più ampio di istanze.\\ \\
-Leggenda:\\
-A=\textit{trainingSepaSel.brown};\\
-B=\textit{trainingSepa.brown}; \\
-C=\textit{trainingSenzaPuntSel.brown}; \\
-D=\textit{trainingSenzaPunt.brown}; \\
-E=\textit{trainingTaggaPuntSel.brown};\\
-F=\textit{trainingTaggaPunt.brown};\\
-G=\textit{trainingParentesiSel.brown}; \\
-H=\textit{trainingParentesi.brown};\\
-I =\textit{trainingSenzaTimeSel.brown}; \\
-L=\textit{trainingSenzaTime.brown}; \\
-
+Un'analisi più dettagliata rispetto ai risultati ha permesso anche di evidenziare le prestazioni rispetto ai domini più frequentemente riscontrati all'interno del test set. Di seguito sono mostrate le stime associate all'analisi dei principali domini rintracciati e le relative valutazioni prestazionali dipendenti dai vari modelli utilizzati. Per questione di visibilità le prestazioni dei vari modelli sono separti in due tabelle: nella prima sono presenti i risultati associati ai training selezionati, mentre nella seconda quelli associali ai training con un numero più ampio di istanze. Inoltre per rendere più leggibili facilmente leggibili i risultati, all'interno delle tabelle, sono stati utilizzati al posto dei nomi dei modelli, delle lettere identificative spiegate nella leggenda sottostante.\\ \\ 
+Leggenda:
+\begin{center}
+\begin{tabular}{cc}
+\hline
+A=\textit{trainingSepaSel.brown} & B=\textit{trainingSepa.brown}\\
+\hline
+C=\textit{trainingSenzaPuntSel.brown} & D=\textit{trainingSenzaPunt.brown} \\
+\hline
+E=\textit{trainingTaggaPuntSel.brown} & F=\textit{trainingTaggaPunt.brown}\\
+\hline
+G=\textit{trainingParentesiSel.brown} & H=\textit{trainingParentesi.brown} \\
+\hline
+I =\textit{trainingSenzaTimeSel.brown} & L=\textit{trainingSenzaTime.brown} \\
+\hline
+\end{tabular}
+\end{center}
+Di seguito è mostrato il confronto tra l'applicazione dei vari modelli, focalizzando l'attenzione sui domini più frequentemente riscontrati. I modelli considerati in questo caso sono quelli generati a partire dai training selezionati.
+\begin{center}
 \begin{tabular}{|cccccccc|}
 \hline
 dominio & \# & info & A & C & E & G & I \\
@@ -447,7 +456,7 @@ dominio & \# & info & A & C & E & G & I \\
 & & (0/3) & 0\%& 0\%& 0\%& 0\%& 0\% \\
 \hline
 \textit{bandsintown} &55& (3/3) & 38,2\%& 63,2\%& 63,6\%& 63,6\%& 63,6\% \\
-& & (2/3) & 27,3\%& 58,2\%& 32,7\%& 32,7\%& 32,7\% \\
+& & (2/3) & 27,3\%& 32,7\%& 32,7\%& 32,7\%& 32,7\% \\
 & & (1/3) & 9,09\%& 3,64\%& 3,64\%& 3,64\%& 3,64\% \\
 & & (0/3) & 0\%& 0\%& 0\%& 0\%& 0\% \\
 \hline
@@ -457,7 +466,11 @@ dominio & \# & info & A & C & E & G & I \\
 & & (0/3) & 0\%& 0\%& 0\%& 0\%& 0\% \\
 \hline
 \end{tabular}
-
+\end{center}
+Questi confronti tra i domini permettono di evidenziare quale tipologia di titoli fornisce le prestazioni migliori se sottoposta al sistema. Emerge ad esempio che per i titoli appartenenti al dominio \textit{bandsintown} il passaggio dal primo al secondo modello selezionato, ha portato un miglioramento consistente che si è andato a stabilizzare con le modifiche successive. In altri casi come ad esempio per i domini \textit{ticketfly} e \textit{ticketnetwork} l'andamento è analogamente opposto. Inoltre, come già è stato osservato nei test precedenti, i valori percentuali più bassi si riscontrano nei di casi di identificazione di una o nessuna informazione rilevante.
+\\ \\
+Di seguito, invece, è mostrato il confronto tra l'applicazione dei vari modelli, focalizzando l'attenzione sui domini più frequentemente riscontrati. I modelli considerati in questo caso sono quelli generati a partire dai training aventi un numero maggiore di istanze.
+\begin{center}
 \begin{tabular}{|cccccccc|}
 \hline
 dominio & \# & info & B & D & F & H & L \\
@@ -493,12 +506,14 @@ dominio & \# & info & B & D & F & H & L \\
 & & (0/3) & 0\%& 0\%& 0\%& 0\%& 0\% \\
 \hline
 \end{tabular}
-
+\end{center}
+Da queste valutazioni emerge come la considerazione di più istanze in fase di addestramento permette di raffinare la precisione dei risultati assocaiti ai domini più frequenti. In particolare ciò è evidente per il dominio \textit{concertful} che in tutti i modelli considerati, ad eccezione di uno, vanta un'accurattezza del 100\% di titoli perfettamente taggati, con 3 informazioni su 3 rilevate. I risultati permettono inoltre di sottolineare come il raffinamento del modello permetta di migliorare le prestazioni. Questo è visibile ad esempio per il dominio \textit{last.fm} per il quale, considerando il passaggio dal modello B al modello L, si passa dal 40\% al 72\% nel caso 3/3, dal 50,9\% al 27,3\% nel caso 2/3 e dal 9,09 \% allo 0\% nel caso 1/3, evidenziando un incremento delle prestazioni che permette di aumentare le volte in cui si rilevano tutte le informazioni correttamente.
 
 \cleardoublepage
 \renewcommand\bibname{Riferimenti}
 \begin{thebibliography}{n}
 \addto\captions{\renewcommand{\thebibliography}{Riferimenti}}
+\bibitem{0} L'intero progetto è disponibile presso la repository GitHub: \\https://github.com/LM7/SistemiIntelligentiPerInternet
 \bibitem{1} \textbf{Stanford Temporal Tagger, SUTime}: \\http://nlp.stanford.edu/software/sutime.shtml
 \bibitem{2} \textbf{Stanford Named Entity Recognizer (NER)}: \\http://nlp.stanford.edu/software/CRF-NER.shtml
 \bibitem{3} \textbf{TagMe}: http://tagme.di.unipi.it/
