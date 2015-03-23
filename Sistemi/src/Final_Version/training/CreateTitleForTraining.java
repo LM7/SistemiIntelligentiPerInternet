@@ -31,9 +31,9 @@ import Final_Version.events.MsnSearchEngine;
  */
 public class CreateTitleForTraining {
 
-	public final static int numero_query = 2;
-	//public final static String[] CITTA = {"Roma","London","New York","Los Angeles","Stoccolma","Paris","Helsinki","Canberra","Chicago","Austin"};
-	public final static String[] CITTA = {"Amsterdam","Liverpool","Boston","Detroit","Dublino"};
+	public final static int numero_query = 10;
+	public final static String[] CITTA = {"Amsterdam","London","New York","Los Angeles","Stoccolma","Paris","Helsinki","Canberra","Chicago","Austin"};
+	//public final static String[] CITTA = {"Amsterdam","London","New York","Los Angeles","Stoccolma"};
 
 	public static void createTitle() {
 		int i;
@@ -137,6 +137,7 @@ public class CreateTitleForTraining {
 						titleTag = insertTag(titleTag,"|","|");
 						titleTag = insertTag(titleTag,",",",");
 						titleTag = insertTag(titleTag,"-","-");
+						titleTag = insertTag(titleTag,"–","–");
 						titleTag = insertTag(titleTag,"???","???");
 						titleTag = insertTag(titleTag,":",":");
 						titleTag = insertTag(titleTag,";",";");

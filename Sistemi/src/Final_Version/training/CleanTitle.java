@@ -108,7 +108,7 @@ public class CleanTitle {
 		String[] titleSplit = title.split(" ");
 		int titleLength = titleSplit.length;
 		String lastToken = titleSplit[titleLength-1];
-		if(lastToken.equals("|") || lastToken.equals(",") || lastToken.equals("???") || lastToken.equals("-") || lastToken.equals("/") ||	lastToken.equals(":") 
+		if(lastToken.equals("|") || lastToken.equals(",") || lastToken.equals("???") || lastToken.equals("-") || lastToken.equals("–") || lastToken.equals("/") ||	lastToken.equals(":") 
 				|| lastToken.equals("at") ||lastToken.equals("in") ||lastToken.equals("from") ||lastToken.equals("with")) {
 		title = replaceLastOccurrence(title, lastToken, "");
 		}

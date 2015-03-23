@@ -11,11 +11,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
-import eu.danieldk.nlp.jitar.cli.CrossValidation;
-import eu.danieldk.nlp.jitar.cli.Tag;
-import eu.danieldk.nlp.jitar.cli.Train;
+import Final_eu.danieldk.nlp.jitar.cli.CrossValidation;
+import Final_eu.danieldk.nlp.jitar.cli.Tag;
+import Final_eu.danieldk.nlp.jitar.cli.Train;
 import Final_Version.parser.FileMapForTesting;
-import Final_Version.suTime.SUTime;
+import Final_Version.suTime.SUTime_Titoli;
 
 public class Testing {
 	
@@ -51,10 +51,10 @@ public class Testing {
 		double titoliTotUrl;
 		double urlPercentualeTre, urlPercentualeDue, urlPercentualeUno, urlPercentualeZero;
 		
+		System.out.println("---------------------STAAAART------------------");
 		int k = 0;
 		for ( String dominio: mapForTest.keySet() ) {
 			ArrayList<String[]> listaArrayStringhe = mapForTest.get(dominio);
-			System.out.println("---------------------STAAAART------------------");
 			treUrl = 0;
 			dueUrl = 0;
 			unoUrl = 0;
@@ -213,7 +213,7 @@ public class Testing {
 		boolean dataOK = false;
 		try {
 			Date dataVera = format.parse(data);
-			SUTime suTime = new SUTime();
+			SUTime_Titoli suTime = new SUTime_Titoli();
 			Date dataPrevisionVera = suTime.fromDataStringToDataDate(dataPrevision);
 			if ( (dataPrevisionVera != null) && (dataVera != null) && (dataVera.equals(dataPrevisionVera)) ) {
 				dataOK = true;

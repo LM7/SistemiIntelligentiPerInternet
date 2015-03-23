@@ -1,6 +1,7 @@
 package Final_Version.suTime;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Properties;
@@ -49,10 +50,10 @@ public class SUTime_Titoli {
 				String textData = text.substring(tokens.get(0).get(CoreAnnotations.CharacterOffsetBeginAnnotation.class)+caratteriAggiunti, tokens.get(tokens.size() - 1).get(CoreAnnotations.CharacterOffsetEndAnnotation.class)+caratteriAggiunti);
 				String textPostData = text.substring(tokens.get(tokens.size() - 1).get(CoreAnnotations.CharacterOffsetEndAnnotation.class)+caratteriAggiunti);
 
-
 				String[] dataComposta = cm.toString().split(" ");
 				for(i=0;i<dataComposta.length;i++) {					
-					if(!dataComposta[i].equals("") && !dataComposta[i].equals(" ") && !dataComposta[i].equals(",") && !dataComposta[i].contains(":")) {
+					if(!dataComposta[i].equals("") && !dataComposta[i].equals(" ") && !dataComposta[i].equals(",") && !dataComposta[i].contains(":") && 
+							!dataComposta[i].equalsIgnoreCase("am") && !dataComposta[i].equalsIgnoreCase("pm")) {
 						textData = textData.replaceAll(dataComposta[i], "DDD#"+dataComposta[i]);
 						caratteriAggiunti += 4;
 					}
@@ -82,6 +83,22 @@ public class SUTime_Titoli {
 		return false;
 	}
 
+	public Date fromDataStringToDataDate (String data) {
+		Annotation annotation = new Annotation(data);
+		annotation.set(CoreAnnotations.DocDateAnnotation.class, "2013-07-14");
+		pipeline.annotate(annotation);
+		List<CoreMap> timexAnnsAll = annotation.get(TimeAnnotations.TimexAnnotations.class);
+		if(!timexAnnsAll.isEmpty()) {
+			CoreMap cm = timexAnnsAll.get(0);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String miaData = cm.get(TimeExpression.Annotation.class).getTemporal().getTimexValue();
+				try{
+					return sdf.parse(miaData);
+				}catch (Exception e){
+				}
+		}
+		return null;
+	}
 
 	public static void main(String[] args) {
 		SUTime_Titoli sutt = new SUTime_Titoli();
@@ -91,7 +108,7 @@ public class SUTime_Titoli {
 		String ss = sutt.getTextTag("Baxter, International Inc. (BAX) Ex-Dividend Date Scheduled for March 09, 2015 - NASDAQ.com");
 		System.out.println(ss);
 		 */
-		String sss = sutt.getTextTag("Hollywood Undead at Bottom Lounge, Chicago on March 17, 2015 05:30pm | CheapTickets.com");
+		String sss = sutt.getTextTag("Hollywood Undead at Bottom Lounge, Chicago on March 17, 2015 05:30 pm | CheapTickets.com");
 		System.out.println("8 (Sunday,  10 April 2018) Connie, Stefny, Steven Letigre Brooklyn concert tickets, Output Club Brooklyn March 10, 2015 - 5gig.com");
 		System.out.println(sss);
 	}
