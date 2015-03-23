@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9) (preloaded format=pdflatex 2013.9.24)  22 MAR 2015 22:33
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9) (preloaded format=pdflatex 2013.9.24)  23 MAR 2015 16:21
 entering extended mode
 **documentazione.tex
 
@@ -430,6 +430,11 @@ Underfull \hbox (badness 10000) in paragraph at lines 77--123
 
  []
 
+
+Underfull \hbox (badness 10000) in paragraph at lines 77--123
+
+ []
+
 [5] [6]
 Underfull \hbox (badness 10000) in paragraph at lines 125--136
 
@@ -510,7 +515,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 414--416
  []
 
 [14]
-Underfull \hbox (badness 10000) in paragraph at lines 470--473
+Underfull \hbox (badness 10000) in paragraph at lines 464--467
 
  []
 
@@ -542,7 +547,7 @@ C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:
 /Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/P
 rogram Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Prog
 ram Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on documentazione.pdf (18 pages, 310476 bytes).
+Output written on documentazione.pdf (18 pages, 310391 bytes).
 PDF statistics:
  415 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
