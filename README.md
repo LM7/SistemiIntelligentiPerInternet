@@ -21,5 +21,6 @@ Il sistema si compone principalmente di due fasi:
 per avviare il main di addestramento riferirsi alla classe <i>CreateTitleForTraining.java</i>
 - <b>Tagging</b> <br>
 per avviare il main di tagging riferirsi alla classe <i>CreateTitleForTesting.java</i>
-<br><br>
+
+<br>
 Per maggiori informazioni consultare la documentazione: https://github.com/LM7/SistemiIntelligentiPerInternet/blob/master/documentazione/documentazione.pdf
