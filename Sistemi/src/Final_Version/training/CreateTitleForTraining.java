@@ -32,7 +32,9 @@ import Final_Version.events.MsnSearchEngine;
 public class CreateTitleForTraining {
 
 	public final static int numero_query = 10;
-	public final static String[] CITTA = {"Amsterdam","London","New York","Los Angeles","Stoccolma","Paris","Helsinki","Canberra","Chicago","Austin"};
+	public final static String[] CITTA = {"Amsterdam","London","New York","Los Angeles","Stoccolma","Paris","Helsinki","Canberra","Chicago","Austin",
+		"Buffalo", "Newport Beach", "Olympia", "Springfield", "Sacramento", "Miami", "Las Vegas", "Atlanta", "Philadelphia", "Salt Lake City"};
+	//public final static String[] CITTA = {"Amsterdam","London","New York","Los Angeles","Stoccolma","Paris","Helsinki","Canberra","Chicago","Austin"};
 	//public final static String[] CITTA = {"Amsterdam","London","New York","Los Angeles","Stoccolma"};
 
 	public static void createTitle() {

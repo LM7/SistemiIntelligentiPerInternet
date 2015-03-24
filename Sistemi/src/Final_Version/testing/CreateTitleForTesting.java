@@ -22,7 +22,9 @@ import Final_Version.events.MsnSearchEngine;
 public class CreateTitleForTesting {
 
 	public final static int numero_query = 10;
-	public final static String[] CITTA = {"Roma","Liverpool", "Boston", "Detroit", "Dublino", "Houston", "Phoenix", "Dallas", "Denver", "Manchester"};
+	public final static String[] CITTA = {"Roma","Liverpool", "Boston", "Detroit", "Dublino", "Houston", "Phoenix", "Dallas", "Denver", "Manchester",
+		"Birmingham", "Leeds", "Leicester", "Newcastle", "Portsmouth", "Nottingham","Southampton", "Cardiff", "Glasgow", "Edimburgo"};
+	//public final static String[] CITTA = {"Roma","Liverpool", "Boston", "Detroit", "Dublino", "Houston", "Phoenix", "Dallas", "Denver", "Manchester"};
 	//public final static String[] CITTA = {"Roma","Liverpool", "Boston", "Detroit", "Dublino"};
 		
 
