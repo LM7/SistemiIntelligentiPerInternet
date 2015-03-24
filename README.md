@@ -14,7 +14,7 @@ Descrizione:<br>Studio ed implementazione di un sistema di estrazione di riferim
 
 ------------------------------------------------
 ##Start
-Il progetto è stato stato sviluppato in maniera sperimentale, utilizzando diversi approcci realizzativi supportati da differenti strumenti ed implementazioni. La versione finale, che si focalizza sulle tecniche di <i>Part-of Speech Tagging</i> (POST), fa riferimento alle sole classi del package <i>Final_Version</i>.
+Il progetto è stato stato sviluppato in maniera sperimentale, utilizzando diversi approcci realizzativi supportati da differenti strumenti ed implementazioni. La versione finale, che si focalizza sulle tecniche di <i>Part-of-Speech Tagging</i> (POST), fa riferimento alle sole classi del package <i>Final_Version</i>.
 <br><br>
 Il sistema si compone principalmente di tre fasi:
 - <b>Training</b> <br>
