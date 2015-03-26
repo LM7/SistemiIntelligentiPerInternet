@@ -55,7 +55,7 @@ Successivamente un'attenta analisi dei dati visualizzati, ci ha portato alla sce
 
 \chapter{Struttura del progetto}
 \section{Organizzazione}
-Il progetto è stato stato sviluppato in maniera sperimentale, utilizzando diversi approcci realizzativi supportati da differenti strumenti ed implementazioni. Questo raffinamento è stato supportato da diverse implementazioni che si sono susseguite nel corso dello sviluppo. Per lasciare traccia di questo percorso, all'interno del progetto sono stati volutamente lasciati tutti gli strumenti utilizzati a partire dalla prima all'ultima versione del progetto. \\
+Il progetto è stato stato sviluppato in maniera sperimentale, utilizzando diversi approcci realizzativi supportati da differenti strumenti. Questo raffinamento è stato supportato da diverse implementazioni che si sono susseguite nel corso dello sviluppo. Per lasciare traccia di questo percorso, all'interno del progetto sono stati volutamente lasciati tutti gli strumenti utilizzati a partire dalla prima all'ultima versione del progetto. \\
 In particolare, la versione finale, che si focalizza sulle tecniche di \textit{Part-of-Speech Tagging} (POST), fa riferimento alle sole classi dei package \textit{Final\_Version}. \\L'organizzazione è la seguente:
 \begin{itemize}
 \item Final\_Version.boilerpipe: classi per la rilevazione e la rimozione del surplus (rumore) all'interno del contenuto testuale principale di una pagina web;
@@ -523,7 +523,7 @@ Da queste valutazioni emerge come la considerazione di più istanze in fase di a
 
 \section{Test}
 Come ultima attività è stato prodotto un ulteriore caso di studio che è stato addestrato e verificato per fornire ulteriori dati di test. \\
-Per quanto riguarda la formazione del training set sono state selezionate 20 città per l'interazione con Last.fm da cui sono state ricavate informazioni certe per estendere la ricerca. Queste città sono:  \textit{Amsterdam}, \textit{London}, \textit{New York},\textit{Los Angeles}, \textit{Stoccolma}, \textit{Paris}, \textit{Helsinki}, \textit{Canberra}, \textit{Chicago}, \textit{Austin},\textit{Buffalo}, \textit{Newport Beach}, \textit{Olympia}, \textit{Springfield}, \textit{Sacramento}, \textit{Miami}, \textit{Las Vegas}, \textit{Atlanta}, \textit{Philadelphia} e \textit{Salt Lake City}. A partire dai primi 10 eventi musicali certi, programmati per ciascuna di queste città, si è estesa la ricerca su Bing selezionando i primi 10 risultati offerti. Delle potenziali 2000 istanze le operazioni di filtraggio hanno ridotto il numero a 529. Questo training set è stato sottoposto alle regole di POST e convertito con il parser nel formato .brown. Il modello scelto è stato quello che in fase di sperimentazioni aveva mostrato i migliori valori prestazionali, ovvero quello in grado di gestire la presenza di eventuali parentesi e di espressioni legate all'orario. Il training automatico supportato da Jitar ha permesso la realizzazione di un corpus.model rappresentativo delle conoscenze apprese.  Il risultato prodotto in fase di training è stato:
+Per quanto riguarda la formazione del training set sono state selezionate 20 città per l'interazione con Last.fm da cui sono state ricavate informazioni certe per estendere la ricerca. Queste città sono:  \textit{Amsterdam}, \textit{London}, \textit{New York}, \textit{Los Angeles}, \textit{Stoccolma}, \textit{Paris}, \textit{Helsinki}, \textit{Canberra}, \textit{Chicago}, \textit{Austin},\textit{Buffalo}, \textit{Newport Beach}, \textit{Olympia}, \textit{Springfield}, \textit{Sacramento}, \textit{Miami}, \textit{Las Vegas}, \textit{Atlanta}, \textit{Philadelphia} e \textit{Salt Lake City}. A partire dai primi 10 eventi musicali certi, programmati per ciascuna di queste città, si è estesa la ricerca su Bing selezionando i primi 10 risultati offerti. Delle potenziali 2000 istanze le operazioni di filtraggio hanno ridotto il numero a 529. Questo training set è stato sottoposto alle regole di POST e convertito con il parser nel formato .brown. Il modello scelto è stato quello che in fase di sperimentazioni aveva mostrato i migliori valori prestazionali, ovvero quello in grado di gestire la presenza di eventuali parentesi e di espressioni legate all'orario. Il training automatico supportato da Jitar ha permesso la realizzazione di un corpus.model rappresentativo delle conoscenze apprese.  Il risultato prodotto in fase di training è stato:
 \begin{center}
 \begin{tabular}{c}
 \textit{overall accuracy} = 96,61\%\\
@@ -545,13 +545,13 @@ Fold 9 accuracy: 97.45 \\
 \end{tabular}
 \end{center}
 Tale valore è risultato superiore rispetto ai casi precedentemente analizzati. \\ \\
-Il test set è stato formato in modo analogo al training set, selezionato ulteriori altre 20 città. In questo caso sono state scelte: \textit{Roma}, \textit{Liverpool}, \textit{Boston}, \textit{Detroit}, \textit{Dublino}, \textit{Houston}, \textit{Phoenix}, \textit{Dallas}, \textit{Denver}, \textit{Manchester},\textit{Birmingham}, \textit{Leeds}, \textit{Leicester}, \textit{Newcastle}, \textit{Portsmouth}, \textit{Nottingham},\textit{Southampton}, \textit{Cardiff}, \textit{Glasgow} e \textit{Edimburgo}. Questa volta, delle potenziali 2000 istanze per il test set, ne sono state filtrate solo 481.  Il risultato generale prodotto nella fase di testing è stato: 
+Il test set è stato formato in modo analogo al training set, selezionato ulteriori altre 20 città. In questo caso sono state scelte: \textit{Roma}, \textit{Liverpool}, \textit{Boston}, \textit{Detroit}, \textit{Dublino}, \textit{Houston}, \textit{Phoenix}, \textit{Dallas}, \textit{Denver}, \textit{Manchester}, \textit{Birmingham}, \textit{Leeds}, \textit{Leicester}, \textit{Newcastle}, \textit{Portsmouth}, \textit{Nottingham},\textit{Southampton}, \textit{Cardiff}, \textit{Glasgow} e \textit{Edimburgo}. Questa volta, delle potenziali 2000 istanze per il test set, ne sono state filtrate solo 481.  Il risultato generale prodotto nella fase di testing è stato: 
 \begin{center}
 \begin{tabular}{c}
 \textit{score} = 84.6\%\\
 \end{tabular}
 \end{center}
-Mentre le valutazioni, sempre relative all'intero test set, di carattere più specifico hanno evidenziato le seguenti prestazioni:
+Mentre le valutazioni, sempre relative all'intero test set, di carattere più specifico, hanno evidenziato le seguenti prestazioni:
 \begin{center}
 \begin{tabular}{cccc}
 & & & \\
@@ -571,7 +571,7 @@ Mentre le valutazioni, sempre relative all'intero test set, di carattere più sp
 & & & \\
 \end{tabular}
 \end{center}
-Coerentemente con i risultati analizzati in precedenza, le migliori percentuali si riscontrano nei casi di corretto matching di tutte e tre le informazioni principali, mentre i casi di mancata rilevazione sono dello 0\%. Anche per quanto riguarda il tagging dei dati specifici,come in precedenza, i risultati più alti sono correlati alla corretta identificazione di luogo e data, mentre leggermente meno precisi risultano essere quelli legati all'evento.
+Coerentemente con i risultati analizzati in precedenza, le migliori percentuali si riscontrano nei casi di corretto matching di tutte e tre le informazioni principali, mentre i casi di mancata rilevazione sono dello 0\%. Anche per quanto riguarda il tagging dei dati specifici, come in precedenza, i risultati più alti sono correlati alla corretta identificazione di luogo e data, mentre leggermente meno precisi risultano essere quelli legati all'evento.
 \\ \\
 Per quanto riguarda invece i risultati, valutati a livello di dominio delle istanze osservate, sono emerse le seguenti considerazioni rispetto ai siti più frequentemente riscontrati:
 \begin{center}
